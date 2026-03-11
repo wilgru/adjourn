@@ -21,6 +21,7 @@ export type NotesGroup = {
   title: string | null;
   notes: Note[];
   relevantNoteData: Partial<Note>;
+  sortOrder?: number;
 };
 
 export type DateWithNotes = {

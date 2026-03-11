@@ -157,7 +157,7 @@ export default function TagComponent() {
                     )}
                     value="created"
                   >
-                    Day Created
+                    Created
                     <DropdownMenu.ItemIndicator>
                       <Check />
                     </DropdownMenu.ItemIndicator>

@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import type { Note, NotesGroup } from "src/notes/Note.type";
 import type { Tag } from "src/tags/Tag.type";
 
@@ -8,15 +9,55 @@ const getGroup = (
 ): {
   title: string | null;
   relevantNoteData: Partial<Note>;
+  sortOrder?: number;
 }[] => {
+  const getCreatedGroupSortOrder = (
+    note: Note,
+  ): {
+    title: string;
+    sortOrder: number;
+  } => {
+    const now = dayjs();
+    let title: string;
+    let sortOrder: number;
+
+    if (note.created.isSame(now, "day")) {
+      title = "Today";
+      sortOrder = note.created.startOf("day").valueOf();
+    } else if (note.created.add(1, "day").isSame(now, "day")) {
+      title = "Yesterday";
+      sortOrder = note.created.startOf("day").valueOf();
+    } else if (note.created.isSame(now, "year")) {
+      title = note.created.format("MMMM");
+      sortOrder = note.created.startOf("month").valueOf();
+    } else {
+      title = note.created.format("YYYY");
+      sortOrder = note.created.startOf("year").valueOf();
+    }
+
+    return { title, sortOrder };
+  };
+
+  const getTagGroupSortOrder = (title: string | null): number => {
+    if (title === null) {
+      return 1;
+    }
+
+    return 0; // when all groups have a sortOrder of 0, they will be sorted alphabetically
+  };
+
   switch (groupBy) {
-    case "created":
+    case "created": {
+      const { title, sortOrder } = getCreatedGroupSortOrder(note);
+
       return [
         {
-          title: note.created.format("dddd MMMM D, YYYY"),
+          title,
           relevantNoteData: {},
+          sortOrder,
         },
       ];
+    }
     case "tag": {
       if (
         note.tags.length === 1 &&
@@ -32,6 +73,7 @@ const getGroup = (
             relevantNoteData: {
               tags: defaultTag ? [defaultTag] : [],
             },
+            sortOrder: getTagGroupSortOrder(null),
           },
         ];
       }
@@ -41,6 +83,7 @@ const getGroup = (
           acc: {
             title: string;
             relevantNoteData: Partial<Note>;
+            sortOrder?: number;
           }[],
           tag,
         ) => {
@@ -55,6 +98,7 @@ const getGroup = (
               relevantNoteData: {
                 tags: [tag],
               },
+              sortOrder: getTagGroupSortOrder(tag.name),
             },
           ];
         },
@@ -103,18 +147,29 @@ export function groupNotes(
               group.relevantNoteData.tags,
             ),
           },
+          sortOrder: group.sortOrder,
         };
 
-        if (group.title === null) {
-          acc.unshift(newGroup);
-        } else {
-          acc.push(newGroup);
-        }
+        acc.push(newGroup);
       }
     }
 
     return acc;
   }, []);
+
+  groupedNotes.sort((a, b) => {
+    const aOrder = a.sortOrder ?? 0;
+    const bOrder = b.sortOrder ?? 0;
+
+    if (aOrder !== bOrder) {
+      return bOrder - aOrder;
+    }
+
+    const aTitle = a.title ?? "";
+    const bTitle = b.title ?? "";
+
+    return aTitle.localeCompare(bTitle);
+  });
 
   return groupedNotes;
 }
