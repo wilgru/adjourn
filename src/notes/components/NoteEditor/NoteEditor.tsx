@@ -16,6 +16,7 @@ import { useEffect, useState } from "react";
 import { colours } from "src/colours/colours.constant";
 import { Button } from "src/common/components/Button/Button";
 import { QuillEditor } from "src/common/components/QuillEditor/QuillEditor";
+import { QuillToolbarButton } from "src/common/components/QuillToolbarButton/QuillToolbarButton";
 import { Toggle } from "src/common/components/Toggle/Toggle";
 import { useCreateNote } from "src/notes/hooks/useCreateNote";
 import { useDeleteNote } from "src/notes/hooks/useDeleteNote";
@@ -217,66 +218,39 @@ const NoteEditor = ({
           aria-label="Text alignment"
         >
           <div className="ql-formats flex flex-row gap-1 pr-1 border-r-2 border-slate-100">
-            <ToggleGroup.Item
-              className="ql-bold rounded-md text-slate-500 data-[state=off]:hover:bg-orange-100 data-[state=off]:hover:text-orange-500 data-[state=on]:bg-orange-100 data-[state=on]:text-orange-500 px-2 py-1"
-              value="bold"
-            >
+            <QuillToolbarButton value="bold" colour={colour}>
               <TextB size={16} weight="bold" />
-            </ToggleGroup.Item>
-            <ToggleGroup.Item
-              className="ql-italic rounded-md text-slate-500 data-[state=off]:hover:bg-orange-100 data-[state=off]:hover:text-orange-500 data-[state=on]:bg-orange-100 data-[state=on]:text-orange-500 px-2 py-1"
-              value="italic"
-            >
+            </QuillToolbarButton>
+            <QuillToolbarButton value="italic" colour={colour}>
               <TextItalic size={16} weight="bold" />
-            </ToggleGroup.Item>
-            <ToggleGroup.Item
-              className="ql-underline rounded-md text-slate-500 data-[state=off]:hover:bg-orange-100 data-[state=off]:hover:text-orange-500 data-[state=on]:bg-orange-100 data-[state=on]:text-orange-500 px-2 py-1"
-              value="underline"
-            >
+            </QuillToolbarButton>
+            <QuillToolbarButton value="underline" colour={colour}>
               <TextUnderline size={16} weight="bold" />
-            </ToggleGroup.Item>
-            <ToggleGroup.Item
-              className=" ql-strike rounded-md text-slate-500 data-[state=off]:hover:bg-orange-100 data-[state=off]:hover:text-orange-500 data-[state=on]:bg-orange-100 data-[state=on]:text-orange-500 px-2 py-1"
-              value="strike"
-            >
+            </QuillToolbarButton>
+            <QuillToolbarButton value="strike" colour={colour}>
               <TextStrikethrough size={16} weight="bold" />
-            </ToggleGroup.Item>
+            </QuillToolbarButton>
           </div>
 
           <div className="flex flex-row gap-1 px-1 pr-1 border-r-2 border-slate-100">
-            <ToggleGroup.Item
-              className=" ql-list rounded-md text-slate-500 data-[state=off]:hover:bg-orange-100 data-[state=off]:hover:text-orange-500 data-[state=on]:bg-orange-100 data-[state=on]:text-orange-500 px-2 py-1"
-              value="ordered"
-            >
+            <QuillToolbarButton value="ordered" colour={colour}>
               <ListNumbers size={16} weight="bold" />
-            </ToggleGroup.Item>
-            <ToggleGroup.Item
-              className=" ql-list rounded-md text-slate-500 data-[state=off]:hover:bg-orange-100 data-[state=off]:hover:text-orange-500 data-[state=on]:bg-orange-100 data-[state=on]:text-orange-500 px-2 py-1"
-              value="bullet"
-            >
+            </QuillToolbarButton>
+            <QuillToolbarButton value="bullet" colour={colour}>
               <ListBullets size={16} weight="bold" />
-            </ToggleGroup.Item>
+            </QuillToolbarButton>
           </div>
 
           <div className="flex flex-row gap-1 px-1 pr-1">
-            <ToggleGroup.Item
-              className=" ql-blockquote rounded-md text-slate-500 data-[state=off]:hover:bg-orange-100 data-[state=off]:hover:text-orange-500 data-[state=on]:bg-orange-100 data-[state=on]:text-orange-500 px-2 py-1"
-              value="blockquote"
-            >
+            <QuillToolbarButton value="blockquote" colour={colour}>
               <Quotes size={16} weight="bold" />
-            </ToggleGroup.Item>
-            <ToggleGroup.Item
-              className=" ql-code-block rounded-md text-slate-500 data-[state=off]:hover:bg-orange-100 data-[state=off]:hover:text-orange-500 data-[state=on]:bg-orange-100 data-[state=on]:text-orange-500 px-2 py-1"
-              value="code-block"
-            >
+            </QuillToolbarButton>
+            <QuillToolbarButton value="code-block" colour={colour}>
               <CodeBlock size={16} weight="bold" />
-            </ToggleGroup.Item>
-            <ToggleGroup.Item
-              className=" ql-link rounded-md text-slate-500 data-[state=off]:hover:bg-orange-100 data-[state=off]:hover:text-orange-500 data-[state=on]:bg-orange-100 data-[state=on]:text-orange-500 px-2 py-1"
-              value="link"
-            >
+            </QuillToolbarButton>
+            <QuillToolbarButton value="link" colour={colour}>
               <LinkSimple size={16} weight="bold" />
-            </ToggleGroup.Item>
+            </QuillToolbarButton>
           </div>
         </ToggleGroup.Root>
       </div>

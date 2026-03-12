@@ -117,5 +117,31 @@ export default {
     "data-[highlighted]:bg-pink-100",
     "data-[highlighted]:bg-amber-200",
     "data-[highlighted]:bg-gray-200",
+
+    // data on backgroundPill
+    "data-[state=on]:bg-orange-100",
+    "data-[state=on]:bg-red-100",
+    "data-[state=on]:bg-yellow-100",
+    "data-[state=on]:bg-lime-100",
+    "data-[state=on]:bg-green-100",
+    "data-[state=on]:bg-blue-100",
+    "data-[state=on]:bg-cyan-100",
+    "data-[state=on]:bg-purple-100",
+    "data-[state=on]:bg-pink-100",
+    "data-[state=on]:bg-amber-200",
+    "data-[state=on]:bg-gray-200",
+
+    // data on textPill
+    "data-[state=on]:text-orange-500",
+    "data-[state=on]:text-red-500",
+    "data-[state=on]:text-yellow-500",
+    "data-[state=on]:text-lime-500",
+    "data-[state=on]:text-green-500",
+    "data-[state=on]:text-blue-500",
+    "data-[state=on]:text-cyan-500",
+    "data-[state=on]:text-purple-500",
+    "data-[state=on]:text-pink-500",
+    "data-[state=on]:text-amber-700",
+    "data-[state=on]:text-gray-500",
   ],
 };
