@@ -1,17 +1,21 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { useState } from "react";
+import { colours } from "src/colours/colours.constant";
 import { Button } from "src/common/components/Button/Button";
 import { CreateTagModal } from "src/tags/components/CreateTagModal/CreateTagModal";
 import { DeleteTagGroupModal } from "src/tags/components/DeleteTagGroupModal/DeleteTagGroupModal";
+import type { Colour } from "src/colours/Colour.type";
 import type { TagGroup } from "src/tags/Tag.type";
 
 export const SidebarTagSection = ({
   title,
   tagGroup,
+  colour = colours.orange,
   children,
 }: {
   title: string;
   tagGroup?: TagGroup;
+  colour?: Colour;
   children: React.ReactNode;
 }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -34,6 +38,7 @@ export const SidebarTagSection = ({
                   variant="ghost-strong"
                   size="xs"
                   iconName="plus"
+                  colour={colour}
                 />
               </Dialog.Trigger>
             )}
@@ -50,6 +55,7 @@ export const SidebarTagSection = ({
                     variant="ghost-strong"
                     size="xs"
                     iconName="trash"
+                    colour={colour}
                   />
                 </Dialog.Trigger>
               )}
