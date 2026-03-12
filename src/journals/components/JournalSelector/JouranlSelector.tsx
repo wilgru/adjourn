@@ -6,6 +6,7 @@ import { Button } from "src/common/components/Button/Button";
 import { cn } from "src/common/utils/cn";
 import { getNavigationDay } from "src/common/utils/getNavigationDay";
 import { Icon } from "src/icons/components/Icon/Icon";
+import { JournalSettingsModal } from "src/journals/components/JournalSettingsModal/JournalSettingsModal";
 import type { Journal } from "src/journals/Journal.type";
 
 type JournalSelectorProps = {
@@ -138,7 +139,7 @@ export const JournalSelector = ({
           <Button variant="ghost" size="sm" iconName="gear" />
         </Dialog.Trigger>
 
-        {/* <DeleteTagModal tag={tag} /> */}
+        <JournalSettingsModal journal={currentJournal} />
       </Dialog.Root>
     </div>
   );
