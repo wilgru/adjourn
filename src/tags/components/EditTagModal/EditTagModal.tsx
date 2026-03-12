@@ -98,7 +98,7 @@ export const EditTagModal = ({ tag }: EditTagModalProps) => {
           <div>
             <Label
               title="Links"
-              tooltipContent="You can add links to highlight important information at the top of this tag's page"
+              tooltipContent="You can add links that will appear underneath this tag's description"
             />
 
             <MultiLinkInput
