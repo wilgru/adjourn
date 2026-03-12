@@ -93,7 +93,7 @@ export const Sidebar = () => {
           {tagGroups.map((tagGroup) => (
             <SidebarTagSection
               title={tagGroup.title}
-              tagGroupId={tagGroup.id}
+              tagGroup={tagGroup}
               key={tagGroup.id}
             >
               <div className="flex flex-col gap-1 mt-1">
