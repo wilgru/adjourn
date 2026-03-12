@@ -59,6 +59,8 @@ import {
   Binoculars,
   Tray,
   MagnifyingGlass,
+  Flag,
+  ListChecks,
 } from "@phosphor-icons/react";
 
 export const icons = [
@@ -110,12 +112,14 @@ export const icons = [
   { name: "chatCircle", icon: ChatCircle },
   { name: "scroll", icon: Scroll },
   { name: "bookmarkSimple", icon: BookmarkSimple },
+  { name: "flag", icon: Flag },
   { name: "mathOperations", icon: MathOperations },
   { name: "code", icon: Code },
   { name: "cpu", icon: Cpu },
   { name: "database", icon: Database },
   { name: "devices", icon: Devices },
   { name: "listNumbers", icon: ListNumbers },
+  { name: "listChecks", icon: ListChecks },
   { name: "noteBlank", icon: NoteBlank },
   { name: "folder", icon: Folder },
   { name: "tray", icon: Tray },
