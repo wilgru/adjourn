@@ -3,6 +3,7 @@ import * as Dialog from "@radix-ui/react-dialog";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import Delta from "quill-delta";
+import { useMemo } from "react";
 import isAuthenticated from "src/Users/utils/isAuthenticated";
 import { Button } from "src/common/components/Button/Button";
 import { Toolbar } from "src/common/components/Toolbar/Toolbar";
@@ -44,6 +45,37 @@ export default function TagComponent() {
   const { note } = useGetNote({ noteId });
   const { createNote } = useCreateNote();
   const { updateTag } = useUpdateTag();
+
+  const sortBy = tag?.sortBy ?? "created";
+  const sortDirection = tag?.sortDirection ?? "asc";
+
+  const sortedNotes = useMemo(() => {
+    const noteCopy = [...notes];
+
+    noteCopy.sort((a, b) => {
+      let compareVal = 0;
+
+      if (sortBy === "alphabetical") {
+        const titleA = a.title ?? "";
+        const titleB = b.title ?? "";
+
+        compareVal = titleA.localeCompare(titleB, undefined, {
+          sensitivity: "base",
+          numeric: true,
+        });
+      } else {
+        compareVal = a.created.valueOf() - b.created.valueOf();
+      }
+
+      if (sortDirection === "desc") {
+        compareVal = -compareVal;
+      }
+
+      return compareVal;
+    });
+
+    return noteCopy;
+  }, [notes, sortBy, sortDirection]);
 
   if (!tag) {
     return null;
@@ -177,8 +209,18 @@ export default function TagComponent() {
                 </DropdownMenu.RadioGroup>
 
                 <DropdownMenu.RadioGroup
-                  value={"created"}
-                  onValueChange={() => {}}
+                  value={tag.sortBy}
+                  onValueChange={(value) => {
+                    if (value === "created" || value === "alphabetical") {
+                      updateTag({
+                        tagId: tag.id,
+                        updateTagData: {
+                          ...tag,
+                          sortBy: value,
+                        },
+                      });
+                    }
+                  }}
                 >
                   <DropdownMenu.Label className="pl-2 text-xs text-slate-400">
                     Sort by
@@ -203,9 +245,55 @@ export default function TagComponent() {
                       `data-[highlighted]:${tag.colour.backgroundPill}`,
                       `data-[highlighted]:${tag.colour.textPill}`,
                     )}
-                    value="title"
+                    value="alphabetical"
                   >
-                    Title
+                    Alphabetical
+                    <DropdownMenu.ItemIndicator>
+                      <Check />
+                    </DropdownMenu.ItemIndicator>
+                  </DropdownMenu.RadioItem>
+                </DropdownMenu.RadioGroup>
+
+                <DropdownMenu.RadioGroup
+                  value={tag.sortDirection}
+                  onValueChange={(value) => {
+                    if (value === "asc" || value === "desc") {
+                      updateTag({
+                        tagId: tag.id,
+                        updateTagData: {
+                          ...tag,
+                          sortDirection: value,
+                        },
+                      });
+                    }
+                  }}
+                >
+                  <DropdownMenu.Label className="pl-2 text-xs text-slate-400">
+                    Sort direction
+                  </DropdownMenu.Label>
+
+                  <DropdownMenu.RadioItem
+                    className={cn(
+                      "leading-none text-sm p-2 flex justify-between items-center outline-none rounded-xl cursor-pointer transition-colors",
+                      `data-[highlighted]:${tag.colour.backgroundPill}`,
+                      `data-[highlighted]:${tag.colour.textPill}`,
+                    )}
+                    value="asc"
+                  >
+                    Ascending
+                    <DropdownMenu.ItemIndicator>
+                      <Check />
+                    </DropdownMenu.ItemIndicator>
+                  </DropdownMenu.RadioItem>
+                  <DropdownMenu.RadioItem
+                    className={cn(
+                      "leading-none text-sm p-2 flex justify-between items-center outline-none rounded-xl cursor-pointer transition-colors",
+                      `data-[highlighted]:${tag.colour.backgroundPill}`,
+                      `data-[highlighted]:${tag.colour.textPill}`,
+                    )}
+                    value="desc"
+                  >
+                    Descending
                     <DropdownMenu.ItemIndicator>
                       <Check />
                     </DropdownMenu.ItemIndicator>
@@ -229,7 +317,7 @@ export default function TagComponent() {
         description={tag.description}
         links={tag.badges}
         colour={tag.colour}
-        notes={notes}
+        notes={sortedNotes}
         selectedNote={note || null}
         prefillNewNoteData={{ tags: [tag] }}
         groupNotesBy={tag.groupBy ?? undefined}

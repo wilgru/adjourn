@@ -38,6 +38,8 @@ export const useCreateTag = (): UseCreateTagResponse => {
       journal: journalId,
       user: user?.id,
       groupBy: null,
+      sortBy: createTagData.sortBy ?? "created",
+      sortDirection: createTagData.sortDirection ?? "asc",
     });
 
     const mappedNewTag = mapTag({ ...newTag, totalNotes: 0 });

@@ -23,6 +23,8 @@ const getInitialTag = (tagGroupId?: string): NewTag => ({
   icon: "tag",
   badges: [],
   tagGroupId: tagGroupId ?? null,
+  sortBy: "created",
+  sortDirection: "asc",
 });
 
 export const CreateTagModal = ({ tagGroupId }: CreateTagModalProps) => {

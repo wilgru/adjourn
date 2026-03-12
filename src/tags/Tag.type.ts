@@ -23,6 +23,8 @@ export type Tag = {
   description: string | null;
   noteCount: number;
   groupBy: "created" | "tag" | null;
+  sortBy: "alphabetical" | "created";
+  sortDirection: "asc" | "desc";
   badges: TagBadge[];
   tagGroupId: string | null;
   created: Dayjs;

@@ -12,6 +12,8 @@ export const mapTag = (tag: RecordModel): Tag => {
     noteCount: tag.totalNotes,
     badges: tag.badges || [],
     groupBy: tag.groupBy,
+    sortBy: tag.sortBy ?? "created",
+    sortDirection: tag.sortDirection ?? "asc",
     tagGroupId: tag.tagGroup || null,
     created: tag.createdAt,
     updated: tag.updatedAt,

@@ -54,6 +54,8 @@ export const TagMultiSelect = ({
         tagGroupId: null,
         colour: colours.orange,
         icon: "tag",
+        sortBy: "created",
+        sortDirection: "asc",
       },
     });
     const newTags = [...selectedTags, newTag];
