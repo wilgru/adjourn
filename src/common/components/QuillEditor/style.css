@@ -41,6 +41,7 @@
 #quill-editor a {
   color: var(--ql-link-color, #f97316); /* falls back to orange-500 */
   text-decoration: underline;
+  cursor: pointer;
 }
 
 #quill-editor .ql-editora8a29e.ql-blank {

@@ -139,9 +139,21 @@ const QuillEditor = ({
       ],
     });
 
+    const handleLinkClick = (e: MouseEvent) => {
+      const anchor = (e.target as HTMLElement).closest("a");
+
+      if (anchor?.href) {
+        e.preventDefault();
+        window.open(anchor.href, "_blank", "noopener,noreferrer");
+      }
+    };
+
+    editorContainer.addEventListener("click", handleLinkClick);
+
     setQuillEditor(quill);
 
     return () => {
+      editorContainer.removeEventListener("click", handleLinkClick);
       container.innerHTML = "";
 
       setQuillEditor(null);
