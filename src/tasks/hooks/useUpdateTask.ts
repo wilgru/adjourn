@@ -29,7 +29,7 @@ export const useUpdateTask = (): UseUpdateTaskResponse => {
       taskId,
       {
         ...updateTaskData,
-        note: updateTaskData.note?.id ?? null,
+        note: updateTaskData.note?.id ?? undefined,
       },
       { expand: "note" },
     );
