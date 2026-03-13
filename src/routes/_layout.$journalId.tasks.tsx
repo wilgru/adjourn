@@ -4,7 +4,7 @@ import { colours } from "src/colours/colours.constant";
 import { Toolbar } from "src/common/components/Toolbar/Toolbar";
 import { cn } from "src/common/utils/cn";
 import { Icon } from "src/icons/components/Icon/Icon";
-import { useGetJournals } from "src/journals/hooks/useGetJournals";
+import { useCurrentJournal } from "src/journals/hooks/useCurrentJournal";
 import { TasksLayout } from "src/tasks/components/TasksLayout/TasksLayout";
 import { useGetTasks } from "src/tasks/hooks/useGetTasks";
 
@@ -23,9 +23,7 @@ export const Route = createFileRoute("/_layout/$journalId/tasks")({
 });
 
 function RouteComponent() {
-  const { journalId } = Route.useParams();
-  const { journals } = useGetJournals();
-  const currentJournal = journals.find((journal) => journal.id === journalId);
+  const { currentJournal } = useCurrentJournal();
   const colour = currentJournal?.colour ?? colours.orange;
 
   const { tasks } = useGetTasks({});

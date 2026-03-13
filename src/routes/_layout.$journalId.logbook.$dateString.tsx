@@ -7,7 +7,7 @@ import { Button } from "src/common/components/Button/Button";
 import { Calendar } from "src/common/components/Calendar/Calendar";
 import { Toolbar } from "src/common/components/Toolbar/Toolbar";
 import { getNavigationDay } from "src/common/utils/getNavigationDay";
-import { useGetJournals } from "src/journals/hooks/useGetJournals";
+import { useCurrentJournal } from "src/journals/hooks/useCurrentJournal";
 import { jumpToDateAtom } from "src/tableOfContents/atoms/jumpToDateAtom";
 
 export const Route = createFileRoute("/_layout/$journalId/logbook/$dateString")(
@@ -28,10 +28,8 @@ export const Route = createFileRoute("/_layout/$journalId/logbook/$dateString")(
 );
 
 function LogbookComponent() {
-  const { journalId } = Route.useParams();
   const { dateString } = Route.useParams();
-  const { journals } = useGetJournals();
-  const currentJournal = journals.find((journal) => journal.id === journalId);
+  const { journalId, currentJournal } = useCurrentJournal();
   const colour = currentJournal?.colour ?? colours.orange;
 
   const navigate = useNavigate();
