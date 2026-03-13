@@ -259,6 +259,7 @@ const NoteEditor = ({
         key={editedNote.id}
         toolbarId={QUILL_TOOLBAR_ID}
         value={editedNote.content}
+        colour={colour}
         onChange={(delta) => onUpdateNote({ content: delta })}
         onSelectedFormattingChange={(selectionFormatting: StringMap) => {
           setToolbarFormatting(selectionFormatting);

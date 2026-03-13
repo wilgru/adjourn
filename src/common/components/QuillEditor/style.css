@@ -38,6 +38,10 @@
   padding: 0;
 }
 
+#quill-editor a {
+  color: var(--ql-link-color, #f97316); /* falls back to orange-500 */
+}
+
 #quill-editor .ql-editora8a29e.ql-blank {
   font-size: 16px;
 }

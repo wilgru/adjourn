@@ -1,4 +1,5 @@
 import * as ToggleGroup from "@radix-ui/react-toggle-group";
+import { useCallback } from "react";
 import { colours } from "src/colours/colours.constant";
 import { cn } from "src/common/utils/cn";
 import type { Colour } from "src/colours/Colour.type";
@@ -21,8 +22,18 @@ export const QuillToolbarButton = ({
 }: QuillToolbarButtonProps) => {
   const quillClass = QUILL_FORMAT_CLASS[value] ?? `ql-${value}`;
 
+  const refCallback = useCallback(
+    (el: HTMLButtonElement | null) => {
+      if (el) {
+        el.value = value;
+      }
+    },
+    [value],
+  );
+
   return (
     <ToggleGroup.Item
+      ref={refCallback}
       className={cn(
         quillClass,
         "rounded-md text-slate-500 px-2 py-1",
