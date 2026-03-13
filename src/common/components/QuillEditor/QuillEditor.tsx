@@ -1,12 +1,20 @@
 import "./style.css";
 import Quill from "quill";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { getColourHex } from "src/colours/utils/getColourHex";
+import {
+  createLinkHandler,
+  createListHandler,
+  createToggleHandler,
+} from "./quillFormatHandlers";
 import type { RangeStatic, StringMap } from "quill";
 import type Delta from "quill-delta";
+import type { Colour } from "src/colours/Colour.type";
 
 type QuillEditorProps = {
   toolbarId: string;
   value?: Delta;
+  colour?: Colour;
   onChange: (delta: Delta) => void;
   onSelectedFormattingChange: (selectionFormatting: StringMap) => void;
 };
@@ -19,6 +27,7 @@ type QuillEditorProps = {
 const QuillEditor = ({
   toolbarId,
   value,
+  colour,
   onChange,
   onSelectedFormattingChange,
 }: QuillEditorProps) => {
@@ -100,72 +109,21 @@ const QuillEditor = ({
       container.ownerDocument.createElement("div"),
     );
 
-    const quill = new Quill(editorContainer, {
+    const quill: Quill = new Quill(editorContainer, {
       // debug: import.meta.env.DEV ? "info" : undefined, // TODO: add back in with dev tools
       placeholder: "No content",
       modules: {
         toolbar: {
           container: `#${toolbarId}`,
           handlers: {
-            bold: function () {
-              const selection = quill.getSelection();
-
-              if (!selection) {
-                return;
-              }
-
-              const selectionFormatting = quill.getFormat(
-                selection.index,
-                selection.length,
-              );
-
-              quill.format("bold", selectionFormatting.bold ? false : true);
-            },
-            italic: function () {
-              const selection = quill.getSelection();
-
-              if (!selection) {
-                return;
-              }
-
-              const selectionFormatting = quill.getFormat(
-                selection.index,
-                selection.length,
-              );
-
-              quill.format("italic", selectionFormatting.italic ? false : true);
-            },
-            underline: function () {
-              const selection = quill.getSelection();
-
-              if (!selection) {
-                return;
-              }
-
-              const selectionFormatting = quill.getFormat(
-                selection.index,
-                selection.length,
-              );
-
-              quill.format(
-                "underline",
-                selectionFormatting.underline ? false : true,
-              );
-            },
-            strike: function () {
-              const selection = quill.getSelection();
-
-              if (!selection) {
-                return;
-              }
-
-              const selectionFormatting = quill.getFormat(
-                selection.index,
-                selection.length,
-              );
-
-              quill.format("strike", selectionFormatting.strike ? false : true);
-            },
+            bold: createToggleHandler(() => quill, "bold"),
+            italic: createToggleHandler(() => quill, "italic"),
+            underline: createToggleHandler(() => quill, "underline"),
+            strike: createToggleHandler(() => quill, "strike"),
+            list: createListHandler(() => quill),
+            blockquote: createToggleHandler(() => quill, "blockquote"),
+            "code-block": createToggleHandler(() => quill, "code-block"),
+            link: createLinkHandler(() => quill),
           },
         },
       },
@@ -181,9 +139,21 @@ const QuillEditor = ({
       ],
     });
 
+    const handleLinkClick = (e: MouseEvent) => {
+      const anchor = (e.target as HTMLElement).closest("a");
+
+      if (anchor?.href) {
+        e.preventDefault();
+        window.open(anchor.href, "_blank", "noopener,noreferrer");
+      }
+    };
+
+    editorContainer.addEventListener("click", handleLinkClick);
+
     setQuillEditor(quill);
 
     return () => {
+      editorContainer.removeEventListener("click", handleLinkClick);
       container.innerHTML = "";
 
       setQuillEditor(null);
@@ -195,6 +165,11 @@ const QuillEditor = ({
       id="quill-editor"
       ref={containerRef}
       className="h-fit placeholder-slate-500"
+      style={
+        colour
+          ? ({ "--ql-link-color": getColourHex(colour) } as React.CSSProperties)
+          : undefined
+      }
     ></div>
   );
 };
