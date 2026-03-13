@@ -4,7 +4,6 @@ import { Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Button } from "src/common/components/Button/Button";
 import { cn } from "src/common/utils/cn";
-import { getNavigationDay } from "src/common/utils/getNavigationDay";
 import { Icon } from "src/icons/components/Icon/Icon";
 import { JournalSettingsModal } from "src/journals/components/JournalSettingsModal/JournalSettingsModal";
 import type { Journal } from "src/journals/Journal.type";
@@ -87,11 +86,11 @@ export const JournalSelector = ({
             {journals.map((journal) => (
               <DropdownMenu.Item key={journal.id}>
                 <Link
-                  to="/$journalId/logbook/$dateString"
+                  to="/$journalId/notes"
                   params={{
                     journalId: journal.id,
-                    dateString: getNavigationDay(),
                   }}
+                  search={{ noteId: null }}
                   onClick={() => {
                     localStorage.setItem("lastUsedJournalId", journal.id);
                     setIsOpen(false);

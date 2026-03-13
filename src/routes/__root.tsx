@@ -1,7 +1,6 @@
 import { createRootRoute, Navigate, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import isAuthenticated from "src/Users/utils/isAuthenticated";
-import { getNavigationDay } from "src/common/utils/getNavigationDay";
 import { useNavigateToLastUsedJournal } from "src/journals/hooks/useGetLastUsedJournal";
 
 const NotFoundComponent = () => {
@@ -21,8 +20,9 @@ const NotFoundComponent = () => {
 
   return (
     <Navigate
-      to="/$journalId/logbook/$dateString"
-      params={{ journalId: lastUsedJournal.id, dateString: getNavigationDay() }}
+      to="/$journalId/notes"
+      params={{ journalId: lastUsedJournal.id }}
+      search={{ noteId: null }}
       replace={true}
     />
   );
