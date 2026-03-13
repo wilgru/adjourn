@@ -63,12 +63,7 @@ export const NoteMultiSelect = ({
       <DropdownMenu.Root>
         <DropdownMenu.Trigger asChild>
           <div>
-            <Button
-              variant="ghost"
-              size="sm"
-              colour={colour}
-              iconName="paperclip"
-            />
+            <Button variant="ghost" size="sm" colour={colour} iconName="plus" />
           </div>
         </DropdownMenu.Trigger>
 

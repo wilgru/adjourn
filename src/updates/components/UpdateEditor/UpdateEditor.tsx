@@ -137,11 +137,11 @@ export const UpdateEditor = ({
           tintClasses.card,
         )}
       >
-        <div className="flex items-center justify-between gap-3 flex-wrap">
-          <NoteMultiSelect
-            selectedNotes={(editedUpdate.notes ?? []) as Note[]}
+        <div className="flex items-center justify-between flex-wrap">
+          <QuillFormattingToolbar
+            toolbarId={toolbarId}
+            toolbarFormatting={toolbarFormatting}
             colour={resolvedColour}
-            onChange={(notes) => onUpdateField({ notes })}
           />
 
           <div className="flex gap-1.5 items-center">
@@ -172,12 +172,6 @@ export const UpdateEditor = ({
           </div>
         </div>
 
-        <QuillFormattingToolbar
-          toolbarId={toolbarId}
-          toolbarFormatting={toolbarFormatting}
-          colour={resolvedColour}
-        />
-
         <QuillEditor
           toolbarId={toolbarId}
           value={editedUpdate.content}
@@ -188,32 +182,40 @@ export const UpdateEditor = ({
           }
         />
 
-        <div className="flex items-center gap-2 pt-1">
-          <Button
-            size="sm"
-            variant="block"
+        <div className="flex items-center justify-between flex-wrap">
+          <NoteMultiSelect
+            selectedNotes={(editedUpdate.notes ?? []) as Note[]}
             colour={resolvedColour}
-            onClick={onDone}
-          >
-            Done
-          </Button>
-          <Button
-            size="sm"
-            variant="ghost"
-            colour={colours.red}
-            onClick={onCancelEdit}
-          >
-            Cancel
-          </Button>
-          {editedUpdate.id && (
+            onChange={(notes) => onUpdateField({ notes })}
+          />
+
+          <div className="flex items-center gap-2">
             <Button
               size="sm"
               variant="ghost"
               colour={colours.red}
-              iconName="trash"
-              onClick={onDelete}
-            />
-          )}
+              onClick={onCancelEdit}
+            >
+              Cancel
+            </Button>
+            <Button
+              size="sm"
+              variant="block"
+              colour={resolvedColour}
+              onClick={onDone}
+            >
+              Done
+            </Button>
+            {editedUpdate.id && (
+              <Button
+                size="sm"
+                variant="ghost"
+                colour={colours.red}
+                iconName="trash"
+                onClick={onDelete}
+              />
+            )}
+          </div>
         </div>
       </div>
     );
@@ -228,36 +230,40 @@ export const UpdateEditor = ({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="flex flex-wrap gap-2 items-center">
-        {(editedUpdate.notes ?? []).length === 0 ? (
-          <span className="text-xs text-slate-400 italic">No notes attached</span>
-        ) : (
-          (editedUpdate.notes as Note[]).map((note) => (
-            <button
-              key={note.id}
-              onClick={() =>
-                navigate({
-                  to: `/${journalId ?? ""}/notes`,
-                  search: { noteId: note.id },
-                })
-              }
-              className={cn(
-                "flex items-center gap-1 px-2 py-0.5 text-xs rounded-full transition-colors",
-                tintClasses.notePill,
-              )}
-            >
-              {note.title ?? "Untitled Note"}
-            </button>
-          ))
-        )}
-      </div>
-
       <QuillViewer content={editedUpdate.content ?? new Delta()} />
 
       <div className="flex items-center justify-between">
-        <p className={cn("text-xs", tintClasses.meta)}>
-          {editedUpdate.created?.format("h:mm a")}
-        </p>
+        <div className="flex items-center gap-2">
+          <div className="flex flex-wrap gap-2 items-center">
+            {(editedUpdate.notes ?? []).length === 0 ? (
+              <span className="text-xs text-slate-400 italic">
+                No notes attached
+              </span>
+            ) : (
+              (editedUpdate.notes as Note[]).map((note) => (
+                <button
+                  key={note.id}
+                  onClick={() =>
+                    navigate({
+                      to: `/${journalId ?? ""}/notes`,
+                      search: { noteId: note.id },
+                    })
+                  }
+                  className={cn(
+                    "flex items-center gap-1 px-2 py-0.5 text-xs rounded-full transition-colors",
+                    tintClasses.notePill,
+                  )}
+                >
+                  {note.title ?? "Untitled Note"}
+                </button>
+              ))
+            )}
+          </div>
+
+          <p className={cn("text-xs", tintClasses.meta)}>
+            {editedUpdate.created?.format("h:mm a")}
+          </p>
+        </div>
 
         <div
           className={cn(
