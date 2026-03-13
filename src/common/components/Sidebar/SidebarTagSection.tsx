@@ -1,15 +1,21 @@
 import * as Dialog from "@radix-ui/react-dialog";
 import { useState } from "react";
+import { colours } from "src/colours/colours.constant";
 import { Button } from "src/common/components/Button/Button";
 import { CreateTagModal } from "src/tags/components/CreateTagModal/CreateTagModal";
+import { DeleteTagGroupModal } from "src/tags/components/DeleteTagGroupModal/DeleteTagGroupModal";
+import type { Colour } from "src/colours/Colour.type";
+import type { TagGroup } from "src/tags/Tag.type";
 
 export const SidebarTagSection = ({
   title,
-  tagGroupId,
+  tagGroup,
+  colour = colours.orange,
   children,
 }: {
   title: string;
-  tagGroupId?: string;
+  tagGroup?: TagGroup;
+  colour?: Colour;
   children: React.ReactNode;
 }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -25,19 +31,38 @@ export const SidebarTagSection = ({
           <h1 className="font-title text-slate-400 text-md">{title}</h1>
 
           <Dialog.Root>
-            <Dialog.Trigger asChild>
-              {isHovered && (
+            {isHovered && (
+              <Dialog.Trigger asChild>
                 <Button
                   className="mb-1"
                   variant="ghost-strong"
                   size="xs"
                   iconName="plus"
+                  colour={colour}
                 />
-              )}
-            </Dialog.Trigger>
+              </Dialog.Trigger>
+            )}
 
-            <CreateTagModal tagGroupId={tagGroupId} />
+            <CreateTagModal tagGroupId={tagGroup?.id} />
           </Dialog.Root>
+
+          {tagGroup && (
+            <Dialog.Root>
+              {isHovered && (
+                <Dialog.Trigger asChild>
+                  <Button
+                    className="mb-1"
+                    variant="ghost-strong"
+                    size="xs"
+                    iconName="trash"
+                    colour={colour}
+                  />
+                </Dialog.Trigger>
+              )}
+
+              <DeleteTagGroupModal tagGroup={tagGroup} />
+            </Dialog.Root>
+          )}
         </div>
         {children}
       </div>

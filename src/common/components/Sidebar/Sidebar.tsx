@@ -79,7 +79,7 @@ export const Sidebar = () => {
             />
           </section>
 
-          <SidebarTagSection title={"Tags"}>
+          <SidebarTagSection title={"Tags"} colour={currentJournal.colour}>
             {ungroupedTags.map((tag) => (
               <NavItem
                 iconName={tag.icon}
@@ -94,7 +94,8 @@ export const Sidebar = () => {
           {tagGroups.map((tagGroup) => (
             <SidebarTagSection
               title={tagGroup.title}
-              tagGroupId={tagGroup.id}
+              tagGroup={tagGroup}
+              colour={currentJournal.colour}
               key={tagGroup.id}
             >
               <div className="flex flex-col gap-1 mt-1">
