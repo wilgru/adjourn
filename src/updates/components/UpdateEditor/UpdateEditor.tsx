@@ -237,8 +237,7 @@ export const UpdateEditor = ({
               key={note.id}
               onClick={() =>
                 navigate({
-                  to: `/$journalId/notes`,
-                  params: { journalId: journalId ?? "" },
+                  to: `/${journalId ?? ""}/notes`,
                   search: { noteId: note.id },
                 })
               }
