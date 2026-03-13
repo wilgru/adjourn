@@ -1,15 +1,3 @@
-import {
-  CodeBlock,
-  LinkSimple,
-  ListBullets,
-  ListNumbers,
-  Quotes,
-  TextB,
-  TextItalic,
-  TextStrikethrough,
-  TextUnderline,
-} from "@phosphor-icons/react";
-import * as ToggleGroup from "@radix-ui/react-toggle-group";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import dayjs from "dayjs";
 import debounce from "debounce";
@@ -17,12 +5,14 @@ import { useEffect, useRef, useState } from "react";
 import { colours } from "src/colours/colours.constant";
 import { Button } from "src/common/components/Button/Button";
 import { QuillEditor } from "src/common/components/QuillEditor/QuillEditor";
-import { QuillToolbarButton } from "src/common/components/QuillToolbarButton/QuillToolbarButton";
+import { QuillFormattingToolbar } from "src/common/components/QuillFormattingToolbar/QuillFormattingToolbar";
 import { Toggle } from "src/common/components/Toggle/Toggle";
 import { useCreateNote } from "src/notes/hooks/useCreateNote";
 import { useDeleteNote } from "src/notes/hooks/useDeleteNote";
 import { useUpdateNote } from "src/notes/hooks/useUpdateNote";
 import { useCreateTask } from "src/tasks/hooks/useCreateTask";
+import { UpdateEditor } from "src/updates/components/UpdateEditor/UpdateEditor";
+import { useGetUpdates } from "src/updates/hooks/useGetUpdates";
 import { TagMultiSelect } from "../../../tags/components/TagMultiSelect/TagMultiSelect";
 import { TaskEditor } from "../../../tasks/components/TaskEditor/TaskEditor";
 import type { StringMap } from "quill";
@@ -46,6 +36,7 @@ const NoteEditor = ({
   const { createTask } = useCreateTask();
   const { updateNote } = useUpdateNote();
   const { deleteNote } = useDeleteNote();
+  const { updates } = useGetUpdates({ noteId: note.id });
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -53,6 +44,7 @@ const NoteEditor = ({
   const [editedNote, setEditedNote] = useState<Note>(note);
   const [toolbarFormatting, setToolbarFormatting] = useState<StringMap>();
   const [updatedDateVisible, setUpdatedDateVisible] = useState<boolean>(false);
+  const [showNewUpdate, setShowNewUpdate] = useState(false);
 
   // Ref that always points to the latest save implementation so the debounced
   // function never closes over stale state.
@@ -77,6 +69,7 @@ const NoteEditor = ({
   useEffect(() => {
     debouncedSave.flush();
     setEditedNote(note);
+    setShowNewUpdate(false);
   }, [note]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Flush any pending debounced save when the component unmounts (navigation).
@@ -163,7 +156,7 @@ const NoteEditor = ({
               size="sm"
               variant="ghost"
               colour={colour}
-              onClick={() => {}}
+              onClick={() => setShowNewUpdate(true)}
               iconName="chatCenteredText"
             />
 
@@ -209,62 +202,11 @@ const NoteEditor = ({
         </div>
       )}
 
-      <div className="h-fit" id={QUILL_TOOLBAR_ID}>
-        <ToggleGroup.Root
-          className="font-medium text-sm flex"
-          type="multiple"
-          defaultValue={[]}
-          value={[
-            ...(toolbarFormatting?.bold ? ["bold"] : []),
-            ...(toolbarFormatting?.italic ? ["italic"] : []),
-            ...(toolbarFormatting?.underline ? ["underline"] : []),
-            ...(toolbarFormatting?.strike ? ["strike"] : []),
-            ...(toolbarFormatting?.list === "ordered" ? ["ordered"] : []),
-            ...(toolbarFormatting?.list === "bullet" ? ["bullet"] : []),
-            ...(toolbarFormatting?.align === "center" ? ["center"] : []),
-            ...(toolbarFormatting?.blockquote ? ["blockquote"] : []),
-            ...(toolbarFormatting?.["code-block"] ? ["code-block"] : []),
-            ...(toolbarFormatting?.link ? ["link"] : []),
-          ]}
-          aria-label="Text alignment"
-        >
-          <div className="ql-formats flex flex-row gap-1 pr-1 border-r-2 border-slate-100">
-            <QuillToolbarButton value="bold" colour={colour}>
-              <TextB size={16} weight="bold" />
-            </QuillToolbarButton>
-            <QuillToolbarButton value="italic" colour={colour}>
-              <TextItalic size={16} weight="bold" />
-            </QuillToolbarButton>
-            <QuillToolbarButton value="underline" colour={colour}>
-              <TextUnderline size={16} weight="bold" />
-            </QuillToolbarButton>
-            <QuillToolbarButton value="strike" colour={colour}>
-              <TextStrikethrough size={16} weight="bold" />
-            </QuillToolbarButton>
-          </div>
-
-          <div className="flex flex-row gap-1 px-1 pr-1 border-r-2 border-slate-100">
-            <QuillToolbarButton value="ordered" colour={colour}>
-              <ListNumbers size={16} weight="bold" />
-            </QuillToolbarButton>
-            <QuillToolbarButton value="bullet" colour={colour}>
-              <ListBullets size={16} weight="bold" />
-            </QuillToolbarButton>
-          </div>
-
-          <div className="flex flex-row gap-1 px-1 pr-1">
-            <QuillToolbarButton value="blockquote" colour={colour}>
-              <Quotes size={16} weight="bold" />
-            </QuillToolbarButton>
-            <QuillToolbarButton value="code-block" colour={colour}>
-              <CodeBlock size={16} weight="bold" />
-            </QuillToolbarButton>
-            <QuillToolbarButton value="link" colour={colour}>
-              <LinkSimple size={16} weight="bold" />
-            </QuillToolbarButton>
-          </div>
-        </ToggleGroup.Root>
-      </div>
+      <QuillFormattingToolbar
+        toolbarId={QUILL_TOOLBAR_ID}
+        toolbarFormatting={toolbarFormatting}
+        colour={colour}
+      />
 
       <QuillEditor
         key={editedNote.id}
@@ -276,6 +218,26 @@ const NoteEditor = ({
           setToolbarFormatting(selectionFormatting);
         }}
       />
+
+      {(updates.length > 0 || showNewUpdate) && (
+        <div className="flex flex-col gap-3 border-t-2 border-slate-100 pt-4">
+          <div className="flex items-center justify-between">
+            <h3 className="font-title text-lg text-slate-500">Updates</h3>
+          </div>
+
+          {showNewUpdate && (
+            <UpdateEditor
+              update={{ notes: [editedNote], tint: null }}
+              colour={colour}
+              onCancel={() => setShowNewUpdate(false)}
+            />
+          )}
+
+          {updates.map((upd) => (
+            <UpdateEditor key={upd.id} update={upd} colour={colour} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

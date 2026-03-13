@@ -4,7 +4,6 @@ import { colours } from "src/colours/colours.constant";
 import { isSideBarVisibleAtom } from "src/common/atoms/isSidebarVisibleAtom";
 import { Button } from "src/common/components/Button/Button";
 import { NavItem } from "src/common/components/NavItem/NavItem";
-import { getNavigationDay } from "src/common/utils/getNavigationDay";
 import { JournalSelector } from "src/journals/components/JournalSelector/JouranlSelector";
 import { useCurrentJournal } from "src/journals/hooks/useCurrentJournal";
 import { CreateTagGroupModal } from "src/tags/components/CreateTagGroupModal/CreateTagGroupModal";
@@ -62,7 +61,7 @@ export const Sidebar = () => {
               ghost
               iconName="chatCenteredText"
               title="Updates"
-              to={`/${journalId}/logbook/${getNavigationDay()}`}
+              to={`/${journalId}/updates`}
               colour={currentJournal.colour}
             />
 
