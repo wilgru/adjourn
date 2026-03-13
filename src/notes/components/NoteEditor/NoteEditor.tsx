@@ -53,10 +53,6 @@ const NoteEditor = ({
   const [toolbarFormatting, setToolbarFormatting] = useState<StringMap>();
   const [updatedDateVisible, setUpdatedDateVisible] = useState<boolean>(false);
 
-  useEffect(() => {
-    setEditedNote(note);
-  }, [note]);
-
   // Ref that always points to the latest save implementation so the debounced
   // function never closes over stale state.
   const saveRef = useRef<() => void>();
@@ -73,6 +69,14 @@ const NoteEditor = ({
   const debouncedSave = useRef(
     debounce(() => saveRef.current?.(), 500),
   ).current;
+
+  // When the selected note changes (NoteEditor stays mounted while the note
+  // prop switches), flush any pending save for the previous note first so
+  // edits aren't lost, then reset state to the new note.
+  useEffect(() => {
+    debouncedSave.flush();
+    setEditedNote(note);
+  }, [note]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Flush any pending debounced save when the component unmounts (navigation).
   useEffect(() => {
