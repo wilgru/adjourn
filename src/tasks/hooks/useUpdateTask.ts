@@ -25,9 +25,14 @@ export const useUpdateTask = (): UseUpdateTaskResponse => {
     taskId,
     updateTaskData,
   }: UpdateTaskProps): Promise<Task | undefined> => {
-    const rawUpdatedTask = await pb.collection("tasks").update(taskId, {
-      ...updateTaskData,
-    });
+    const rawUpdatedTask = await pb.collection("tasks").update(
+      taskId,
+      {
+        ...updateTaskData,
+        note: updateTaskData.note?.id ?? undefined,
+      },
+      { expand: "note" },
+    );
 
     return mapTask(rawUpdatedTask);
   };

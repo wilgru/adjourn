@@ -12,7 +12,8 @@ import {
 import * as ToggleGroup from "@radix-ui/react-toggle-group";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import debounce from "debounce";
+import { useEffect, useRef, useState } from "react";
 import { colours } from "src/colours/colours.constant";
 import { Button } from "src/common/components/Button/Button";
 import { QuillEditor } from "src/common/components/QuillEditor/QuillEditor";
@@ -53,9 +54,37 @@ const NoteEditor = ({
   const [toolbarFormatting, setToolbarFormatting] = useState<StringMap>();
   const [updatedDateVisible, setUpdatedDateVisible] = useState<boolean>(false);
 
+  // Ref that always points to the latest save implementation so the debounced
+  // function never closes over stale state.
+  const saveRef = useRef<() => void>();
+  saveRef.current = () => {
+    if (editedNote.id) {
+      updateNote({ noteId: editedNote.id, updateNoteData: editedNote });
+    } else {
+      createNote({ createNoteData: editedNote });
+    }
+    onSave?.();
+  };
+
+  // Stable debounced save – created once and reused across renders.
+  const debouncedSave = useRef(
+    debounce(() => saveRef.current?.(), 500),
+  ).current;
+
+  // When the selected note changes (NoteEditor stays mounted while the note
+  // prop switches), flush any pending save for the previous note first so
+  // edits aren't lost, then reset state to the new note.
   useEffect(() => {
+    debouncedSave.flush();
     setEditedNote(note);
-  }, [note]);
+  }, [note]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Flush any pending debounced save when the component unmounts (navigation).
+  useEffect(() => {
+    return () => {
+      debouncedSave.flush();
+    };
+  }, [debouncedSave]);
 
   const onCreateTask = async () => {
     await createTask({
@@ -72,35 +101,17 @@ const NoteEditor = ({
     });
   };
 
-  const onUpdateNote = async (updateNoteData: Partial<Note>) => {
-    setEditedNote((currentEditedNote) => {
-      const newNoteData: Note = {
-        ...currentEditedNote,
-        ...updateNoteData,
-        updated: dayjs(),
-      };
-
-      return newNoteData;
-    });
-
-    const newNoteData = {
-      ...editedNote,
+  const onUpdateNote = (updateNoteData: Partial<Note>) => {
+    setEditedNote((currentEditedNote) => ({
+      ...currentEditedNote,
       ...updateNoteData,
-    };
-
-    if (editedNote.id) {
-      await updateNote({
-        noteId: editedNote.id,
-        updateNoteData: newNoteData,
-      });
-    } else {
-      createNote({ createNoteData: newNoteData });
-    }
-
-    onSave?.();
+      updated: dayjs(),
+    }));
+    debouncedSave();
   };
 
   const onDeleteNote = async () => {
+    debouncedSave.clear();
     await deleteNote({ noteId: editedNote.id });
 
     navigate({

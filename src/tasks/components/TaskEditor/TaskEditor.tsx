@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
-import { useState } from "react";
+import debounce from "debounce";
+import { useEffect, useRef, useState } from "react";
 import { colours } from "src/colours/colours.constant";
 import { Button } from "src/common/components/Button/Button";
 import { cn } from "src/common/utils/cn";
@@ -37,33 +38,45 @@ export const TaskEditor = ({ task, onSave }: TaskEditorProps) => {
 
   const [editedTask, setEditedTask] = useState<Task>(getInitialTask(task));
 
-  // const initialTask = useMemo(() => getInitialTask(task), [task]);
-
-  const onUpdateTask = async (updateTaskData?: Partial<Task>) => {
+  // Ref that always points to the latest save implementation so the debounced
+  // function never closes over stale state.
+  const saveRef = useRef<() => void>();
+  saveRef.current = () => {
     if (!editedTask.title && !editedTask.description && !editedTask.link) {
       deleteTask({ taskId: editedTask.id });
+      return;
     }
 
-    setEditedTask((currentEditedTask) => {
-      const newTaskData = {
-        ...currentEditedTask,
-        ...updateTaskData,
-        updated: dayjs(),
-      };
-
-      return newTaskData;
-    });
-
     if (editedTask.id) {
-      await updateTask({
-        taskId: editedTask.id,
-        updateTaskData: editedTask,
-      });
+      updateTask({ taskId: editedTask.id, updateTaskData: editedTask });
     } else {
-      await createTask({ createTaskData: editedTask });
+      createTask({ createTaskData: editedTask });
     }
 
     onSave?.();
+  };
+
+  // Stable debounced save – created once and reused across renders.
+  const debouncedSave = useRef(
+    debounce(() => saveRef.current?.(), 500),
+  ).current;
+
+  // Flush any pending debounced save when the component unmounts (navigation).
+  useEffect(() => {
+    return () => {
+      debouncedSave.flush();
+    };
+  }, [debouncedSave]);
+
+  // const initialTask = useMemo(() => getInitialTask(task), [task]);
+
+  const onUpdateTask = (updateTaskData?: Partial<Task>) => {
+    setEditedTask((currentEditedTask) => ({
+      ...currentEditedTask,
+      ...updateTaskData,
+      updated: dayjs(),
+    }));
+    debouncedSave();
   };
 
   return (
