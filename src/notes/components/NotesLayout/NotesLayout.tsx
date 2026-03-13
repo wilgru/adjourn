@@ -7,7 +7,8 @@ import { groupNotes } from "src/notes/utils/groupNotes";
 import { NotesList } from "../NotesList/NotesList";
 import type { Colour } from "src/colours/Colour.type";
 import type { Note, NotesGroup } from "src/notes/Note.type";
-import type { TagBadge } from "src/tags/Tag.type";
+import { getDisplayUrl } from "src/tags/utils/getDisplayUrl";
+import type { TagLink } from "src/tags/Tag.type";
 
 type NotesLayoutProps = {
   title: string;
@@ -16,7 +17,7 @@ type NotesLayoutProps = {
   selectedNote: Note | null;
   showNoteCreateTimeOnly?: boolean;
   description: string | null;
-  links?: TagBadge[];
+  links?: TagLink[];
   prefillNewNoteData?: Partial<Note>;
   groupNotesBy?: "created" | "tag";
   groupSortDirection?: "asc" | "desc";
@@ -57,7 +58,7 @@ export const NotesLayout = ({
   return (
     <div className="h-full w-full min-w-0 pb-16 flex">
       <div className="h-full w-80 px-6 flex flex-col gap-6 overflow-y-scroll border-r-2 border-slate-100">
-        {(description ?? links) && (
+        {(description || (links && links.length > 0)) && (
           <div className="bg-slate-50 p-4 rounded-xl flex flex-col gap-2">
             {description && (
               <p className="text-sm text-slate-500">{description}</p>
@@ -70,12 +71,14 @@ export const NotesLayout = ({
                   href={link.link}
                   target="_blank"
                   className={cn(
-                    "flex flex-row items-center gap-2 text-sm rounded-full hover:underline",
+                    "flex flex-row items-center gap-2 text-sm rounded-full hover:underline min-w-0",
                     colour.text,
                   )}
                 >
                   <Icon iconName="link" size="sm" />
-                  {link.title}
+                  <span className="truncate">
+                    {link.title || getDisplayUrl(link.link)}
+                  </span>
                 </a>
               ))}
           </div>

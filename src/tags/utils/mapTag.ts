@@ -10,7 +10,7 @@ export const mapTag = (tag: RecordModel): Tag => {
     icon: tag.icon,
     description: tag.description ?? null,
     noteCount: tag.totalNotes,
-    badges: tag.badges || [],
+    links: tag.links || [],
     groupBy: tag.groupBy,
     sortBy: tag.sortBy ?? "created",
     sortDirection: tag.sortDirection ?? "asc",

@@ -50,7 +50,7 @@ export const TagMultiSelect = ({
       createTagData: {
         name: search.trim(),
         description: null,
-        badges: [],
+        links: [],
         tagGroupId: null,
         colour: colours.orange,
         icon: "tag",

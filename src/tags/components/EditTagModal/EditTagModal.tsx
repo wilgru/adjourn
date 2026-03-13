@@ -7,10 +7,10 @@ import { Input } from "src/common/components/Input/Input";
 import { Label } from "src/common/components/Label/Label";
 import IconPicker from "src/icons/components/IconPicker/IconPicker";
 import { generateId } from "src/pocketbase/utils/generateId";
-import { MultiBadgeInput } from "src/tags/components/MultiBadgeInput/MultiBadgeInput";
+import { MultiLinkInput } from "src/tags/components/MultiLinkInput/MultiLinkInput";
 import { useUpdateTag } from "src/tags/hooks/useUpdateTag";
 import { DeleteTagModal } from "../DeleteTagModal/DeleteTagModal";
-import type { Tag, TagBadge } from "src/tags/Tag.type";
+import type { Tag, TagLink } from "src/tags/Tag.type";
 
 type EditTagModalProps = {
   tag: Tag;
@@ -31,31 +31,31 @@ export const EditTagModal = ({ tag }: EditTagModalProps) => {
         tagId: editedTag.id,
         updateTagData: {
           ...editedTag,
-          badges: editedTag.badges.filter((badge) => badge.title.trim() !== ""),
+          links: editedTag.links.filter((link) => link.link.trim() !== ""),
         },
       });
     }
   };
 
-  const onAddBadge = () => {
+  const onAddLink = () => {
     setEditedTag((currentTagToEdit) => {
       return {
         ...currentTagToEdit,
-        badges: [
-          ...currentTagToEdit.badges,
-          { id: generateId(), title: "", link: "" },
+        links: [
+          ...currentTagToEdit.links,
+          { id: generateId(), title: undefined, link: "" },
         ],
       };
     });
   };
 
-  const onEditBadges = (updatedBadge: TagBadge) => {
+  const onEditLinks = (updatedLink: TagLink) => {
     setEditedTag((currentTagToEdit) => {
-      const updatedBadges = currentTagToEdit.badges.map((badge) =>
-        badge.id === updatedBadge.id ? updatedBadge : badge,
+      const updatedLinks = currentTagToEdit.links.map((link) =>
+        link.id === updatedLink.id ? updatedLink : link,
       );
 
-      return { ...currentTagToEdit, badges: updatedBadges };
+      return { ...currentTagToEdit, links: updatedLinks };
     });
   };
 
@@ -97,14 +97,14 @@ export const EditTagModal = ({ tag }: EditTagModalProps) => {
 
           <div>
             <Label
-              title="Badges"
-              tooltipContent="You can add badges to highlight important information at the top of this tag's page"
+              title="Links"
+              tooltipContent="You can add links that will appear underneath this tag's description"
             />
 
-            <MultiBadgeInput
-              badges={editedTag.badges}
-              onChange={onEditBadges}
-              onAddBadge={onAddBadge}
+            <MultiLinkInput
+              links={editedTag.links}
+              onChange={onEditLinks}
+              onAddLink={onAddLink}
             />
           </div>
 

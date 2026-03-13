@@ -33,7 +33,7 @@ export const useUpdateTag = (): UseUpdateTagResponse => {
         colour: updateTagData.colour.name,
       },
       {
-        expand: "badges",
+        expand: "links",
       },
     );
 

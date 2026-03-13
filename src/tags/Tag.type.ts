@@ -9,10 +9,10 @@ export type TagGroup = {
   updated: Dayjs;
 };
 
-export type TagBadge = {
+export type TagLink = {
   id: string;
-  title: string;
-  link?: string;
+  title?: string;
+  link: string;
 };
 
 export type Tag = {
@@ -25,7 +25,7 @@ export type Tag = {
   groupBy: "created" | "tag" | null;
   sortBy: "alphabetical" | "created";
   sortDirection: "asc" | "desc";
-  badges: TagBadge[];
+  links: TagLink[];
   tagGroupId: string | null;
   created: Dayjs;
   updated: Dayjs;

@@ -4,7 +4,7 @@ import { colours } from "src/colours/colours.constant";
 import { ColourPicker } from "src/colours/components/ColourPicker/ColourPicker";
 import { Button } from "src/common/components/Button/Button";
 import { Input } from "src/common/components/Input/Input";
-// import { MultiBadgeInput } from "src/components/dataEntry/MultiBadgeInput/MultiBadgeInput";
+// import { MultiLinkInput } from "src/tags/components/MultiLinkInput/MultiLinkInput";
 import { Label } from "src/common/components/Label/Label";
 import IconPicker from "src/icons/components/IconPicker/IconPicker";
 import { useCreateTag } from "src/tags/hooks/useCreateTag";
@@ -21,7 +21,7 @@ const getInitialTag = (tagGroupId?: string): NewTag => ({
   description: null,
   colour: colours.orange,
   icon: "tag",
-  badges: [],
+  links: [],
   tagGroupId: tagGroupId ?? null,
   sortBy: "created",
   sortDirection: "asc",
@@ -35,30 +35,30 @@ export const CreateTagModal = ({ tagGroupId }: CreateTagModalProps) => {
     createTag({
       createTagData: {
         ...editedTag,
-        badges: editedTag.badges.filter((badge) => badge.title.trim() !== ""),
+        links: editedTag.links.filter((link) => link.link.trim() !== ""),
       },
     });
   };
 
-  // const onAddBadge = () => {
+  // const onAddLink = () => {
   //   setEditedTag((currentTagToEdit) => {
   //     return {
   //       ...currentTagToEdit,
-  //       badges: [
-  //         ...currentTagToEdit.badges,
-  //         { id: generateId(), title: "", link: "" },
+  //       links: [
+  //         ...currentTagToEdit.links,
+  //         { id: generateId(), title: undefined, link: "" },
   //       ],
   //     };
   //   });
   // };
 
-  // const onEditBadges = (updatedBadge: TagBadge) => {
+  // const onEditLinks = (updatedLink: TagLink) => {
   //   setEditedTag((currentTagToEdit) => {
-  //     const updatedBadges = currentTagToEdit.badges.map((badge) =>
-  //       badge.id === updatedBadge.id ? updatedBadge : badge
+  //     const updatedLinks = currentTagToEdit.links.map((link) =>
+  //       link.id === updatedLink.id ? updatedLink : link
   //     );
 
-  //     return { ...currentTagToEdit, badges: updatedBadges };
+  //     return { ...currentTagToEdit, links: updatedLinks };
   //   });
   // };
 
@@ -99,14 +99,14 @@ export const CreateTagModal = ({ tagGroupId }: CreateTagModalProps) => {
 
           {/* <div>
             <Label
-              title="Badges"
-              tooltipContent="You can add badges to highlight important information at the top of this tag's page"
+              title="Links"
+              tooltipContent="You can add links to highlight important information at the top of this tag's page"
             />
 
-            <MultiBadgeInput
-              badges={editedTag.badges}
-              onChange={onEditBadges}
-              onAddBadge={onAddBadge}
+            <MultiLinkInput
+              links={editedTag.links}
+              onChange={onEditLinks}
+              onAddLink={onAddLink}
             />
           </div> */}
 
