@@ -2,16 +2,19 @@ import { Link } from "@tanstack/react-router";
 import dayjs from "dayjs";
 import { useAtom } from "jotai";
 import { useEffect, useState } from "react";
+import { colours } from "src/colours/colours.constant";
 import { Button } from "src/common/components/Button/Button";
 import { cn } from "src/common/utils/cn";
 import { getNavigationDay } from "src/common/utils/getNavigationDay";
 import { useGetDatesWithNotes } from "src/notes/hooks/useGetDatesWithNotes";
 import { jumpToDateAtom } from "src/tableOfContents/atoms/jumpToDateAtom";
+import type { Colour } from "src/colours/Colour.type";
 import type { Dayjs } from "dayjs";
 import type { DateWithNotes } from "src/notes/Note.type";
 
 type CalendarProps = {
   journalId: string;
+  colour?: Colour;
 };
 
 type CalendarDay = {
@@ -37,6 +40,7 @@ const MONTH_NAMES = [
 type CalendarItem = {
   key: number;
   journalId: string;
+  colour: Colour;
   datesWithNotes: DateWithNotes[];
   today: Dayjs;
   calendarDay: CalendarDay;
@@ -46,6 +50,7 @@ type CalendarItem = {
 const CalendarItem = ({
   key,
   journalId,
+  colour,
   datesWithNotes,
   today,
   calendarDay,
@@ -70,14 +75,17 @@ const CalendarItem = ({
         }}
         key={key}
         className={cn(
-          "h-6 w-6 text-sm text-center leading-6 rounded-full cursor-pointer select-none hover:bg-orange-200 hover:text-orange-500",
+          "h-6 w-6 text-sm text-center leading-6 rounded-full cursor-pointer select-none",
+          // hover:bg-*-100 and hover:text-*-500 variants are safelisted in tailwind.config.js
+          `hover:${colour.backgroundPill}`,
+          `hover:${colour.textPill}`,
           !calendarDay.isCurrentMonth && "text-slate-400 bg-transparent",
         )}
-        activeProps={{ className: "bg-orange-200 text-orange-500" }}
+        activeProps={{ className: cn(colour.backgroundPill, colour.textPill) }}
         inactiveProps={{
           className: cn(
             calendarDay.day.isSame(today, "day")
-              ? "text-orange-500"
+              ? colour.textPill
               : calendarDay.isCurrentMonth && "text-slate-700",
           ),
         }}
@@ -91,7 +99,7 @@ const CalendarItem = ({
         <div
           className={cn(
             "h-1 w-1 rounded-full",
-            dateWithNotes.hasBookmarked ? "bg-orange-400" : "bg-slate-400",
+            dateWithNotes.hasBookmarked ? colour.background : "bg-slate-400",
           )}
         />
       )}
@@ -99,7 +107,7 @@ const CalendarItem = ({
   );
 };
 
-export const Calendar = ({ journalId }: CalendarProps): JSX.Element => {
+export const Calendar = ({ journalId, colour = colours.orange }: CalendarProps): JSX.Element => {
   const { datesWithNotes } = useGetDatesWithNotes();
   const [jumpToDate, setJumpToDate] = useAtom(jumpToDateAtom);
 
@@ -242,6 +250,7 @@ export const Calendar = ({ journalId }: CalendarProps): JSX.Element => {
           <CalendarItem
             key={index}
             journalId={journalId}
+            colour={colour}
             calendarDay={calendarDay}
             datesWithNotes={datesWithNotes}
             today={today}
