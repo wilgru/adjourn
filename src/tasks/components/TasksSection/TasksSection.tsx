@@ -22,7 +22,7 @@ export const TasksSection = ({ taskGroup, colour }: TasksSectionProps) => {
     return (
       <section id="no-note">
         <div className="flex flex-col gap-2 p-4 rounded-2xl bg-gray-50">
-          <p className="text-sm text-slate-400 font-medium">{taskGroup.title}</p>
+          <p className="text-lg text-slate-400 font-title">{taskGroup.title}</p>
 
           {taskGroup.tasks.length === 0 && (
             <div className="w-full p-3 flex flex-col gap-3 items-center">
@@ -57,7 +57,7 @@ export const TasksSection = ({ taskGroup, colour }: TasksSectionProps) => {
         onMouseOver={() => setIsTitleHovered(true)}
         onMouseLeave={() => setIsTitleHovered(false)}
       >
-        <h2 className="font-title text-4xl">{taskGroup.title}</h2>
+        <h2 className="font-title text-3xl">{taskGroup.title}</h2>
 
         {isTitleHovered && journalId && (
           <div className="mb-2">
@@ -78,24 +78,6 @@ export const TasksSection = ({ taskGroup, colour }: TasksSectionProps) => {
       </div>
 
       <div className="flex flex-col gap-1.5 p-1">
-        {taskGroup.tasks.length === 0 && (
-          <div className="w-full p-3 flex flex-col gap-3 items-center rounded-lg bg-gray-50">
-            <p className="text-slate-500">No task yet</p>
-
-            <div>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full"
-                iconName="plusSquare"
-                onClick={() => {}}
-              >
-                Create your first task
-              </Button>
-            </div>
-          </div>
-        )}
-
         {taskGroup.tasks.map((task) => (
           <TaskEditor key={task.id} task={task} onSave={() => {}} />
         ))}
