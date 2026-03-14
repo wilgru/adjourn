@@ -4,10 +4,10 @@ import { cn } from "src/common/utils/cn";
 import { Icon } from "src/icons/components/Icon/Icon";
 import NoteEditor from "src/notes/components/NoteEditor/NoteEditor";
 import { groupNotes } from "src/notes/utils/groupNotes";
+import { getDisplayUrl } from "src/tags/utils/getDisplayUrl";
 import { NotesList } from "../NotesList/NotesList";
 import type { Colour } from "src/colours/Colour.type";
 import type { Note, NotesGroup } from "src/notes/Note.type";
-import { getDisplayUrl } from "src/tags/utils/getDisplayUrl";
 import type { TagLink } from "src/tags/Tag.type";
 
 type NotesLayoutProps = {

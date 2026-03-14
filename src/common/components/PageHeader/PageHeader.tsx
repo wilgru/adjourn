@@ -1,8 +1,8 @@
 import { colours } from "src/colours/colours.constant";
 import { cn } from "src/common/utils/cn";
 import { Icon } from "src/icons/components/Icon/Icon";
-import type { Colour } from "src/colours/Colour.type";
 import { getDisplayUrl } from "src/tags/utils/getDisplayUrl";
+import type { Colour } from "src/colours/Colour.type";
 import type { TagLink } from "src/tags/Tag.type";
 
 type PageHeaderProps = {

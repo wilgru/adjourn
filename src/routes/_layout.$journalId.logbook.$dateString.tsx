@@ -2,10 +2,12 @@ import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import dayjs from "dayjs";
 import { useSetAtom } from "jotai";
 import isAuthenticated from "src/Users/utils/isAuthenticated";
+import { colours } from "src/colours/colours.constant";
 import { Button } from "src/common/components/Button/Button";
 import { Calendar } from "src/common/components/Calendar/Calendar";
 import { Toolbar } from "src/common/components/Toolbar/Toolbar";
 import { getNavigationDay } from "src/common/utils/getNavigationDay";
+import { useCurrentJournal } from "src/journals/hooks/useCurrentJournal";
 import { jumpToDateAtom } from "src/tableOfContents/atoms/jumpToDateAtom";
 
 export const Route = createFileRoute("/_layout/$journalId/logbook/$dateString")(
@@ -26,8 +28,9 @@ export const Route = createFileRoute("/_layout/$journalId/logbook/$dateString")(
 );
 
 function LogbookComponent() {
-  const { journalId } = Route.useParams();
-  const { dateString } = Route.useParams();
+  const { journalId, dateString } = Route.useParams();
+  const { currentJournal } = useCurrentJournal();
+  const colour = currentJournal?.colour ?? colours.orange;
 
   const navigate = useNavigate();
   const setJumpToAtom = useSetAtom(jumpToDateAtom);
@@ -41,7 +44,7 @@ function LogbookComponent() {
 
   return (
     <div className="h-full w-full flex flex-col items-center">
-      <Toolbar iconName="notebook" title={title}>
+      <Toolbar iconName="notebook" title={title} colour={colour}>
         <>
           <div>
             <Button
@@ -85,7 +88,7 @@ function LogbookComponent() {
         </>
       </Toolbar>
 
-      <Calendar journalId={journalId} />
+      <Calendar journalId={journalId} colour={colour} />
     </div>
   );
 }

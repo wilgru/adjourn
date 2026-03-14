@@ -29,7 +29,7 @@ const getGroup = (
 
       return [
         {
-          title: task.note?.title ?? "Untitled Note",
+          title: task.note?.title || "Untitled Note",
           relevantTaskData: {
             note: task.note,
           },
@@ -72,5 +72,11 @@ export function groupTasks(
     return acc;
   }, []);
 
-  return groupedTasks;
+  return groupedTasks.sort((a, b) => {
+    const aIsNoNote = a.relevantTaskData.note === null;
+    const bIsNoNote = b.relevantTaskData.note === null;
+    if (aIsNoNote && !bIsNoNote) return -1;
+    if (!aIsNoNote && bIsNoNote) return 1;
+    return 0;
+  });
 }

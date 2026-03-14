@@ -13,7 +13,9 @@ type JournalSettingsModalProps = {
   journal: Journal;
 };
 
-export const JournalSettingsModal = ({ journal }: JournalSettingsModalProps) => {
+export const JournalSettingsModal = ({
+  journal,
+}: JournalSettingsModalProps) => {
   const [editedJournal, setEditedJournal] = useState(journal);
   const { updateJournal, isUpdatingJournal } = useUpdateJournal();
 

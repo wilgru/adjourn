@@ -27,7 +27,9 @@ export const useDeleteTagGroup = (): UseDeleteTagGroupResponse => {
       ),
     );
 
-    const isTagGroupDeleted = await pb.collection("tagGroups").delete(tagGroupId);
+    const isTagGroupDeleted = await pb
+      .collection("tagGroups")
+      .delete(tagGroupId);
 
     if (isTagGroupDeleted) {
       return tagGroupId;

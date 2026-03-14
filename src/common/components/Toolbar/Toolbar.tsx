@@ -64,7 +64,7 @@ export const Toolbar = ({
               <Button
                 variant="block"
                 size="sm"
-                colour={colours.blue}
+                colour={colour}
                 iconName="user"
               />
             </div>

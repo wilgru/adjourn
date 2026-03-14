@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, Fragment } from "react";
 import { colours } from "src/colours/colours.constant";
 import { PageHeader } from "src/common/components/PageHeader/PageHeader";
 import TableOfContents from "src/tableOfContents/TableOfContents/TableOfContents";
@@ -33,10 +33,6 @@ export const TasksLayout = ({
 
   const groupedTasks = groupTasks(tasks, "note");
 
-  const secondaryBadges = useMemo(() => {
-    return [`${tasks.length} tasks`];
-  }, [tasks.length]);
-
   const tableOfContentItems = useMemo(() => {
     const noteTOCItems = groupedTasks.map((group) => {
       return {
@@ -51,17 +47,16 @@ export const TasksLayout = ({
   // FIXME: pb-16 is the height of the toolbar to fix issue with scrolling body getting cut off. Issue to do with not having a fixed height on consuming element and children elements before this one pushing this one down.
   return (
     <div className="h-full max-w-[1000px] w-full min-w-0 pb-16 flex items-center">
-      <div className="h-full w-full p-12 flex flex-col gap-14 overflow-y-scroll">
-        <PageHeader
-          colour={colour}
-          secondaryBadges={secondaryBadges}
-          description={description}
-        >
+      <div className="h-full w-full p-12 flex flex-col gap-6 overflow-y-scroll">
+        <PageHeader colour={colour} description={description}>
           {header}
         </PageHeader>
 
-        {groupedTasks.map((group) => (
-          <TasksSection taskGroup={group} colour={colour} />
+        {groupedTasks.map((group, index) => (
+          <Fragment key={group.relevantTaskData.note?.id ?? "no-note"}>
+            {index > 0 && <hr className="border-slate-200" />}
+            <TasksSection taskGroup={group} colour={colour} />
+          </Fragment>
         ))}
       </div>
 

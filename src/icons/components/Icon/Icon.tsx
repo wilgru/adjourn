@@ -29,6 +29,7 @@ import {
   Paperclip,
   Info,
   Notebook,
+  ArrowCircleRight,
 } from "@phosphor-icons/react";
 import { ChatCenteredText } from "@phosphor-icons/react/dist/ssr";
 import { icons } from "src/icons/icons.constant";
@@ -125,6 +126,8 @@ const Icon = ({
       return <ArrowArcLeft {...iconProps} />;
     case "arrowArcRight":
       return <ArrowArcRight {...iconProps} />;
+    case "arrowCircleRight":
+      return <ArrowCircleRight {...iconProps} />;
     case "info":
       return <Info {...iconProps} />;
     default:

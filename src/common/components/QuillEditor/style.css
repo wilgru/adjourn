@@ -19,6 +19,15 @@
   padding-left: 0;
 }
 
+#quill-editor ol {
+  padding-left: 0;
+}
+
+#quill-editor ol li {
+  font-size: 16px;
+  padding-left: 0;
+}
+
 #quill-editor blockquote {
   font-size: 16px;
   border-left: 2px solid #cbd5e1; /* slate-300. Tailwind v4 will let you use var(--color-slate-300) */
@@ -36,6 +45,12 @@
 
 #quill-editor .ql-editor {
   padding: 0;
+}
+
+#quill-editor a {
+  color: var(--ql-link-color, #f97316); /* falls back to orange-500 */
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 #quill-editor .ql-editora8a29e.ql-blank {

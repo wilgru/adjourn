@@ -1,27 +1,18 @@
-import {
-  CodeBlock,
-  LinkSimple,
-  ListBullets,
-  ListNumbers,
-  Quotes,
-  TextB,
-  TextItalic,
-  TextStrikethrough,
-  TextUnderline,
-} from "@phosphor-icons/react";
-import * as ToggleGroup from "@radix-ui/react-toggle-group";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import debounce from "debounce";
+import { useEffect, useRef, useState } from "react";
 import { colours } from "src/colours/colours.constant";
 import { Button } from "src/common/components/Button/Button";
 import { QuillEditor } from "src/common/components/QuillEditor/QuillEditor";
-import { QuillToolbarButton } from "src/common/components/QuillToolbarButton/QuillToolbarButton";
+import { QuillFormattingToolbar } from "src/common/components/QuillFormattingToolbar/QuillFormattingToolbar";
 import { Toggle } from "src/common/components/Toggle/Toggle";
 import { useCreateNote } from "src/notes/hooks/useCreateNote";
 import { useDeleteNote } from "src/notes/hooks/useDeleteNote";
 import { useUpdateNote } from "src/notes/hooks/useUpdateNote";
 import { useCreateTask } from "src/tasks/hooks/useCreateTask";
+import { UpdateEditor } from "src/updates/components/UpdateEditor/UpdateEditor";
+import { useGetUpdates } from "src/updates/hooks/useGetUpdates";
 import { TagMultiSelect } from "../../../tags/components/TagMultiSelect/TagMultiSelect";
 import { TaskEditor } from "../../../tasks/components/TaskEditor/TaskEditor";
 import type { StringMap } from "quill";
@@ -45,6 +36,7 @@ const NoteEditor = ({
   const { createTask } = useCreateTask();
   const { updateNote } = useUpdateNote();
   const { deleteNote } = useDeleteNote();
+  const { updates } = useGetUpdates({ noteId: note.id });
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -52,10 +44,40 @@ const NoteEditor = ({
   const [editedNote, setEditedNote] = useState<Note>(note);
   const [toolbarFormatting, setToolbarFormatting] = useState<StringMap>();
   const [updatedDateVisible, setUpdatedDateVisible] = useState<boolean>(false);
+  const [showNewUpdate, setShowNewUpdate] = useState(false);
 
+  // Ref that always points to the latest save implementation so the debounced
+  // function never closes over stale state.
+  const saveRef = useRef<() => void>();
+  saveRef.current = () => {
+    if (editedNote.id) {
+      updateNote({ noteId: editedNote.id, updateNoteData: editedNote });
+    } else {
+      createNote({ createNoteData: editedNote });
+    }
+    onSave?.();
+  };
+
+  // Stable debounced save – created once and reused across renders.
+  const debouncedSave = useRef(
+    debounce(() => saveRef.current?.(), 500),
+  ).current;
+
+  // When the selected note changes (NoteEditor stays mounted while the note
+  // prop switches), flush any pending save for the previous note first so
+  // edits aren't lost, then reset state to the new note.
   useEffect(() => {
+    debouncedSave.flush();
     setEditedNote(note);
-  }, [note]);
+    setShowNewUpdate(false);
+  }, [note]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Flush any pending debounced save when the component unmounts (navigation).
+  useEffect(() => {
+    return () => {
+      debouncedSave.flush();
+    };
+  }, [debouncedSave]);
 
   const onCreateTask = async () => {
     await createTask({
@@ -72,35 +94,17 @@ const NoteEditor = ({
     });
   };
 
-  const onUpdateNote = async (updateNoteData: Partial<Note>) => {
-    setEditedNote((currentEditedNote) => {
-      const newNoteData: Note = {
-        ...currentEditedNote,
-        ...updateNoteData,
-        updated: dayjs(),
-      };
-
-      return newNoteData;
-    });
-
-    const newNoteData = {
-      ...editedNote,
+  const onUpdateNote = (updateNoteData: Partial<Note>) => {
+    setEditedNote((currentEditedNote) => ({
+      ...currentEditedNote,
       ...updateNoteData,
-    };
-
-    if (editedNote.id) {
-      await updateNote({
-        noteId: editedNote.id,
-        updateNoteData: newNoteData,
-      });
-    } else {
-      createNote({ createNoteData: newNoteData });
-    }
-
-    onSave?.();
+      updated: dayjs(),
+    }));
+    debouncedSave();
   };
 
   const onDeleteNote = async () => {
+    debouncedSave.clear();
     await deleteNote({ noteId: editedNote.id });
 
     navigate({
@@ -112,8 +116,8 @@ const NoteEditor = ({
   };
 
   return (
-    <div className="flex flex-col gap-4 w-[1000px]">
-      <div className="flex flex-col gap-2 justify-between border-b-2 border-slate-100 pb-4">
+    <div className="flex flex-col items-center gap-4 w-[1000px]">
+      <div className="w-full flex flex-col gap-2 justify-between border-b-2 border-slate-100 pb-4">
         <textarea
           name="title"
           value={editedNote.title ?? ""}
@@ -152,7 +156,7 @@ const NoteEditor = ({
               size="sm"
               variant="ghost"
               colour={colour}
-              onClick={() => {}}
+              onClick={() => setShowNewUpdate(true)}
               iconName="chatCenteredText"
             />
 
@@ -191,79 +195,58 @@ const NoteEditor = ({
       </div>
 
       {note.tasks && note.tasks.length > 0 && (
-        <div className="flex flex-col gap-2 justify-between border-b-2 border-slate-100 pb-4">
+        <div className="w-full flex flex-col gap-2 justify-between border-b-2 border-slate-100 pb-4">
           {note.tasks.map((task) => (
             <TaskEditor key={task.id} task={task} />
           ))}
         </div>
       )}
 
-      <div className="h-fit" id={QUILL_TOOLBAR_ID}>
-        <ToggleGroup.Root
-          className="font-medium text-sm flex"
-          type="multiple"
-          defaultValue={[]}
-          value={[
-            ...(toolbarFormatting?.bold ? ["bold"] : []),
-            ...(toolbarFormatting?.italic ? ["italic"] : []),
-            ...(toolbarFormatting?.underline ? ["underline"] : []),
-            ...(toolbarFormatting?.strike ? ["strike"] : []),
-            ...(toolbarFormatting?.list === "ordered" ? ["ordered"] : []),
-            ...(toolbarFormatting?.list === "bullet" ? ["bullet"] : []),
-            ...(toolbarFormatting?.align === "center" ? ["center"] : []),
-            ...(toolbarFormatting?.blockquote ? ["blockquote"] : []),
-            ...(toolbarFormatting?.["code-block"] ? ["code-block"] : []),
-            ...(toolbarFormatting?.link ? ["link"] : []),
-          ]}
-          aria-label="Text alignment"
-        >
-          <div className="ql-formats flex flex-row gap-1 pr-1 border-r-2 border-slate-100">
-            <QuillToolbarButton value="bold" colour={colour}>
-              <TextB size={16} weight="bold" />
-            </QuillToolbarButton>
-            <QuillToolbarButton value="italic" colour={colour}>
-              <TextItalic size={16} weight="bold" />
-            </QuillToolbarButton>
-            <QuillToolbarButton value="underline" colour={colour}>
-              <TextUnderline size={16} weight="bold" />
-            </QuillToolbarButton>
-            <QuillToolbarButton value="strike" colour={colour}>
-              <TextStrikethrough size={16} weight="bold" />
-            </QuillToolbarButton>
-          </div>
-
-          <div className="flex flex-row gap-1 px-1 pr-1 border-r-2 border-slate-100">
-            <QuillToolbarButton value="ordered" colour={colour}>
-              <ListNumbers size={16} weight="bold" />
-            </QuillToolbarButton>
-            <QuillToolbarButton value="bullet" colour={colour}>
-              <ListBullets size={16} weight="bold" />
-            </QuillToolbarButton>
-          </div>
-
-          <div className="flex flex-row gap-1 px-1 pr-1">
-            <QuillToolbarButton value="blockquote" colour={colour}>
-              <Quotes size={16} weight="bold" />
-            </QuillToolbarButton>
-            <QuillToolbarButton value="code-block" colour={colour}>
-              <CodeBlock size={16} weight="bold" />
-            </QuillToolbarButton>
-            <QuillToolbarButton value="link" colour={colour}>
-              <LinkSimple size={16} weight="bold" />
-            </QuillToolbarButton>
-          </div>
-        </ToggleGroup.Root>
-      </div>
+      <QuillFormattingToolbar
+        toolbarId={QUILL_TOOLBAR_ID}
+        toolbarFormatting={toolbarFormatting}
+        colour={colour}
+      />
 
       <QuillEditor
         key={editedNote.id}
         toolbarId={QUILL_TOOLBAR_ID}
         value={editedNote.content}
+        colour={colour}
         onChange={(delta) => onUpdateNote({ content: delta })}
         onSelectedFormattingChange={(selectionFormatting: StringMap) => {
           setToolbarFormatting(selectionFormatting);
         }}
       />
+
+      {(updates.length > 0 || showNewUpdate) && (
+        <div className="w-full flex flex-col pt-4 pr-12">
+          {showNewUpdate && (
+            <UpdateEditor
+              update={{ notes: [editedNote], tint: null }}
+              colour={colour}
+              showNotes={false}
+              dateDisplay="date"
+              onCancel={() => setShowNewUpdate(false)}
+              onCreated={() => setShowNewUpdate(false)}
+            />
+          )}
+
+          {updates.length > 0 && (
+            <div className="flex flex-col relative">
+              {updates.map((upd) => (
+                <UpdateEditor
+                  key={upd.id}
+                  update={upd}
+                  colour={colour}
+                  showNotes={false}
+                  dateDisplay="date"
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

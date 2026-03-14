@@ -4,7 +4,6 @@ import { colours } from "src/colours/colours.constant";
 import { ColourPicker } from "src/colours/components/ColourPicker/ColourPicker";
 import { Button } from "src/common/components/Button/Button";
 import { Input } from "src/common/components/Input/Input";
-import { getNavigationDay } from "src/common/utils/getNavigationDay";
 import IconPicker from "src/icons/components/IconPicker/IconPicker";
 import { useCreateJournal } from "src/journals/hooks/useCreateJournal";
 import type { Colour } from "src/colours/Colour.type";
@@ -41,7 +40,7 @@ function RouteComponent() {
       return;
     }
 
-    navigate({ to: `/${createdJournal.id}/logbook/${getNavigationDay()}` });
+    navigate({ to: `/${createdJournal.id}/notes` });
   };
 
   return (

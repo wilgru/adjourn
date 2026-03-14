@@ -4,20 +4,15 @@ import { colours } from "src/colours/colours.constant";
 import { isSideBarVisibleAtom } from "src/common/atoms/isSidebarVisibleAtom";
 import { Button } from "src/common/components/Button/Button";
 import { NavItem } from "src/common/components/NavItem/NavItem";
-import { getNavigationDay } from "src/common/utils/getNavigationDay";
 import { JournalSelector } from "src/journals/components/JournalSelector/JouranlSelector";
-import { useCurrentJournalId } from "src/journals/hooks/useCurrentJournalId";
-import { useGetJournals } from "src/journals/hooks/useGetJournals";
+import { useCurrentJournal } from "src/journals/hooks/useCurrentJournal";
 import { CreateTagGroupModal } from "src/tags/components/CreateTagGroupModal/CreateTagGroupModal";
 import { useGetTagGroups } from "src/tags/hooks/useGetTagGroups";
 import { SidebarTagSection } from "./SidebarTagSection";
 
 export const Sidebar = () => {
-  const { journalId } = useCurrentJournalId();
+  const { journalId, currentJournal, journals } = useCurrentJournal();
   const { ungroupedTags, tagGroups } = useGetTagGroups();
-  const { journals } = useGetJournals();
-
-  const currentJournal = journals.find((journal) => journal.id === journalId);
 
   const setIsSidebarVisible = useSetAtom(isSideBarVisibleAtom);
 
@@ -35,6 +30,7 @@ export const Sidebar = () => {
             <Button
               variant="ghost"
               size="sm"
+              colour={currentJournal.colour}
               onClick={() => setIsSidebarVisible(false)}
               iconName="arrowLineLeft"
             />
@@ -51,7 +47,7 @@ export const Sidebar = () => {
               iconName="pencil"
               title="Notes"
               to={`/${journalId}/notes/`}
-              colour={colours.grey}
+              colour={currentJournal.colour}
             />
 
             <NavItem
@@ -59,15 +55,15 @@ export const Sidebar = () => {
               iconName="checkCircle"
               title="Tasks"
               to={`/${journalId}/tasks/`}
-              colour={colours.grey}
+              colour={currentJournal.colour}
             />
 
             <NavItem
               ghost
               iconName="chatCenteredText"
               title="Updates"
-              to={`/${journalId}/logbook/${getNavigationDay()}`}
-              colour={colours.grey}
+              to={`/${journalId}/updates`}
+              colour={currentJournal.colour}
             />
 
             <NavItem
