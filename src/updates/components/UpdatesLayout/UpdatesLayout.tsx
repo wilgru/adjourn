@@ -13,14 +13,17 @@ import type { Update } from "src/updates/Update.type";
 type UpdatesLayoutProps = {
   updates: Update[];
   colour?: Colour;
+  pendingNew?: boolean;
+  onCancelNew?: () => void;
 };
 
 export const UpdatesLayout = ({
   updates,
   colour = colours.orange,
+  pendingNew = false,
+  onCancelNew,
 }: UpdatesLayoutProps) => {
   const [navigationId, setNavigationId] = useState("");
-  const [pendingNew, setPendingNew] = useState(false);
 
   const groupedUpdates = groupUpdates(updates);
 
@@ -42,28 +45,13 @@ export const UpdatesLayout = ({
     <div className="h-full max-w-[1000px] w-full min-w-0 pb-16 flex items-center">
       <div className="h-full w-full p-12 flex flex-col gap-14 overflow-y-scroll">
         <PageHeader colour={colour} secondaryBadges={secondaryBadges}>
-          <div className="flex gap-3 items-end justify-between">
-            <div className="flex gap-3 items-end">
-              <Icon
-                className={cn("pb-1", colour.text)}
-                iconName="chatCenteredText"
-                size="xl"
-              />
-              <h1 className="font-title text-5xl">Updates</h1>
-            </div>
-
-            <button
-              className={cn(
-                "flex items-center gap-2 px-3 py-1.5 text-sm rounded-full transition-colors mb-1",
-                colour.backgroundPill,
-                colour.textPill,
-                colour.backgroundPillInverted,
-              )}
-              onClick={() => setPendingNew(true)}
-            >
-              <Icon iconName="plus" size="sm" />
-              New update
-            </button>
+          <div className="flex gap-3 items-end">
+            <Icon
+              className={cn("pb-1", colour.text)}
+              iconName="chatCenteredText"
+              size="xl"
+            />
+            <h1 className="font-title text-5xl">Updates</h1>
           </div>
         </PageHeader>
 
@@ -72,7 +60,7 @@ export const UpdatesLayout = ({
             <UpdateEditor
               update={{ notes: [], tint: null }}
               colour={colour}
-              onCancel={() => setPendingNew(false)}
+              onCancel={onCancelNew}
             />
           </div>
         )}
