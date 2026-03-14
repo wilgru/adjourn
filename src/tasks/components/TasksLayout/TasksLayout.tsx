@@ -1,5 +1,6 @@
 import { useState, useMemo, Fragment } from "react";
 import { colours } from "src/colours/colours.constant";
+import { EmptyState } from "src/common/components/EmptyState/EmptyState";
 import { PageHeader } from "src/common/components/PageHeader/PageHeader";
 import TableOfContents from "src/tableOfContents/TableOfContents/TableOfContents";
 import { groupTasks } from "src/tasks/utils/groupTasks";
@@ -52,6 +53,15 @@ export const TasksLayout = ({
           {header}
         </PageHeader>
 
+        {groupedTasks.length === 0 && (
+          <EmptyState
+            title="No tasks yet"
+            description="Add your first task to start tracking what matters."
+            colour={colour}
+            iconName="checkCircle"
+          />
+        )}
+
         {groupedTasks.map((group, index) => (
           <Fragment key={group.relevantTaskData.note?.id ?? "no-note"}>
             {index > 0 && <hr className="border-slate-200" />}
@@ -60,15 +70,17 @@ export const TasksLayout = ({
         ))}
       </div>
 
-      <div className="flex flex-col justify-center">
-        <TableOfContents
-          title={title}
-          items={tableOfContentItems}
-          colour={colour}
-          activeItemNavigationId={navigationId}
-          onJumpTo={(id) => setNavigationId(id)}
-        />
-      </div>
+      {tableOfContentItems.length > 0 && (
+        <div className="flex flex-col justify-center">
+          <TableOfContents
+            title={title}
+            items={tableOfContentItems}
+            colour={colour}
+            activeItemNavigationId={navigationId}
+            onJumpTo={(id) => setNavigationId(id)}
+          />
+        </div>
+      )}
     </div>
   );
 };

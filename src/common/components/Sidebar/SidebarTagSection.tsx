@@ -11,11 +11,14 @@ export const SidebarTagSection = ({
   title,
   tagGroup,
   colour = colours.orange,
+  isEmpty = false,
   children,
 }: {
   title: string;
   tagGroup?: TagGroup;
   colour?: Colour;
+  isEmpty?: boolean;
+  emptyMessage?: string;
   children: React.ReactNode;
 }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -65,6 +68,12 @@ export const SidebarTagSection = ({
           )}
         </div>
         {children}
+
+        {isEmpty && (
+          <p className="mt-1 text-xs italic text-slate-400">
+            No tags in this section yet
+          </p>
+        )}
       </div>
     </section>
   );

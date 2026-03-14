@@ -102,7 +102,16 @@ export const NotesLayout = ({
         {selectedNote ? (
           <NoteEditor note={selectedNote} colour={colour} />
         ) : (
-          <p>Select a note to view it here.</p>
+          <div className="h-fit w-full max-w-md p-6 rounded-2xl bg-slate-50 flex flex-col items-center gap-2 text-center">
+            <div className="flex flex-col gap-1">
+              <p className="text-base font-semibold text-slate-600">
+                No note selected
+              </p>
+              <p className="text-sm text-slate-500">
+                Pick a note on the left to view and edit it here.
+              </p>
+            </div>
+          </div>
         )}
       </div>
     </div>

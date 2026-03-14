@@ -4,6 +4,8 @@ import { colours } from "src/colours/colours.constant";
 import { isSideBarVisibleAtom } from "src/common/atoms/isSidebarVisibleAtom";
 import { Button } from "src/common/components/Button/Button";
 import { NavItem } from "src/common/components/NavItem/NavItem";
+import { cn } from "src/common/utils/cn";
+import { Icon } from "src/icons/components/Icon/Icon";
 import { JournalSelector } from "src/journals/components/JournalSelector/JouranlSelector";
 import { useCurrentJournal } from "src/journals/hooks/useCurrentJournal";
 import { CreateTagGroupModal } from "src/tags/components/CreateTagGroupModal/CreateTagGroupModal";
@@ -75,7 +77,11 @@ export const Sidebar = () => {
             />
           </section>
 
-          <SidebarTagSection title={"Tags"} colour={currentJournal.colour}>
+          <SidebarTagSection
+            title={"Tags"}
+            colour={currentJournal.colour}
+            isEmpty={ungroupedTags.length === 0}
+          >
             {ungroupedTags.map((tag) => (
               <NavItem
                 iconName={tag.icon}
@@ -92,6 +98,7 @@ export const Sidebar = () => {
               title={tagGroup.title}
               tagGroup={tagGroup}
               colour={currentJournal.colour}
+              isEmpty={tagGroup.tags.length === 0}
               key={tagGroup.id}
             >
               <div className="flex flex-col gap-1 mt-1">
@@ -108,16 +115,20 @@ export const Sidebar = () => {
             </SidebarTagSection>
           ))}
 
+          {/* <hr className="w-full border-slate-200" /> */}
+
           <Dialog.Root>
             <Dialog.Trigger asChild>
-              <Button
-                className="mt-1"
-                variant="ghost-strong"
-                size="sm"
-                iconName="plus"
+              <button
+                type="button"
+                className={cn(
+                  "mt-1 w-fit flex items-center gap-1 text-slate-400 transition-colors",
+                  `hover:${currentJournal.colour.textPill}`,
+                )}
               >
-                Add section
-              </Button>
+                <span className="font-title text-md">Add Section</span>
+                <Icon iconName="plusSquare" size="sm" className="pb-1" />
+              </button>
             </Dialog.Trigger>
 
             <CreateTagGroupModal />

@@ -1,4 +1,4 @@
-import { Button } from "src/common/components/Button/Button";
+import { EmptyState } from "src/common/components/EmptyState/EmptyState";
 import { NoteListItem } from "./NoteListItem";
 import type { Colour } from "src/colours/Colour.type";
 import type { NotesGroup } from "src/notes/Note.type";
@@ -32,18 +32,14 @@ export const NotesList = ({
       </div>
 
       {noteGroup.notes.length === 0 && (
-        <div className="w-full p-3 flex flex-col gap-3 items-center rounded-lg bg-gray-50">
-          <p className="text-slate-500">No notes yet</p>
-
-          <Button
-            variant="ghost"
-            size="sm"
-            className="w-full"
-            iconName="plusSquare"
-          >
-            Create your first note
-          </Button>
-        </div>
+        <EmptyState
+          title="No notes yet"
+          description="Capture your first thought here."
+          colour={colour}
+          size="sm"
+          iconName="pencil"
+          createFirstButtonText="Create your first note"
+        />
       )}
     </section>
   );

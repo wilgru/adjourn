@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { colours } from "src/colours/colours.constant";
+import { EmptyState } from "src/common/components/EmptyState/EmptyState";
 import { PageHeader } from "src/common/components/PageHeader/PageHeader";
 import { cn } from "src/common/utils/cn";
 import { Icon } from "src/icons/components/Icon/Icon";
@@ -15,6 +16,7 @@ type UpdatesLayoutProps = {
   colour?: Colour;
   pendingNew?: boolean;
   onCancelNew?: () => void;
+  onCreateNew?: () => void;
 };
 
 export const UpdatesLayout = ({
@@ -22,6 +24,7 @@ export const UpdatesLayout = ({
   colour = colours.orange,
   pendingNew = false,
   onCancelNew,
+  onCreateNew,
 }: UpdatesLayoutProps) => {
   const [navigationId, setNavigationId] = useState("");
 
@@ -66,9 +69,14 @@ export const UpdatesLayout = ({
         )}
 
         {groupedUpdates.length === 0 && !pendingNew && (
-          <div className="w-full p-6 flex flex-col gap-3 items-center rounded-2xl bg-slate-50">
-            <p className="text-slate-500">No updates yet</p>
-          </div>
+          <EmptyState
+            title="No updates yet"
+            description="Add an update when there is progress to track."
+            colour={colour}
+            iconName="chatCenteredText"
+            createFirstButtonText="Create your first update"
+            onCreateFirst={onCreateNew}
+          />
         )}
 
         {groupedUpdates.map((group) => (
@@ -76,15 +84,17 @@ export const UpdatesLayout = ({
         ))}
       </div>
 
-      <div className="flex flex-col justify-center">
-        <TableOfContents
-          title="Updates"
-          items={tableOfContentItems}
-          colour={colour}
-          activeItemNavigationId={navigationId}
-          onJumpTo={(id) => setNavigationId(id)}
-        />
-      </div>
+      {tableOfContentItems.length > 0 && (
+        <div className="flex flex-col justify-center">
+          <TableOfContents
+            title="Updates"
+            items={tableOfContentItems}
+            colour={colour}
+            activeItemNavigationId={navigationId}
+            onJumpTo={(id) => setNavigationId(id)}
+          />
+        </div>
+      )}
     </div>
   );
 };

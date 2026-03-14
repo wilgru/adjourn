@@ -46,6 +46,7 @@ function UpdatesComponent() {
         updates={updates}
         colour={currentJournal?.colour}
         pendingNew={pendingNew}
+        onCreateNew={() => setPendingNew(true)}
         onCancelNew={() => setPendingNew(false)}
       />
     </div>
