@@ -265,7 +265,7 @@ export const UpdateEditor = ({
   return (
     <div className="flex items-start gap-3">
       {/* Date on the left, outside the card */}
-      <p className="text-xs text-slate-400 shrink-0 pt-3 w-16 text-right">
+      <p className="text-xs text-slate-400 shrink-0 pt-3 w-24 text-right whitespace-nowrap">
         {dateStr}
       </p>
 
