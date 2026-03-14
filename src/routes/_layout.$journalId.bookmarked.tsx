@@ -91,7 +91,7 @@ function RouteComponent() {
                     updateJournal({
                       journalId: currentJournal.id,
                       updateJournalData: {
-                        ...journal,
+                        ...currentJournal,
                         bookmarkedGroupBy: value === "null" ? null : value,
                       },
                     });
@@ -151,7 +151,7 @@ function RouteComponent() {
                     updateJournal({
                       journalId: currentJournal.id,
                       updateJournalData: {
-                        ...journal,
+                        ...currentJournal,
                         bookmarkedSortBy: value,
                       },
                     });
@@ -197,7 +197,7 @@ function RouteComponent() {
                     updateJournal({
                       journalId: currentJournal.id,
                       updateJournalData: {
-                        ...journal,
+                        ...currentJournal,
                         bookmarkedSortDirection: value,
                       },
                     });
