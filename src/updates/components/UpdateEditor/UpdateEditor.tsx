@@ -1,7 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
-import debounce from "debounce";
 import Delta from "quill-delta";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { colours } from "src/colours/colours.constant";
 import { Button } from "src/common/components/Button/Button";
 import { QuillEditor } from "src/common/components/QuillEditor/QuillEditor";
@@ -88,8 +87,11 @@ export const UpdateEditor = ({
     ? (TINT_TO_COLOUR[editedUpdate.tint] ?? colours.grey)
     : colours.grey;
 
-  const saveRef = useRef<() => Promise<void>>();
-  saveRef.current = async () => {
+  const onUpdateField = (fields: Partial<Update>) => {
+    setEditedUpdate((current) => ({ ...current, ...fields }));
+  };
+
+  const onDone = async () => {
     if (editedUpdate.id) {
       await updateUpdate({
         updateId: editedUpdate.id,
@@ -99,34 +101,9 @@ export const UpdateEditor = ({
           notes: editedUpdate.notes as Note[],
         },
       });
-    }
-  };
-
-  const debouncedSave = useRef(
-    debounce(() => saveRef.current?.(), 500),
-  ).current;
-
-  useEffect(() => {
-    return () => {
-      debouncedSave.flush();
-    };
-  }, [debouncedSave]);
-
-  const onUpdateField = (fields: Partial<Update>) => {
-    setEditedUpdate((current) => ({ ...current, ...fields }));
-    // Only auto-save existing updates; new ones are saved explicitly via the Save button
-    if (editedUpdate.id) {
-      debouncedSave();
-    }
-  };
-
-  const onDone = async () => {
-    if (editedUpdate.id) {
-      // Existing update — flush any pending debounced save then close
-      debouncedSave.flush();
       setIsEditing(false);
     } else {
-      // New update — create explicitly now (no prior auto-save)
+      // New update — create explicitly now
       const created = await createUpdate({
         createUpdateData: {
           content: editedUpdate.content!,
@@ -141,7 +118,6 @@ export const UpdateEditor = ({
   };
 
   const onCancelEdit = () => {
-    debouncedSave.clear();
     if (!editedUpdate.id) {
       onCancel?.();
     } else {
@@ -151,7 +127,6 @@ export const UpdateEditor = ({
   };
 
   const onDelete = async () => {
-    debouncedSave.clear();
     if (editedUpdate.id) {
       await deleteUpdate({ updateId: editedUpdate.id });
     } else {
