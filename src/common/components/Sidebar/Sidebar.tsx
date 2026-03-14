@@ -8,6 +8,7 @@ import { cn } from "src/common/utils/cn";
 import { Icon } from "src/icons/components/Icon/Icon";
 import { JournalSelector } from "src/journals/components/JournalSelector/JouranlSelector";
 import { useCurrentJournal } from "src/journals/hooks/useCurrentJournal";
+import { useGetJournalContentCounts } from "src/journals/hooks/useGetJournalContentCounts";
 import { CreateTagGroupModal } from "src/tags/components/CreateTagGroupModal/CreateTagGroupModal";
 import { useGetTagGroups } from "src/tags/hooks/useGetTagGroups";
 import { SidebarTagSection } from "./SidebarTagSection";
@@ -15,6 +16,7 @@ import { SidebarTagSection } from "./SidebarTagSection";
 export const Sidebar = () => {
   const { journalId, currentJournal, journals } = useCurrentJournal();
   const { ungroupedTags, tagGroups } = useGetTagGroups();
+  const { counts } = useGetJournalContentCounts();
 
   const setIsSidebarVisible = useSetAtom(isSideBarVisibleAtom);
 
@@ -50,6 +52,7 @@ export const Sidebar = () => {
               title="Notes"
               to={`/${journalId}/notes/`}
               colour={currentJournal.colour}
+              preview={counts?.noteCount}
             />
 
             <NavItem
@@ -58,6 +61,7 @@ export const Sidebar = () => {
               title="Tasks"
               to={`/${journalId}/tasks/`}
               colour={currentJournal.colour}
+              preview={counts?.taskCount}
             />
 
             <NavItem
@@ -66,6 +70,7 @@ export const Sidebar = () => {
               title="Updates"
               to={`/${journalId}/updates`}
               colour={currentJournal.colour}
+              preview={counts?.updateCount}
             />
 
             <NavItem
@@ -74,6 +79,7 @@ export const Sidebar = () => {
               title={"Bookmarked"}
               to={`/${journalId}/bookmarked/`}
               colour={colours.red}
+              preview={counts?.bookmarkedCount}
             />
           </section>
 
