@@ -10,4 +10,10 @@ export type Journal = {
   updated: Dayjs;
   noteCount?: number;
   taskCount?: number;
+  notesSortBy?: "alphabetical" | "created";
+  notesSortDirection?: "asc" | "desc";
+  notesGroupBy?: "created" | "tag" | null;
+  bookmarkedSortBy?: "alphabetical" | "created";
+  bookmarkedSortDirection?: "asc" | "desc";
+  bookmarkedGroupBy?: "created" | "tag" | null;
 };
