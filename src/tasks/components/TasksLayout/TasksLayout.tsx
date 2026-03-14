@@ -37,7 +37,7 @@ export const TasksLayout = ({
     const noteTOCItems = groupedTasks.map((group) => {
       return {
         title: group.title,
-        navigationId: group.title,
+        navigationId: group.relevantTaskData.note?.id ?? "no-note",
       };
     });
 
