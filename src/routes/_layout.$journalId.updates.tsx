@@ -32,14 +32,12 @@ function UpdatesComponent() {
     <div className="h-full w-full flex flex-col items-center">
       <Toolbar iconName="chatCenteredText" title="Updates" colour={colour}>
         <Button
-          variant="block"
+          variant="ghost"
           size="sm"
           colour={colour}
           iconName="plus"
           onClick={() => setPendingNew(true)}
-        >
-          New update
-        </Button>
+        />
       </Toolbar>
 
       <UpdatesLayout
