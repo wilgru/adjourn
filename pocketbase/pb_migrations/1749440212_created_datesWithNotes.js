@@ -55,7 +55,7 @@ migrate((app) => {
     "id": "pbc_307469378",
     "indexes": [],
     "listRule": "user = @request.auth.id",
-    "name": "datesWithNotes",
+    "name": "datesWithUpdates",
     "system": false,
     "type": "view",
     "updateRule": null,

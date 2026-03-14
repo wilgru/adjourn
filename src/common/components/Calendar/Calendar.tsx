@@ -5,9 +5,8 @@ import { useEffect, useState } from "react";
 import { colours } from "src/colours/colours.constant";
 import { Button } from "src/common/components/Button/Button";
 import { cn } from "src/common/utils/cn";
-import { getNavigationDay } from "src/common/utils/getNavigationDay";
-import { useGetDatesWithNotes } from "src/notes/hooks/useGetDatesWithNotes";
 import { jumpToDateAtom } from "src/tableOfContents/atoms/jumpToDateAtom";
+import { useGetDatesWithUpdates } from "src/updates/hooks/useGetDatesWithUpdates";
 import type { Dayjs } from "dayjs";
 import type { Colour } from "src/colours/Colour.type";
 import type { DateWithNotes } from "src/notes/Note.type";
@@ -41,7 +40,7 @@ type CalendarItem = {
   key: number;
   journalId: string;
   colour: Colour;
-  datesWithNotes: DateWithNotes[];
+  datesWithUpdates: DateWithNotes[];
   today: Dayjs;
   calendarDay: CalendarDay;
   handleSelectDay: (calendarDay: CalendarDay) => void;
@@ -51,12 +50,12 @@ const CalendarItem = ({
   key,
   journalId,
   colour,
-  datesWithNotes,
+  datesWithUpdates,
   today,
   calendarDay,
   handleSelectDay,
 }: CalendarItem) => {
-  const dateWithNotes = datesWithNotes.find((dateWithNotes) => {
+  const dateWithNotes = datesWithUpdates.find((dateWithNotes) => {
     return calendarDay.day.isSame(dateWithNotes.created, "day");
   });
 
@@ -68,11 +67,11 @@ const CalendarItem = ({
       )}
     >
       <Link
-        to="/$journalId/logbook/$dateString"
+        to="/$journalId/updates"
         params={{
           journalId: journalId,
-          dateString: getNavigationDay(calendarDay.day),
         }}
+        itemID="todo"
         key={key}
         className={cn(
           "h-6 w-6 text-sm text-center leading-6 rounded-full cursor-pointer select-none",
@@ -111,7 +110,7 @@ export const Calendar = ({
   journalId,
   colour = colours.orange,
 }: CalendarProps): JSX.Element => {
-  const { datesWithNotes } = useGetDatesWithNotes();
+  const { datesWithUpdates } = useGetDatesWithUpdates();
   const [jumpToDate, setJumpToDate] = useAtom(jumpToDateAtom);
 
   const today = dayjs();
@@ -255,7 +254,7 @@ export const Calendar = ({
             journalId={journalId}
             colour={colour}
             calendarDay={calendarDay}
-            datesWithNotes={datesWithNotes}
+            datesWithUpdates={datesWithUpdates}
             today={today}
             handleSelectDay={handleSelectDay}
           />
