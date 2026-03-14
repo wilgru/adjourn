@@ -289,7 +289,7 @@ export const UpdateEditor = ({
       {/* Content */}
       <QuillViewer
         content={editedUpdate.content ?? new Delta()}
-        className={tintClasses.text}
+        textColor={tintClasses.textColor}
       />
 
       {/* Bottom row: date (left) + edit/delete icons (right, hover-only) */}

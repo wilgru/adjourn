@@ -7,9 +7,14 @@ import type Delta from "quill-delta";
 type QuillViewerProps = {
   content: Delta;
   className?: string;
+  textColor?: string;
 };
 
-export default function QuillViewer({ content, className }: QuillViewerProps) {
+export default function QuillViewer({
+  content,
+  className,
+  textColor,
+}: QuillViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -29,10 +34,21 @@ export default function QuillViewer({ content, className }: QuillViewerProps) {
 
     quillEditor?.setContents(content);
 
+    // Directly apply tint color to the .ql-editor element so it overrides
+    // any color that Quill or its container may set via CSS.
+    if (textColor) {
+      const editorEl = editorContainer.querySelector(
+        ".ql-editor",
+      ) as HTMLElement | null;
+      if (editorEl) {
+        editorEl.style.color = textColor;
+      }
+    }
+
     return () => {
       container.innerHTML = "";
     };
-  }, [content]);
+  }, [content, textColor]);
 
   return (
     <div
