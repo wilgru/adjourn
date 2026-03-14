@@ -14,5 +14,11 @@ export const mapJournal = (journal: RecordModel): Journal => {
     colour: getColour(journal.colour),
     created: dayjs.utc(journal.created).local(),
     updated: dayjs.utc(journal.updated).local(),
+    notesSortBy: journal.notesSortBy ?? "created",
+    notesSortDirection: journal.notesSortDirection ?? "asc",
+    notesGroupBy: journal.notesGroupBy ?? null,
+    bookmarkedSortBy: journal.bookmarkedSortBy ?? "created",
+    bookmarkedSortDirection: journal.bookmarkedSortDirection ?? "asc",
+    bookmarkedGroupBy: journal.bookmarkedGroupBy ?? null,
   };
 };

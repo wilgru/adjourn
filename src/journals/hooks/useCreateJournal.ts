@@ -28,6 +28,12 @@ export const useCreateJournal = (): UseCreateJournalResponse => {
   }: CreateJournalProps): Promise<Journal | undefined> => {
     const createdJournal = await pb.collection("journals").create(
       {
+        notesSortBy: "created",
+        notesSortDirection: "asc",
+        notesGroupBy: null,
+        bookmarkedSortBy: "created",
+        bookmarkedSortDirection: "asc",
+        bookmarkedGroupBy: null,
         ...createJournalData,
         colour: createJournalData.colour.name,
         user: user?.id,

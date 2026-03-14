@@ -6,7 +6,18 @@ import type { Journal } from "src/journals/Journal.type";
 
 type UpdateJournalProps = {
   journalId: string;
-  updateJournalData: Pick<Journal, "title" | "icon" | "colour">;
+  updateJournalData: Pick<
+    Journal,
+    | "title"
+    | "icon"
+    | "colour"
+    | "notesSortBy"
+    | "notesSortDirection"
+    | "notesGroupBy"
+    | "bookmarkedSortBy"
+    | "bookmarkedSortDirection"
+    | "bookmarkedGroupBy"
+  >;
 };
 
 type UseUpdateJournalResponse = {
