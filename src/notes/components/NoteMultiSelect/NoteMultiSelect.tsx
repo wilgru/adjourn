@@ -47,7 +47,7 @@ export const NoteMultiSelect = ({
           key={note.id}
           onClick={() => handleRemoveNote(note.id)}
           className={cn(
-            "flex items-center gap-1 px-2 py-0.5 text-xs rounded-full transition-colors",
+            "flex items-center gap-1 px-2 py-1 text-xs rounded-full transition-colors",
             colour.backgroundPill,
             colour.textPill,
             colour.backgroundPillInverted,

@@ -96,19 +96,6 @@ export const UpdateEditor = ({
           notes: editedUpdate.notes as Note[],
         },
       });
-    } else {
-      const created = await createUpdate({
-        createUpdateData: {
-          content: editedUpdate.content!,
-          tint: editedUpdate.tint ?? null,
-          notes: (editedUpdate.notes ?? []) as Note[],
-        },
-      });
-      if (created) {
-        // Dismiss the "new update" editor slot so the saved update only
-        // appears once — via the refetched updates list.
-        onCreated?.();
-      }
     }
   };
 
@@ -124,12 +111,30 @@ export const UpdateEditor = ({
 
   const onUpdateField = (fields: Partial<Update>) => {
     setEditedUpdate((current) => ({ ...current, ...fields }));
-    debouncedSave();
+    // Only auto-save existing updates; new ones are saved explicitly via the Save button
+    if (editedUpdate.id) {
+      debouncedSave();
+    }
   };
 
   const onDone = async () => {
-    debouncedSave.flush();
-    setIsEditing(false);
+    if (editedUpdate.id) {
+      // Existing update — flush any pending debounced save then close
+      debouncedSave.flush();
+      setIsEditing(false);
+    } else {
+      // New update — create explicitly now (no prior auto-save)
+      const created = await createUpdate({
+        createUpdateData: {
+          content: editedUpdate.content!,
+          tint: editedUpdate.tint ?? null,
+          notes: (editedUpdate.notes ?? []) as Note[],
+        },
+      });
+      if (created) {
+        onCreated?.();
+      }
+    }
   };
 
   const onCancelEdit = () => {
@@ -220,6 +225,7 @@ export const UpdateEditor = ({
             size="sm"
             variant="ghost"
             colour={colours.red}
+            className="text-red-500"
             onClick={onDelete}
           >
             Delete
@@ -229,7 +235,7 @@ export const UpdateEditor = ({
             <Button
               size="sm"
               variant="ghost"
-              colour={colours.red}
+              colour={tintColour}
               onClick={onCancelEdit}
             >
               Discard
@@ -275,7 +281,7 @@ export const UpdateEditor = ({
                   })
                 }
                 className={cn(
-                  "flex items-center gap-1 px-2 py-0.5 text-xs rounded-full transition-colors",
+                  "flex items-center gap-1 px-2 py-1 text-xs rounded-full transition-colors",
                   tintClasses.notePill,
                 )}
               >
