@@ -139,6 +139,7 @@ const NoteEditor = ({
             </p>
 
             <TagMultiSelect
+              key={editedNote.id}
               initialTags={editedNote.tags}
               colour={colour}
               onChange={(tags) => onUpdateNote({ tags })}
