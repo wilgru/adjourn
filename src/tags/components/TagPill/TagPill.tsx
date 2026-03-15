@@ -63,7 +63,7 @@ export const TagPill = ({
             variant === "block" && tag.colour.backgroundPill,
             variant === "block" && tag.colour.textPillInverted,
             variant === "block" && tag.colour.backgroundPillInverted,
-            variant === "ghost" && "text-slate-500",
+            variant === "ghost" && "text-slate-400",
             variant === "link" && "underline-offset-4",
           )}
         >
