@@ -41,7 +41,7 @@ const NoteEditor = ({
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [editedNote, setEditedNote] = useState<Note>(note);
+  const [editedNote, setEditedNote] = useState<Note>(note); // TODO: maybe use key prop when using NoteEditor to force reset instead of having to manage this state and useEffects to reset when the note prop changes.
   const [toolbarFormatting, setToolbarFormatting] = useState<StringMap>();
   const [updatedDateVisible, setUpdatedDateVisible] = useState<boolean>(false);
   const [showNewUpdate, setShowNewUpdate] = useState(false);
