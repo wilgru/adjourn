@@ -7,6 +7,7 @@ import { isSideBarVisibleAtom } from "src/common/atoms/isSidebarVisibleAtom";
 import { Button } from "src/common/components/Button/Button";
 import { cn } from "src/common/utils/cn";
 import { Icon } from "src/icons/components/Icon/Icon";
+import { NoteSearchBar } from "src/notes/components/NoteSearchBar/NoteSearchBar";
 import type { Colour } from "src/colours/Colour.type";
 
 type ToolbarProps = {
@@ -15,7 +16,6 @@ type ToolbarProps = {
   colour?: Colour;
   journalColour?: Colour;
   children?: JSX.Element;
-  rightChildren?: JSX.Element;
 };
 
 export const Toolbar = ({
@@ -24,7 +24,6 @@ export const Toolbar = ({
   colour = colours.orange,
   journalColour,
   children,
-  rightChildren,
 }: ToolbarProps) => {
   const navigate = useNavigate();
   const { logout } = useLogin();
@@ -62,7 +61,7 @@ export const Toolbar = ({
       </div>
 
       <div className="flex items-center gap-2">
-        {rightChildren}
+        <NoteSearchBar />
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild>
             <div>

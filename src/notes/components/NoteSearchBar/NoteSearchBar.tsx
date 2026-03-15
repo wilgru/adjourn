@@ -4,10 +4,10 @@ import { matchSorter } from "match-sorter";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { colours } from "src/colours/colours.constant";
 import { cn } from "src/common/utils/cn";
+import { useCurrentJournal } from "src/journals/hooks/useCurrentJournal";
 import { useGetNotes } from "src/notes/hooks/useGetNotes";
 import { NoteListItem } from "../NotesList/NoteListItem";
 import type Delta from "quill-delta";
-import type { Colour } from "src/colours/Colour.type";
 import type { Note } from "src/notes/Note.type";
 
 const getTextFromDelta = (delta: Delta): string => {
@@ -17,18 +17,15 @@ const getTextFromDelta = (delta: Delta): string => {
     .join("");
 };
 
-type NoteSearchBarProps = {
-  colour?: Colour;
-};
-
-export const NoteSearchBar = ({
-  colour = colours.orange,
-}: NoteSearchBarProps) => {
+export const NoteSearchBar = () => {
   const [inputValue, setInputValue] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const { journalId, currentJournal } = useCurrentJournal();
+  const colour = currentJournal?.colour ?? colours.orange;
 
   const { notes } = useGetNotes({});
 
@@ -98,6 +95,12 @@ export const NoteSearchBar = ({
     }
   };
 
+  const notesPath = journalId ? `/${journalId}/notes` : undefined;
+
+  if (!journalId) {
+    return null;
+  }
+
   return (
     <div ref={containerRef} className="relative">
       <div
@@ -133,7 +136,7 @@ export const NoteSearchBar = ({
           {searchResults.length > 0 ? (
             searchResults.map((note) => (
               <div key={note.id} onClick={handleNoteSelect}>
-                <NoteListItem note={note} colour={colour} />
+                <NoteListItem note={note} colour={colour} to={notesPath} />
               </div>
             ))
           ) : (

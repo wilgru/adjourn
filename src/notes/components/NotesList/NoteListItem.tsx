@@ -12,19 +12,21 @@ type NoteListItemProps = {
 
   createdDateFormat?: string;
   colour?: Colour;
+  to?: string;
 };
 
 export const NoteListItem = ({
   note,
   createdDateFormat = "ddd MMM D, YYYY",
   colour = colours.orange,
+  to,
 }: NoteListItemProps) => {
   const location = useLocation();
   const [isHovered, setIsHovered] = useState(false);
 
   return (
     <Link
-      to={location.pathname}
+      to={to ?? location.pathname}
       search={(old) => ({ ...old, noteId: note.id })}
       onMouseOver={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
