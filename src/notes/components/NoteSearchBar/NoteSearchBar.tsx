@@ -1,0 +1,151 @@
+import { MagnifyingGlass, X } from "@phosphor-icons/react";
+import debounce from "debounce";
+import { matchSorter } from "match-sorter";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { colours } from "src/colours/colours.constant";
+import { cn } from "src/common/utils/cn";
+import { useCurrentJournal } from "src/journals/hooks/useCurrentJournal";
+import { useGetNotes } from "src/notes/hooks/useGetNotes";
+import { NoteListItem } from "../NotesList/NoteListItem";
+import type Delta from "quill-delta";
+import type { Note } from "src/notes/Note.type";
+
+const getTextFromDelta = (delta: Delta): string => {
+  return delta.ops
+    .filter((op) => typeof op.insert === "string")
+    .map((op) => op.insert as string)
+    .join("");
+};
+
+export const NoteSearchBar = () => {
+  const [inputValue, setInputValue] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const { journalId, currentJournal } = useCurrentJournal();
+  const colour = currentJournal?.colour ?? colours.orange;
+
+  const { notes } = useGetNotes({});
+
+  const noteTextMap = useMemo(
+    () =>
+      new Map(notes.map((note) => [note.id, getTextFromDelta(note.content)])),
+    [notes],
+  );
+
+  const debouncedSearch = useRef(
+    debounce((value: string) => {
+      setSearchQuery(value);
+    }, 300),
+  );
+
+  useEffect(() => {
+    const debounced = debouncedSearch.current;
+    return () => {
+      debounced.clear();
+    };
+  }, []);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setInputValue(value);
+    debouncedSearch.current(value);
+    setIsOpen(value.length > 0);
+  };
+
+  const searchResults: Note[] =
+    searchQuery.length > 0
+      ? matchSorter(notes, searchQuery, {
+          keys: ["title", (note: Note) => noteTextMap.get(note.id) ?? ""],
+        }).slice(0, 10)
+      : [];
+
+  const handleClear = () => {
+    setInputValue("");
+    setSearchQuery("");
+    setIsOpen(false);
+    inputRef.current?.focus();
+  };
+
+  const handleNoteSelect = () => {
+    setIsOpen(false);
+    setInputValue("");
+    setSearchQuery("");
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Escape") {
+      setIsOpen(false);
+    }
+  };
+
+  const notesPath = journalId ? `/${journalId}/notes` : undefined;
+
+  if (!journalId) {
+    return null;
+  }
+
+  return (
+    <div ref={containerRef} className="relative">
+      <div
+        className={cn(
+          "flex items-center gap-1.5 px-2 py-1.5 rounded-xl border border-slate-200 bg-white text-sm transition-colors",
+          isOpen && "border-slate-300",
+        )}
+      >
+        <MagnifyingGlass size={14} className="text-slate-400 shrink-0" />
+        <input
+          ref={inputRef}
+          type="text"
+          value={inputValue}
+          onChange={handleInputChange}
+          onFocus={() => inputValue.length > 0 && setIsOpen(true)}
+          onKeyDown={handleKeyDown}
+          placeholder="Search notes..."
+          className="w-36 outline-none text-sm placeholder:text-slate-400 bg-transparent"
+        />
+        {inputValue && (
+          <button
+            type="button"
+            onClick={handleClear}
+            className="text-slate-400 hover:text-slate-600 transition-colors"
+          >
+            <X size={14} />
+          </button>
+        )}
+      </div>
+
+      {isOpen && searchQuery.length > 0 && (
+        <div className="absolute right-0 top-full mt-1 w-72 bg-white border border-slate-200 rounded-2xl p-2 shadow-lg z-50 max-h-80 overflow-y-auto">
+          {searchResults.length > 0 ? (
+            searchResults.map((note) => (
+              <div key={note.id} onClick={handleNoteSelect}>
+                <NoteListItem note={note} colour={colour} to={notesPath} />
+              </div>
+            ))
+          ) : (
+            <p className="text-sm text-slate-400 p-2 text-center">
+              No notes found
+            </p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};

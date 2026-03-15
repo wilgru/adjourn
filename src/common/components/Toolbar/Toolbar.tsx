@@ -7,6 +7,7 @@ import { isSideBarVisibleAtom } from "src/common/atoms/isSidebarVisibleAtom";
 import { Button } from "src/common/components/Button/Button";
 import { cn } from "src/common/utils/cn";
 import { Icon } from "src/icons/components/Icon/Icon";
+import { NoteSearchBar } from "src/notes/components/NoteSearchBar/NoteSearchBar";
 import type { Colour } from "src/colours/Colour.type";
 
 type ToolbarProps = {
@@ -60,6 +61,7 @@ export const Toolbar = ({
       </div>
 
       <div className="flex items-center gap-2">
+        <NoteSearchBar />
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild>
             <div>
