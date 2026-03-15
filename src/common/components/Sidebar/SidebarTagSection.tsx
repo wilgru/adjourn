@@ -3,7 +3,7 @@ import { useState } from "react";
 import { colours } from "src/colours/colours.constant";
 import { Button } from "src/common/components/Button/Button";
 import { CreateTagModal } from "src/tags/components/CreateTagModal/CreateTagModal";
-import { DeleteTagGroupModal } from "src/tags/components/DeleteTagGroupModal/DeleteTagGroupModal";
+import { EditTagGroupModal } from "src/tags/components/EditTagGroupModal/EditTagGroupModal";
 import type { Colour } from "src/colours/Colour.type";
 import type { TagGroup } from "src/tags/Tag.type";
 
@@ -33,6 +33,24 @@ export const SidebarTagSection = ({
         <div className="flex flex-row items-center gap-1">
           <h1 className="font-title text-slate-400 text-md">{title}</h1>
 
+          {tagGroup && (
+            <Dialog.Root>
+              {isHovered && (
+                <Dialog.Trigger asChild>
+                  <Button
+                    className="mb-1"
+                    variant="ghost-strong"
+                    size="xs"
+                    iconName="gear"
+                    colour={colour}
+                  />
+                </Dialog.Trigger>
+              )}
+
+              <EditTagGroupModal tagGroup={tagGroup} />
+            </Dialog.Root>
+          )}
+
           <Dialog.Root>
             {isHovered && (
               <Dialog.Trigger asChild>
@@ -48,24 +66,6 @@ export const SidebarTagSection = ({
 
             <CreateTagModal tagGroupId={tagGroup?.id} />
           </Dialog.Root>
-
-          {tagGroup && (
-            <Dialog.Root>
-              {isHovered && (
-                <Dialog.Trigger asChild>
-                  <Button
-                    className="mb-1"
-                    variant="ghost-strong"
-                    size="xs"
-                    iconName="trash"
-                    colour={colour}
-                  />
-                </Dialog.Trigger>
-              )}
-
-              <DeleteTagGroupModal tagGroup={tagGroup} />
-            </Dialog.Root>
-          )}
         </div>
         {children}
 
