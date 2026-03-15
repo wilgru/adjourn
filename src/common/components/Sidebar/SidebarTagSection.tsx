@@ -30,22 +30,6 @@ export const SidebarTagSection = ({
         <div className="flex flex-row items-center gap-1">
           <h1 className="font-title text-slate-400 text-md">{title}</h1>
 
-          <Dialog.Root>
-            {isHovered && (
-              <Dialog.Trigger asChild>
-                <Button
-                  className="mb-1"
-                  variant="ghost-strong"
-                  size="xs"
-                  iconName="plus"
-                  colour={colour}
-                />
-              </Dialog.Trigger>
-            )}
-
-            <CreateTagModal tagGroupId={tagGroup?.id} />
-          </Dialog.Root>
-
           {tagGroup && (
             <Dialog.Root>
               {isHovered && (
@@ -63,6 +47,22 @@ export const SidebarTagSection = ({
               <EditTagGroupModal tagGroup={tagGroup} />
             </Dialog.Root>
           )}
+
+          <Dialog.Root>
+            {isHovered && (
+              <Dialog.Trigger asChild>
+                <Button
+                  className="mb-1"
+                  variant="ghost-strong"
+                  size="xs"
+                  iconName="plus"
+                  colour={colour}
+                />
+              </Dialog.Trigger>
+            )}
+
+            <CreateTagModal tagGroupId={tagGroup?.id} />
+          </Dialog.Root>
         </div>
         {children}
       </div>
