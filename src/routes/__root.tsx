@@ -10,6 +10,7 @@ import {
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { useState } from "react";
 import isAuthenticated from "src/Users/utils/isAuthenticated";
+import appCss from "src/index.css?url";
 import { useNavigateToLastUsedJournal } from "src/journals/hooks/useGetLastUsedJournal";
 
 const NotFoundComponent = () => {
@@ -65,6 +66,10 @@ export const Route = createRootRoute({
       { title: "Adjourn" },
     ],
     links: [
+      {
+        rel: "stylesheet",
+        href: appCss,
+      },
       {
         rel: "stylesheet",
         href: "https://cdn.quilljs.com/1.3.7/quill.core.css",

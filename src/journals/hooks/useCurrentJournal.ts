@@ -6,13 +6,19 @@ type UseCurrentJournalResponse = {
   journalId: string | undefined;
   currentJournal: Journal | undefined;
   journals: Journal[];
+  isFetchingJournals: boolean;
 };
 
 export const useCurrentJournal = (): UseCurrentJournalResponse => {
   const { journalId } = useCurrentJournalId();
-  const { journals } = useGetJournals();
+  const { journals, isFetching } = useGetJournals();
 
   const currentJournal = journals.find((journal) => journal.id === journalId);
 
-  return { journalId, currentJournal, journals };
+  return {
+    journalId,
+    currentJournal,
+    journals,
+    isFetchingJournals: isFetching,
+  };
 };

@@ -17,14 +17,19 @@ import { SidebarTagSection } from "./SidebarTagSection";
 export const Sidebar = () => {
   const { isElectron, isMacElectron } = useElectronEnvironment();
 
-  const { journalId, currentJournal, journals } = useCurrentJournal();
+  const { journalId, currentJournal, journals, isFetchingJournals } =
+    useCurrentJournal();
   const { ungroupedTags, tagGroups } = useGetTagGroups();
   const { counts } = useGetJournalContentCounts();
 
   const setIsSidebarVisible = useSetAtom(isSideBarVisibleAtom);
 
+  if (isFetchingJournals) {
+    return null;
+  }
+
   if (!journalId || !currentJournal) {
-    return <div>Error trying to load journal...</div>; // TODO: handle this better, use a loading state or a message indicating no journal is selected
+    return null;
   }
 
   return (
