@@ -9,16 +9,14 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 import { useState } from "react";
-import isAuthenticated from "src/Users/utils/isAuthenticated";
+import requireClientAuth from "src/Users/utils/requireClientAuth";
 import appCss from "src/index.css?url";
 import { useNavigateToLastUsedJournal } from "src/journals/hooks/useGetLastUsedJournal";
 
 const NotFoundComponent = () => {
   const { lastUsedJournal, isFetching } = useNavigateToLastUsedJournal();
 
-  if (!isAuthenticated()) {
-    return <Navigate to="/login" replace={true} />;
-  }
+  requireClientAuth();
 
   if (isFetching) {
     return <div>Loading journals...</div>; // TODO: handle this better, use a spinner/loading component?

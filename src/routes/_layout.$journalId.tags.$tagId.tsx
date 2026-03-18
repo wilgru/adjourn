@@ -1,10 +1,10 @@
 import { Check } from "@phosphor-icons/react";
 import * as Dialog from "@radix-ui/react-dialog";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import Delta from "quill-delta";
 import { useMemo } from "react";
-import isAuthenticated from "src/Users/utils/isAuthenticated";
+import requireClientAuth from "src/Users/utils/requireClientAuth";
 import { Button } from "src/common/components/Button/Button";
 import { Toolbar } from "src/common/components/Toolbar/Toolbar";
 import { cn } from "src/common/utils/cn";
@@ -21,14 +21,7 @@ export const Route = createFileRoute("/_layout/$journalId/tags/$tagId")({
   component: TagComponent,
   // loader: ({ params }) => fetch(params.tagId),
   beforeLoad: async ({ location }) => {
-    if (!isAuthenticated()) {
-      throw redirect({
-        to: "/login",
-        search: {
-          redirect: location.href,
-        },
-      });
-    }
+    requireClientAuth(location);
   },
   validateSearch: (
     search: Record<string, unknown>,
