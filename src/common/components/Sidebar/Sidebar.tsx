@@ -4,6 +4,7 @@ import { colours } from "src/colours/colours.constant";
 import { isSideBarVisibleAtom } from "src/common/atoms/isSidebarVisibleAtom";
 import { Button } from "src/common/components/Button/Button";
 import { NavItem } from "src/common/components/NavItem/NavItem";
+import { useElectronEnvironment } from "src/common/hooks/useElectronEnvironment";
 import { cn } from "src/common/utils/cn";
 import { Icon } from "src/icons/components/Icon/Icon";
 import { JournalSelector } from "src/journals/components/JournalSelector/JouranlSelector";
@@ -14,6 +15,8 @@ import { useGetTagGroups } from "src/tags/hooks/useGetTagGroups";
 import { SidebarTagSection } from "./SidebarTagSection";
 
 export const Sidebar = () => {
+  const { isElectron, isMacElectron } = useElectronEnvironment();
+
   const { journalId, currentJournal, journals } = useCurrentJournal();
   const { ungroupedTags, tagGroups } = useGetTagGroups();
   const { counts } = useGetJournalContentCounts();
@@ -28,10 +31,19 @@ export const Sidebar = () => {
     <aside className="p-3 bg-slate-50 min-w-60">
       <div className="flex flex-col flex-shrink-0 justify-between gap-3 h-full">
         <div className="flex flex-col gap-3 justify-between overflow-y-auto">
-          <div className="flex flex-row items-center justify-between gap-2">
-            <h1 className="font-title text-slate-500 text-xl">Adjourn</h1>
+          <div
+            className={cn(
+              "flex flex-row items-center gap-2",
+              isElectron ? "justify-end" : "justify-between",
+              isMacElectron ? "electron-drag-region min-h-8" : "",
+            )}
+          >
+            {!isElectron && (
+              <h1 className="font-title text-slate-500 text-xl">Adjourn</h1>
+            )}
 
             <Button
+              className={isMacElectron ? "electron-no-drag" : ""}
               variant="ghost"
               size="sm"
               colour={currentJournal.colour}

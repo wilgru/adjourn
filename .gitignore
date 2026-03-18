@@ -29,3 +29,7 @@ dist-ssr
 # Pocketbase
 pb_data
 *storybook.log
+
+# Electron
+release
+dist-electron
