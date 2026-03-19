@@ -1,9 +1,9 @@
 import { resolve } from "path";
-import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
-import svgr from "vite-plugin-svgr"; // TODO: no longer needed?
 import electron from "vite-plugin-electron/simple";
+import svgr from "vite-plugin-svgr"; // TODO: no longer needed?
 
 const isElectron = process.env.ELECTRON === "true";
 
@@ -11,7 +11,7 @@ const isElectron = process.env.ELECTRON === "true";
 export default defineConfig({
   base: isElectron ? "./" : "/",
   plugins: [
-    TanStackRouterVite(),
+    tanstackStart(),
     svgr(),
     react(),
     ...(isElectron

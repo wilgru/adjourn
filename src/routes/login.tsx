@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState, type FormEvent, useEffect } from "react";
+import { useCallback, useEffect, useState, type FormEvent } from "react";
 import { useLogin } from "src/Users/hooks/useLogin";
 import { useUser } from "src/Users/hooks/useUser";
 import { Button } from "src/common/components/Button/Button";
@@ -11,17 +11,33 @@ type FormData = {
 };
 
 export const Route = createFileRoute("/login")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    redirect:
+      typeof search.redirect === "string" && search.redirect.startsWith("/")
+        ? search.redirect
+        : undefined,
+  }),
   component: LoginIndexComponent,
 });
 
 function LoginIndexComponent(): JSX.Element {
   const { login, loginLoading, loginError } = useLogin();
   const { user } = useUser();
+  const { redirect } = Route.useSearch();
   const navigate = useNavigate();
   const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
   });
+
+  const navigateAfterAuth = useCallback(() => {
+    if (redirect) {
+      window.location.replace(redirect);
+      return;
+    }
+
+    navigate({ to: ".." });
+  }, [navigate, redirect]);
 
   const onChange = (e: { target: { name: string; value: string } }) => {
     const name = e.target.name;
@@ -36,12 +52,14 @@ function LoginIndexComponent(): JSX.Element {
     await login({ email: formData.email, password: formData.password });
 
     // redirect on successful login
-    navigate({ to: ".." });
+    navigateAfterAuth();
   };
 
   useEffect(() => {
-    user && navigate({ to: ".." });
-  }, [user, navigate]);
+    if (user) {
+      navigateAfterAuth();
+    }
+  }, [navigateAfterAuth, user]);
 
   return (
     <div className="flex flex-col gap-6 justify-center items-center h-screen w-screen bg-slate-100">

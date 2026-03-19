@@ -1,5 +1,4 @@
 import "./style.css";
-import Quill from "quill";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { getColourHex } from "src/colours/utils/getColourHex";
 import {
@@ -7,6 +6,7 @@ import {
   createListHandler,
   createToggleHandler,
 } from "./quillFormatHandlers";
+import type Quill from "quill";
 import type { RangeStatic, StringMap } from "quill";
 import type Delta from "quill-delta";
 import type { Colour } from "src/colours/Colour.type";
@@ -33,7 +33,7 @@ const QuillEditor = ({
 }: QuillEditorProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const onChangeRef = useRef(onChange);
-  const [quillEditor, setQuillEditor] = useState<Quill | null>();
+  const [quillEditor, setQuillEditor] = useState<Quill | null>(null);
 
   useLayoutEffect(() => {
     onChangeRef.current = onChange;
@@ -105,55 +105,73 @@ const QuillEditor = ({
       return;
     }
 
+    let isMounted = true;
     const editorContainer = container.appendChild(
       container.ownerDocument.createElement("div"),
     );
 
-    const quill: Quill = new Quill(editorContainer, {
-      // debug: import.meta.env.DEV ? "info" : undefined, // TODO: add back in with dev tools
-      placeholder: "No content",
-      modules: {
-        toolbar: {
-          container: `#${toolbarId}`,
-          handlers: {
-            bold: createToggleHandler(() => quill, "bold"),
-            italic: createToggleHandler(() => quill, "italic"),
-            underline: createToggleHandler(() => quill, "underline"),
-            strike: createToggleHandler(() => quill, "strike"),
-            list: createListHandler(() => quill),
-            blockquote: createToggleHandler(() => quill, "blockquote"),
-            "code-block": createToggleHandler(() => quill, "code-block"),
-            link: createLinkHandler(() => quill),
+    const initializeEditor = async () => {
+      const { default: QuillConstructor } = await import("quill");
+
+      if (!isMounted) {
+        return;
+      }
+
+      const quill: Quill = new QuillConstructor(editorContainer, {
+        // debug: import.meta.env.DEV ? "info" : undefined, // TODO: add back in with dev tools
+        placeholder: "No content",
+        modules: {
+          toolbar: {
+            container: `#${toolbarId}`,
+            handlers: {
+              bold: createToggleHandler(() => quill, "bold"),
+              italic: createToggleHandler(() => quill, "italic"),
+              underline: createToggleHandler(() => quill, "underline"),
+              strike: createToggleHandler(() => quill, "strike"),
+              list: createListHandler(() => quill),
+              blockquote: createToggleHandler(() => quill, "blockquote"),
+              "code-block": createToggleHandler(() => quill, "code-block"),
+              link: createLinkHandler(() => quill),
+            },
           },
         },
-      },
-      formats: [
-        "bold",
-        "italic",
-        "underline",
-        "strike",
-        "list",
-        "blockquote",
-        "code-block",
-        "link",
-      ],
-    });
+        formats: [
+          "bold",
+          "italic",
+          "underline",
+          "strike",
+          "list",
+          "blockquote",
+          "code-block",
+          "link",
+        ],
+      });
 
-    const handleLinkClick = (e: MouseEvent) => {
-      const anchor = (e.target as HTMLElement).closest("a");
+      const handleLinkClick = (e: MouseEvent) => {
+        const anchor = (e.target as HTMLElement).closest("a");
 
-      if (anchor?.href) {
-        e.preventDefault();
-        window.open(anchor.href, "_blank", "noopener,noreferrer");
-      }
+        if (anchor?.href) {
+          e.preventDefault();
+          window.open(anchor.href, "_blank", "noopener,noreferrer");
+        }
+      };
+
+      editorContainer.addEventListener("click", handleLinkClick);
+      setQuillEditor(quill);
+
+      return () => {
+        editorContainer.removeEventListener("click", handleLinkClick);
+      };
     };
 
-    editorContainer.addEventListener("click", handleLinkClick);
-
-    setQuillEditor(quill);
+    let cleanupLinks: (() => void) | undefined;
+    initializeEditor().then((cleanup) => {
+      cleanupLinks = cleanup;
+    });
 
     return () => {
-      editorContainer.removeEventListener("click", handleLinkClick);
+      isMounted = false;
+      cleanupLinks?.();
       container.innerHTML = "";
 
       setQuillEditor(null);

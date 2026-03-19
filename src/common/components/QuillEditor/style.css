@@ -36,8 +36,9 @@
 
 #quill-editor pre {
   font-size: 14px;
-  font-family: "SF Mono", SFMono-Regular, Consolas, "Liberation Mono", Menlo,
-    Courier, monospace;
+  font-family:
+    "SF Mono", SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier,
+    monospace;
   background-color: #f1f5f9; /* slate-100. Tailwind v4 will let you use var(--color-slate-100) */
   padding: 4px 8px;
   border-radius: 8px;

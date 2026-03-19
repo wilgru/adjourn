@@ -9,6 +9,9 @@ type UseGetJournalsResponse = {
 };
 
 export const useGetJournals = (): UseGetJournalsResponse => {
+  const shouldFetchJournals =
+    typeof window !== "undefined" && !!pb.authStore?.isValid;
+
   const queryFn = async (): Promise<{
     journals: Journal[];
   }> => {
@@ -33,15 +36,17 @@ export const useGetJournals = (): UseGetJournalsResponse => {
   };
 
   // TODO: consider time caching for better performance
-  const { data, isFetching } = useQuery({
+  const { data, isPending } = useQuery({
     queryKey: ["journals.list"],
     queryFn,
+    enabled: shouldFetchJournals,
     // staleTime: 2 * 60 * 1000,
     // gcTime: 2 * 60 * 1000,
   });
 
   return {
     journals: data?.journals ?? [],
-    isFetching,
+    // Only treat the very first load as blocking; background refetches should not blank UI.
+    isFetching: isPending,
   };
 };
