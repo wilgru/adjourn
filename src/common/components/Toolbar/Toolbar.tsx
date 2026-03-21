@@ -23,23 +23,28 @@ export const Toolbar = ({
   journalColour,
   children,
 }: ToolbarProps) => {
-  const { isMacElectron } = useElectronEnvironment();
+  const { isMacElectrobun } = useElectronEnvironment();
 
   const [isSideBarVisible, setValue] = useAtom(isSideBarVisibleAtom);
-  const shouldReserveWindowButtonSpace = isMacElectron && !isSideBarVisible;
+  const shouldReserveWindowButtonSpace = isMacElectrobun && !isSideBarVisible;
 
   //TODO: remove h-16 when scrolling issue is fixed
   return (
     <div
       className={cn(
         "bg-white w-full h-16 flex items-center justify-between p-3",
-        isMacElectron ? "electron-drag-region" : "",
+        isMacElectrobun ? "electrobun-webkit-app-region-drag" : "",
       )}
     >
       <div className="flex items-center gap-2">
         {shouldReserveWindowButtonSpace && <div className="h-8 w-[4.5rem]" />}
 
-        <div className={cn("flex gap-2", isMacElectron && "electron-no-drag")}>
+        <div
+          className={cn(
+            "flex gap-2",
+            isMacElectrobun && "electrobun-webkit-app-region-no-drag",
+          )}
+        >
           {!isSideBarVisible && (
             <Button
               variant="ghost"
@@ -70,7 +75,7 @@ export const Toolbar = ({
       <div
         className={cn(
           "flex items-center gap-2",
-          isMacElectron ? "electron-no-drag" : "",
+          isMacElectrobun ? "electrobun-webkit-app-region-no-drag" : "",
         )}
       >
         <NoteSearchBar />

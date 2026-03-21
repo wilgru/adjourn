@@ -21,14 +21,6 @@ body {
   background-color: white;
 }
 
-.electron-drag-region {
-  -webkit-app-region: drag;
-}
-
-.electron-no-drag {
-  -webkit-app-region: no-drag;
-}
-
 /* 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;

@@ -5,7 +5,7 @@
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "always"
   },
-  "cSpell.words": ["colours", "Customisation"],
+  "cSpell.words": ["colours", "Customisation", "Electrobun"],
   "better-comments.tags": [
     {
       "tag": "!",

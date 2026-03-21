@@ -8,8 +8,8 @@
     "bun": ">=1.0.0"
   },
   "scripts": {
-    "dev": "bun electron-forge start",
-    "build": "tsc && bun electron-forge make",
+    "dev": "bun run electrobun build && electrobun dev",
+    "build": "bun --bun vite build && electrobun build",
     "dev:cloud": "bun --bun vite",
     "build:cloud": "tsc && bun --bun vite build",
     "start:cloud": "bun run .vite/dist-cloud/server/index.mjs",
@@ -37,6 +37,7 @@
     "dayjs": "^1.11.10",
     "debounce": "^1.2.1",
     "drizzle-orm": "^0.45.1",
+    "electrobun": "^1.16.0",
     "jotai": "^2.12.5",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",

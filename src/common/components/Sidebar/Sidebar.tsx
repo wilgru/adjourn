@@ -15,7 +15,7 @@ import { useGetTagGroups } from "src/tags/hooks/useGetTagGroups";
 import { SidebarTagSection } from "./SidebarTagSection";
 
 export const Sidebar = () => {
-  const { isElectron, isMacElectron } = useElectronEnvironment();
+  const { isElectrobun, isMacElectrobun } = useElectronEnvironment();
 
   const { journalId, currentJournal, journals, isFetchingJournals } =
     useCurrentJournal();
@@ -39,16 +39,20 @@ export const Sidebar = () => {
           <div
             className={cn(
               "flex flex-row items-center gap-2",
-              isElectron ? "justify-end" : "justify-between",
-              isMacElectron ? "electron-drag-region min-h-8" : "",
+              isElectrobun ? "justify-end" : "justify-between",
+              isMacElectrobun
+                ? "electrobun-webkit-app-region-drag min-h-8"
+                : "",
             )}
           >
-            {!isElectron && (
+            {!isMacElectrobun && (
               <h1 className="font-title text-slate-500 text-xl">Adjourn</h1>
             )}
 
             <Button
-              className={isMacElectron ? "electron-no-drag" : ""}
+              className={
+                isMacElectrobun ? "electrobun-webkit-app-region-no-drag" : ""
+              }
               variant="ghost"
               size="sm"
               colour={currentJournal.colour}
