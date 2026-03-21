@@ -84,7 +84,8 @@
     "productName": "Adjourn",
     "executableName": "Adjourn",
     "directories": {
-      "output": "release"
+      "output": "dist/release",
+      "buildResources": "resources"
     },
     "files": [
       "dist/**",

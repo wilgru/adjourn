@@ -36,6 +36,7 @@ function createWindow() {
     win.loadURL(VITE_DEV_SERVER_URL);
     win.webContents.openDevTools();
   } else {
+    // Always load from 'dist' for Electron production build
     win.loadFile(path.join(__dirname, "../dist/index.html"));
   }
 }
