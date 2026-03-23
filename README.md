@@ -2,6 +2,8 @@
 
 Adjourn is a stream of consciousness note taking web app where you can view your notes in different ways.
 
+https://github.com/cheriot/electron-tanstack-demo
+
 ## Getting Started
 
 1. Install recommended extensions (VS Code). The recommended extensions can be found under `.vscode/extensions.json` but VS Code should prompt you to install them as well.
