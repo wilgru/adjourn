@@ -47,7 +47,7 @@ await migrate(db, {
   migrationsFolder:
     process.env.NODE_ENV === "production"
       ? path.join(process.resourcesPath, "drizzle")
-      : path.join(process.cwd(), "migrations"),
+      : path.join(process.cwd(), "drizzle"),
 });
 
 export { db };
