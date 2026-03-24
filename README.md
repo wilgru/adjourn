@@ -1,6 +1,6 @@
 # Adjourn
 
-Adjourn is a stream of consciousness note taking web app where you can view your notes in different ways.
+Adjourn is a note taking web app where you can view your notes in different ways.
 
 https://github.com/cheriot/electron-tanstack-demo
 
@@ -16,14 +16,14 @@ https://github.com/cheriot/electron-tanstack-demo
    cp .env.example .env
    ```
 
-4. Install Packages (You'll need Bun installed)
+4. Install Packages
 
    ```
-   bun install
+   npm install
    ```
 
 5. Start the Electron App
 
    ```
-   bun run dev
+   npm run dev
    ```

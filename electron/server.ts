@@ -13,20 +13,19 @@ let nitroProcess: UtilityProcess | null = null;
 export async function startServer(): Promise<number> {
   const isDev = !app.isPackaged;
 
+  // the Nitro server is started separately, so just return the port here (make sure Nitro dev server started on PORT 3000)
   if (isDev) {
-    // In development, vite runs its own dev server on port 3000
-    // We don't start a server here, just return the port where the dev server is running
     return 3000;
   }
 
-  // Get available port for production, preferring 3000
+  // Get available port, preferring 3000
   const serverPort = await getPort({ port: 3000 });
 
   // Production: Start embedded Nitro server as utility process
-  const workerPath = path.join(__dirname, "nitro-worker.js");
+  const workerPath = path.join(__dirname, "nitro-worker.cjs");
   const serverDir = path.join(process.resourcesPath, "dist-cloud", "server");
 
-  // See Nitro Node.js Runtime docs for how to use the server built by web-ui/
+  // See Nitro Node.js Runtime docs for how to use the Adjourn Cloud server
   // https://nitro.build/deploy/runtimes/node
   nitroProcess = utilityProcess.fork(workerPath, [], {
     env: {
@@ -39,7 +38,6 @@ export async function startServer(): Promise<number> {
     stdio: "pipe",
   });
 
-  // Pipe stdout/stderr to electron-log
   nitroProcess.stdout?.on("data", (data: Buffer) => {
     const str = data.toString().trim();
     if (str) log.info("[nitro]", str);
