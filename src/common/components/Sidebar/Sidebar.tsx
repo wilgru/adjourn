@@ -107,11 +107,12 @@ export const Sidebar = () => {
           >
             {ungroupedTags.map((tag) => (
               <NavItem
-                iconName={tag.icon}
                 colour={tag.colour}
                 title={tag.name}
                 preview={tag.noteCount}
                 to={`/${journalId}/tags/${tag.id}`}
+                key={tag.id}
+                iconName={tag.icon}
               />
             ))}
           </SidebarTagSection>
@@ -132,6 +133,7 @@ export const Sidebar = () => {
                     title={tag.name}
                     preview={tag.noteCount}
                     to={`/${journalId}/tags/${tag.id}`}
+                    key={tag.id}
                   />
                 ))}
               </div>

@@ -17,6 +17,7 @@ export const ColourPicker = ({
     <div className="flex flex-wrap gap-2">
       {colours.map((colour) => (
         <ColourPickerColourButton
+          key={colour.name}
           colour={colour}
           selected={selectedColourName === colour.name}
           onClick={onSelectColour}

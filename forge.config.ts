@@ -8,7 +8,7 @@ const config: ForgeConfig = {
     extraResource: ["dist-cloud", "drizzle"],
   },
   outDir: "dist",
-  rebuildConfig: {},
+  rebuildConfig: {}, // This config wont rebuild better-sqlite3, we have to do it manually with electron-rebuild in the build script, see package.json
   makers: [
     {
       name: "@electron-forge/maker-zip",
