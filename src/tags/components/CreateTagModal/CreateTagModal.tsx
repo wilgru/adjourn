@@ -46,7 +46,7 @@ export const CreateTagModal = ({ tagGroupId }: CreateTagModalProps) => {
   //       ...currentTagToEdit,
   //       links: [
   //         ...currentTagToEdit.links,
-  //         { id: generateId(), title: undefined, link: "" },
+  //         { id: crypto.randomUUID(), title: undefined, link: "" },
   //       ],
   //     };
   //   });

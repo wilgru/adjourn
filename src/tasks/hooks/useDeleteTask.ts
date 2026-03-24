@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { pb } from "src/pocketbase/utils/connection";
+import { useServerFn } from "@tanstack/react-start";
+import { deleteTask } from "../serverFunctions/deleteTask";
 import { useGetTasks } from "./useGetTasks";
 import type { UseMutateAsyncFunction } from "@tanstack/react-query";
 
@@ -19,6 +20,7 @@ type UseDeleteTaskResponse = {
 export const useDeleteTask = (): UseDeleteTaskResponse => {
   const queryClient = useQueryClient();
   const { tasks } = useGetTasks({});
+  const deleteTaskFn = useServerFn(deleteTask);
 
   const mutationFn = async ({
     taskId,
@@ -29,7 +31,7 @@ export const useDeleteTask = (): UseDeleteTaskResponse => {
       return;
     }
 
-    await pb.collection("tasks").delete(taskId);
+    await deleteTaskFn({ data: { taskId } });
 
     return taskId;
   };

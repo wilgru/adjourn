@@ -1,15 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { mapUser } from "src/Users/utils/mapUser";
-import { pb } from "src/pocketbase/utils/connection";
 import type { User } from "src/Users/User.type";
 
 export const useUser = () => {
   const queryFn = async (): Promise<User | null> => {
-    if (pb.authStore?.record) {
-      return mapUser(pb.authStore.record);
-    }
-
-    return null;
+    return null; // todo: implement real auth
   };
 
   const { data, isPending, isError } = useQuery({

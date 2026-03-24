@@ -1,12 +1,16 @@
 import { resolve } from "path";
-import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import react from "@vitejs/plugin-react";
+import { nitro } from "nitro/vite";
 import { defineConfig } from "vite";
-import svgr from "vite-plugin-svgr"; // TODO: no longer needed?
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [TanStackRouterVite(), svgr(), react()],
+  base: "/",
+  plugins: [tanstackStart(), react(), nitro({ output: { dir: "dist-cloud" } })],
+  environments: {
+    ssr: { build: { rollupOptions: { input: "./src/server.ts" } } },
+  },
   resolve: {
     alias: {
       src: resolve(__dirname, "src"),

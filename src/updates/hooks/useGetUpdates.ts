@@ -1,7 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { useCurrentJournalId } from "src/journals/hooks/useCurrentJournalId";
-import { pb } from "src/pocketbase/utils/connection";
+import { mapNote } from "src/notes/utils/mapNote";
 import { mapUpdate } from "src/updates/utils/mapUpdate";
+import { getUpdates } from "../serverFunctions/getUpdates";
+import type { Note } from "src/notes/Note.type";
 import type { Update } from "src/updates/Update.type";
 
 type UseGetUpdatesResponse = {
@@ -14,23 +17,25 @@ export const useGetUpdates = ({
   noteId?: string;
 } = {}): UseGetUpdatesResponse => {
   const { journalId } = useCurrentJournalId();
+  const getUpdatesFn = useServerFn(getUpdates);
 
   const queryFn = async (): Promise<Update[]> => {
-    const filters = [`journal = '${journalId}'`];
+    if (!journalId) return [];
 
-    if (noteId) {
-      filters.push(`notes ~ '${noteId}'`);
-    }
+    const result = await getUpdatesFn({
+      data: { journalId, noteId },
+    });
 
-    const rawUpdates = await pb
-      .collection("updates")
-      .getList(undefined, undefined, {
-        filter: filters.join(" && "),
-        expand: "notes",
-        sort: "-created",
-      });
+    const noteMap = new Map(
+      result.notes.map((note) => [note.id, mapNote(note)]),
+    );
 
-    return rawUpdates.items.map(mapUpdate);
+    return result.updates.map((update) => {
+      const notes = update.noteIds
+        .map((id) => noteMap.get(id))
+        .filter(Boolean) as Note[];
+      return mapUpdate(update, { notes });
+    });
   };
 
   const { data } = useQuery({

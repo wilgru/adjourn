@@ -16,7 +16,7 @@ ENV NODE_ENV="production"
 FROM base AS build
 
 # Build arguments/env variables
-ARG VITE_POCKETBASE_URL="https://adjourn-pocketbase.fly.dev"
+# ARG
 
 # Install packages needed to build node modules
 RUN apt-get update -qq && \
@@ -40,7 +40,7 @@ FROM nginx
 
 # Copy built application
 COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /app/dist-cloud /usr/share/nginx/html
 
 # Start the server by default, this can be overwritten at runtime
 EXPOSE 80

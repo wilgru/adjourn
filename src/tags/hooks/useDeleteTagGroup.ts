@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { pb } from "src/pocketbase/utils/connection";
+import { useServerFn } from "@tanstack/react-start";
+import { deleteTagGroup } from "../serverFunctions/deleteTagGroup";
 import type { UseMutateAsyncFunction } from "@tanstack/react-query";
 
 type UseDeleteTagGroupResponse = {
@@ -13,29 +14,13 @@ type UseDeleteTagGroupResponse = {
 
 export const useDeleteTagGroup = (): UseDeleteTagGroupResponse => {
   const queryClient = useQueryClient();
+  const deleteTagGroupFn = useServerFn(deleteTagGroup);
 
   const mutationFn = async (
     tagGroupId: string,
   ): Promise<string | undefined> => {
-    const tagsInGroup = await pb.collection("tags").getFullList({
-      filter: `tagGroup = '${tagGroupId}'`,
-    });
-
-    await Promise.all(
-      tagsInGroup.map((tag) =>
-        pb.collection("tags").update(tag.id, { tagGroup: null }),
-      ),
-    );
-
-    const isTagGroupDeleted = await pb
-      .collection("tagGroups")
-      .delete(tagGroupId);
-
-    if (isTagGroupDeleted) {
-      return tagGroupId;
-    }
-
-    return undefined;
+    await deleteTagGroupFn({ data: { tagGroupId } });
+    return tagGroupId;
   };
 
   const onSuccess = (data: string | undefined) => {

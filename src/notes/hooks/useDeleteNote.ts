@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { pb } from "src/pocketbase/utils/connection";
+import { useServerFn } from "@tanstack/react-start";
 import { useGetTags } from "src/tags/hooks/useGetTags";
+import { deleteNote } from "../serverFunctions/deleteNote";
 import { useGetNotes } from "./useGetNotes";
 import type { UseMutateAsyncFunction } from "@tanstack/react-query";
 
@@ -21,6 +22,7 @@ export const useDeleteNote = (): UseDeleteNoteResponse => {
   const queryClient = useQueryClient();
   const { notes } = useGetNotes({ isBookmarked: false });
   const { refetchTags } = useGetTags();
+  const deleteNoteFn = useServerFn(deleteNote);
 
   const mutationFn = async ({
     noteId,
@@ -31,7 +33,7 @@ export const useDeleteNote = (): UseDeleteNoteResponse => {
       return;
     }
 
-    await pb.collection("notes").delete(noteId);
+    await deleteNoteFn({ data: { noteId } });
 
     if (noteToDelete.tags.length) {
       await refetchTags();

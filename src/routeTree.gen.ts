@@ -8,167 +8,66 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-// Import Routes
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as SignupRouteImport } from './routes/signup'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as CreateJournalRouteImport } from './routes/create-journal'
+import { Route as LayoutRouteImport } from './routes/_layout'
+import { Route as LayoutJournalIdUpdatesRouteImport } from './routes/_layout.$journalId.updates'
+import { Route as LayoutJournalIdTasksRouteImport } from './routes/_layout.$journalId.tasks'
+import { Route as LayoutJournalIdNotesRouteImport } from './routes/_layout.$journalId.notes'
+import { Route as LayoutJournalIdBookmarkedRouteImport } from './routes/_layout.$journalId.bookmarked'
+import { Route as LayoutJournalIdTagsTagIdRouteImport } from './routes/_layout.$journalId.tags.$tagId'
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as SignupImport } from './routes/signup'
-import { Route as LoginImport } from './routes/login'
-import { Route as CreateJournalImport } from './routes/create-journal'
-import { Route as LayoutImport } from './routes/_layout'
-import { Route as LayoutJournalIdUpdatesImport } from './routes/_layout.$journalId.updates'
-import { Route as LayoutJournalIdTasksImport } from './routes/_layout.$journalId.tasks'
-import { Route as LayoutJournalIdNotesImport } from './routes/_layout.$journalId.notes'
-import { Route as LayoutJournalIdBookmarkedImport } from './routes/_layout.$journalId.bookmarked'
-import { Route as LayoutJournalIdTagsTagIdImport } from './routes/_layout.$journalId.tags.$tagId'
-
-// Create/Update Routes
-
-const SignupRoute = SignupImport.update({
+const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const LoginRoute = LoginImport.update({
+const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const CreateJournalRoute = CreateJournalImport.update({
+const CreateJournalRoute = CreateJournalRouteImport.update({
   id: '/create-journal',
   path: '/create-journal',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const LayoutRoute = LayoutImport.update({
+const LayoutRoute = LayoutRouteImport.update({
   id: '/_layout',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => rootRouteImport,
 } as any)
-
-const LayoutJournalIdUpdatesRoute = LayoutJournalIdUpdatesImport.update({
+const LayoutJournalIdUpdatesRoute = LayoutJournalIdUpdatesRouteImport.update({
   id: '/$journalId/updates',
   path: '/$journalId/updates',
   getParentRoute: () => LayoutRoute,
 } as any)
-
-const LayoutJournalIdTasksRoute = LayoutJournalIdTasksImport.update({
+const LayoutJournalIdTasksRoute = LayoutJournalIdTasksRouteImport.update({
   id: '/$journalId/tasks',
   path: '/$journalId/tasks',
   getParentRoute: () => LayoutRoute,
 } as any)
-
-const LayoutJournalIdNotesRoute = LayoutJournalIdNotesImport.update({
+const LayoutJournalIdNotesRoute = LayoutJournalIdNotesRouteImport.update({
   id: '/$journalId/notes',
   path: '/$journalId/notes',
   getParentRoute: () => LayoutRoute,
 } as any)
-
-const LayoutJournalIdBookmarkedRoute = LayoutJournalIdBookmarkedImport.update({
-  id: '/$journalId/bookmarked',
-  path: '/$journalId/bookmarked',
-  getParentRoute: () => LayoutRoute,
-} as any)
-
-const LayoutJournalIdTagsTagIdRoute = LayoutJournalIdTagsTagIdImport.update({
-  id: '/$journalId/tags/$tagId',
-  path: '/$journalId/tags/$tagId',
-  getParentRoute: () => LayoutRoute,
-} as any)
-
-// Populate the FileRoutesByPath interface
-
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {
-    '/_layout': {
-      id: '/_layout'
-      path: ''
-      fullPath: ''
-      preLoaderRoute: typeof LayoutImport
-      parentRoute: typeof rootRoute
-    }
-    '/create-journal': {
-      id: '/create-journal'
-      path: '/create-journal'
-      fullPath: '/create-journal'
-      preLoaderRoute: typeof CreateJournalImport
-      parentRoute: typeof rootRoute
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginImport
-      parentRoute: typeof rootRoute
-    }
-    '/signup': {
-      id: '/signup'
-      path: '/signup'
-      fullPath: '/signup'
-      preLoaderRoute: typeof SignupImport
-      parentRoute: typeof rootRoute
-    }
-    '/_layout/$journalId/bookmarked': {
-      id: '/_layout/$journalId/bookmarked'
-      path: '/$journalId/bookmarked'
-      fullPath: '/$journalId/bookmarked'
-      preLoaderRoute: typeof LayoutJournalIdBookmarkedImport
-      parentRoute: typeof LayoutImport
-    }
-    '/_layout/$journalId/notes': {
-      id: '/_layout/$journalId/notes'
-      path: '/$journalId/notes'
-      fullPath: '/$journalId/notes'
-      preLoaderRoute: typeof LayoutJournalIdNotesImport
-      parentRoute: typeof LayoutImport
-    }
-    '/_layout/$journalId/tasks': {
-      id: '/_layout/$journalId/tasks'
-      path: '/$journalId/tasks'
-      fullPath: '/$journalId/tasks'
-      preLoaderRoute: typeof LayoutJournalIdTasksImport
-      parentRoute: typeof LayoutImport
-    }
-    '/_layout/$journalId/updates': {
-      id: '/_layout/$journalId/updates'
-      path: '/$journalId/updates'
-      fullPath: '/$journalId/updates'
-      preLoaderRoute: typeof LayoutJournalIdUpdatesImport
-      parentRoute: typeof LayoutImport
-    }
-    '/_layout/$journalId/tags/$tagId': {
-      id: '/_layout/$journalId/tags/$tagId'
-      path: '/$journalId/tags/$tagId'
-      fullPath: '/$journalId/tags/$tagId'
-      preLoaderRoute: typeof LayoutJournalIdTagsTagIdImport
-      parentRoute: typeof LayoutImport
-    }
-  }
-}
-
-// Create and export the route tree
-
-interface LayoutRouteChildren {
-  LayoutJournalIdBookmarkedRoute: typeof LayoutJournalIdBookmarkedRoute
-  LayoutJournalIdNotesRoute: typeof LayoutJournalIdNotesRoute
-  LayoutJournalIdTasksRoute: typeof LayoutJournalIdTasksRoute
-  LayoutJournalIdUpdatesRoute: typeof LayoutJournalIdUpdatesRoute
-  LayoutJournalIdTagsTagIdRoute: typeof LayoutJournalIdTagsTagIdRoute
-}
-
-const LayoutRouteChildren: LayoutRouteChildren = {
-  LayoutJournalIdBookmarkedRoute: LayoutJournalIdBookmarkedRoute,
-  LayoutJournalIdNotesRoute: LayoutJournalIdNotesRoute,
-  LayoutJournalIdTasksRoute: LayoutJournalIdTasksRoute,
-  LayoutJournalIdUpdatesRoute: LayoutJournalIdUpdatesRoute,
-  LayoutJournalIdTagsTagIdRoute: LayoutJournalIdTagsTagIdRoute,
-}
-
-const LayoutRouteWithChildren =
-  LayoutRoute._addFileChildren(LayoutRouteChildren)
+const LayoutJournalIdBookmarkedRoute =
+  LayoutJournalIdBookmarkedRouteImport.update({
+    id: '/$journalId/bookmarked',
+    path: '/$journalId/bookmarked',
+    getParentRoute: () => LayoutRoute,
+  } as any)
+const LayoutJournalIdTagsTagIdRoute =
+  LayoutJournalIdTagsTagIdRouteImport.update({
+    id: '/$journalId/tags/$tagId',
+    path: '/$journalId/tags/$tagId',
+    getParentRoute: () => LayoutRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
-  '': typeof LayoutRouteWithChildren
+  '/': typeof LayoutRouteWithChildren
   '/create-journal': typeof CreateJournalRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
@@ -178,9 +77,8 @@ export interface FileRoutesByFullPath {
   '/$journalId/updates': typeof LayoutJournalIdUpdatesRoute
   '/$journalId/tags/$tagId': typeof LayoutJournalIdTagsTagIdRoute
 }
-
 export interface FileRoutesByTo {
-  '': typeof LayoutRouteWithChildren
+  '/': typeof LayoutRouteWithChildren
   '/create-journal': typeof CreateJournalRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
@@ -190,9 +88,8 @@ export interface FileRoutesByTo {
   '/$journalId/updates': typeof LayoutJournalIdUpdatesRoute
   '/$journalId/tags/$tagId': typeof LayoutJournalIdTagsTagIdRoute
 }
-
 export interface FileRoutesById {
-  __root__: typeof rootRoute
+  __root__: typeof rootRouteImport
   '/_layout': typeof LayoutRouteWithChildren
   '/create-journal': typeof CreateJournalRoute
   '/login': typeof LoginRoute
@@ -203,11 +100,10 @@ export interface FileRoutesById {
   '/_layout/$journalId/updates': typeof LayoutJournalIdUpdatesRoute
   '/_layout/$journalId/tags/$tagId': typeof LayoutJournalIdTagsTagIdRoute
 }
-
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | ''
+    | '/'
     | '/create-journal'
     | '/login'
     | '/signup'
@@ -218,7 +114,7 @@ export interface FileRouteTypes {
     | '/$journalId/tags/$tagId'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | ''
+    | '/'
     | '/create-journal'
     | '/login'
     | '/signup'
@@ -240,7 +136,6 @@ export interface FileRouteTypes {
     | '/_layout/$journalId/tags/$tagId'
   fileRoutesById: FileRoutesById
 }
-
 export interface RootRouteChildren {
   LayoutRoute: typeof LayoutRouteWithChildren
   CreateJournalRoute: typeof CreateJournalRoute
@@ -248,68 +143,108 @@ export interface RootRouteChildren {
   SignupRoute: typeof SignupRoute
 }
 
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/create-journal': {
+      id: '/create-journal'
+      path: '/create-journal'
+      fullPath: '/create-journal'
+      preLoaderRoute: typeof CreateJournalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_layout': {
+      id: '/_layout'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof LayoutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_layout/$journalId/updates': {
+      id: '/_layout/$journalId/updates'
+      path: '/$journalId/updates'
+      fullPath: '/$journalId/updates'
+      preLoaderRoute: typeof LayoutJournalIdUpdatesRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/$journalId/tasks': {
+      id: '/_layout/$journalId/tasks'
+      path: '/$journalId/tasks'
+      fullPath: '/$journalId/tasks'
+      preLoaderRoute: typeof LayoutJournalIdTasksRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/$journalId/notes': {
+      id: '/_layout/$journalId/notes'
+      path: '/$journalId/notes'
+      fullPath: '/$journalId/notes'
+      preLoaderRoute: typeof LayoutJournalIdNotesRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/$journalId/bookmarked': {
+      id: '/_layout/$journalId/bookmarked'
+      path: '/$journalId/bookmarked'
+      fullPath: '/$journalId/bookmarked'
+      preLoaderRoute: typeof LayoutJournalIdBookmarkedRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/$journalId/tags/$tagId': {
+      id: '/_layout/$journalId/tags/$tagId'
+      path: '/$journalId/tags/$tagId'
+      fullPath: '/$journalId/tags/$tagId'
+      preLoaderRoute: typeof LayoutJournalIdTagsTagIdRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+  }
+}
+
+interface LayoutRouteChildren {
+  LayoutJournalIdBookmarkedRoute: typeof LayoutJournalIdBookmarkedRoute
+  LayoutJournalIdNotesRoute: typeof LayoutJournalIdNotesRoute
+  LayoutJournalIdTasksRoute: typeof LayoutJournalIdTasksRoute
+  LayoutJournalIdUpdatesRoute: typeof LayoutJournalIdUpdatesRoute
+  LayoutJournalIdTagsTagIdRoute: typeof LayoutJournalIdTagsTagIdRoute
+}
+
+const LayoutRouteChildren: LayoutRouteChildren = {
+  LayoutJournalIdBookmarkedRoute: LayoutJournalIdBookmarkedRoute,
+  LayoutJournalIdNotesRoute: LayoutJournalIdNotesRoute,
+  LayoutJournalIdTasksRoute: LayoutJournalIdTasksRoute,
+  LayoutJournalIdUpdatesRoute: LayoutJournalIdUpdatesRoute,
+  LayoutJournalIdTagsTagIdRoute: LayoutJournalIdTagsTagIdRoute,
+}
+
+const LayoutRouteWithChildren =
+  LayoutRoute._addFileChildren(LayoutRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   LayoutRoute: LayoutRouteWithChildren,
   CreateJournalRoute: CreateJournalRoute,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
 }
-
-export const routeTree = rootRoute
+export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
 
-/* ROUTE_MANIFEST_START
-{
-  "routes": {
-    "__root__": {
-      "filePath": "__root.tsx",
-      "children": [
-        "/_layout",
-        "/create-journal",
-        "/login",
-        "/signup"
-      ]
-    },
-    "/_layout": {
-      "filePath": "_layout.tsx",
-      "children": [
-        "/_layout/$journalId/bookmarked",
-        "/_layout/$journalId/notes",
-        "/_layout/$journalId/tasks",
-        "/_layout/$journalId/updates",
-        "/_layout/$journalId/tags/$tagId"
-      ]
-    },
-    "/create-journal": {
-      "filePath": "create-journal.tsx"
-    },
-    "/login": {
-      "filePath": "login.tsx"
-    },
-    "/signup": {
-      "filePath": "signup.tsx"
-    },
-    "/_layout/$journalId/bookmarked": {
-      "filePath": "_layout.$journalId.bookmarked.tsx",
-      "parent": "/_layout"
-    },
-    "/_layout/$journalId/notes": {
-      "filePath": "_layout.$journalId.notes.tsx",
-      "parent": "/_layout"
-    },
-    "/_layout/$journalId/tasks": {
-      "filePath": "_layout.$journalId.tasks.tsx",
-      "parent": "/_layout"
-    },
-    "/_layout/$journalId/updates": {
-      "filePath": "_layout.$journalId.updates.tsx",
-      "parent": "/_layout"
-    },
-    "/_layout/$journalId/tags/$tagId": {
-      "filePath": "_layout.$journalId.tags.$tagId.tsx",
-      "parent": "/_layout"
-    }
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
   }
 }
-ROUTE_MANIFEST_END */

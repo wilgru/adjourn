@@ -43,5 +43,14 @@
       "bold": false,
       "italic": false
     }
+  ],
+  "sqltools.useNodeRuntime": true,
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "driver": "SQLite",
+      "name": "Adjourn Dev DB",
+      "database": "/dev-db/adjourn.db"
+    }
   ]
 }

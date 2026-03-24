@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { useCurrentJournalId } from "src/journals/hooks/useCurrentJournalId";
-import { pb } from "src/pocketbase/utils/connection";
 import { mapTag } from "src/tags/utils/mapTag";
+import { getTags } from "../serverFunctions/getTags";
 import type {
   QueryObserverResult,
   RefetchOptions,
@@ -17,19 +18,14 @@ type UseGetTagsResponse = {
 
 export const useGetTags = (): UseGetTagsResponse => {
   const { journalId } = useCurrentJournalId();
+  const getTagsFn = useServerFn(getTags);
 
   const queryFn = async (): Promise<Tag[]> => {
-    const filters = [`journal = '${journalId}'`];
+    const result = await getTagsFn({
+      data: { journalId: journalId ?? "" },
+    });
 
-    const rawTags = await pb
-      .collection("tagsWithNoteCounts")
-      .getList(undefined, undefined, {
-        filter: filters.join(" && "),
-      });
-
-    const mappedTags = rawTags.items.map(mapTag);
-
-    return mappedTags;
+    return result.tags.map((tag) => mapTag(tag, { noteCount: tag.noteCount }));
   };
 
   // TODO: consider time caching for better performance

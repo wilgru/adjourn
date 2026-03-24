@@ -1,12 +1,18 @@
+import type { TaskSchema } from "./tasks.schema";
 import type { Dayjs } from "dayjs";
 import type { Note } from "src/notes/Note.type";
 
-export type Task = {
-  id: string;
-  title: string;
-  description: string;
-  link: string | null;
-  isFlagged: boolean;
+export type Task = Omit<
+  TaskSchema,
+  | "note"
+  | "dueDate"
+  | "completedDate"
+  | "cancelledDate"
+  | "journal"
+  | "user"
+  | "created"
+  | "updated"
+> & {
   note: Note | null;
   dueDate: Dayjs | null;
   completedDate: Dayjs | null;

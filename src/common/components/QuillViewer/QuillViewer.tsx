@@ -1,5 +1,4 @@
 import "./style.css";
-import Quill from "quill";
 import { useEffect, useRef } from "react";
 import { cn } from "src/common/utils/cn";
 import type Delta from "quill-delta";
@@ -26,28 +25,40 @@ export default function QuillViewer({
       return;
     }
 
+    let isMounted = true;
     const editorContainer = container.appendChild(
       container.ownerDocument.createElement("div"),
     );
 
-    const quillEditor = new Quill(editorContainer, {
-      readOnly: true,
-    });
+    const initializeViewer = async () => {
+      const { default: Quill } = await import("quill");
 
-    quillEditor?.setContents(content);
-
-    // Directly apply tint color to the .ql-editor element so it overrides
-    // any color that Quill or its container may set via CSS.
-    if (textColor) {
-      const editorEl = editorContainer.querySelector(
-        ".ql-editor",
-      ) as HTMLElement | null;
-      if (editorEl) {
-        editorEl.style.color = textColor;
+      if (!isMounted) {
+        return;
       }
-    }
+
+      const quillEditor = new Quill(editorContainer, {
+        readOnly: true,
+      });
+
+      quillEditor.setContents(content);
+
+      // Directly apply tint color to the .ql-editor element so it overrides
+      // any color that Quill or its container may set via CSS.
+      if (textColor) {
+        const editorEl = editorContainer.querySelector(
+          ".ql-editor",
+        ) as HTMLElement | null;
+        if (editorEl) {
+          editorEl.style.color = textColor;
+        }
+      }
+    };
+
+    void initializeViewer();
 
     return () => {
+      isMounted = false;
       container.innerHTML = "";
     };
   }, [content, textColor]);

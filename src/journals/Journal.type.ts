@@ -1,10 +1,20 @@
+import type { JournalSchema } from "./journals.schema";
 import type { Dayjs } from "dayjs";
 import type { Colour } from "src/colours/Colour.type";
 
-export type Journal = {
-  id: string;
-  title: string;
-  icon: string;
+export type Journal = Omit<
+  JournalSchema,
+  | "colour"
+  | "notesSortBy"
+  | "notesSortDirection"
+  | "notesGroupBy"
+  | "bookmarkedSortBy"
+  | "bookmarkedSortDirection"
+  | "bookmarkedGroupBy"
+  | "user"
+  | "created"
+  | "updated"
+> & {
   colour: Colour;
   created: Dayjs;
   updated: Dayjs;

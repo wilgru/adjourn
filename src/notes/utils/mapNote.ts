@@ -1,26 +1,31 @@
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
 import Delta from "quill-delta";
-import { mapTag } from "../../tags/utils/mapTag";
-import { mapTask } from "../../tasks/utils/mapTask";
-import type { RecordModel } from "pocketbase";
 import type { Note } from "src/notes/Note.type";
+import type { NoteSchema } from "src/notes/notes.schema";
+import type { Tag } from "src/tags/Tag.type";
+import type { Task } from "src/tasks/Task.type";
 
 dayjs.extend(utc);
 
-export const mapNote = (note: RecordModel): Note => {
+type MapNoteOptions = {
+  tags?: Tag[];
+  tasks?: Task[];
+};
+
+export const mapNote = (
+  note: NoteSchema,
+  options: MapNoteOptions = {},
+): Note => {
   return {
     id: note.id,
-    isDraft: false,
     title: note.title,
-    tasks: note?.expand?.tasks_via_note
-      ? note.expand.tasks_via_note.map(mapTask)
-      : [],
-    content: note.content ? new Delta(note.content) : new Delta(), // TODO: make not nullable in pocketbase
+    tasks: options.tasks ?? [],
+    content: note.content ? new Delta(JSON.parse(note.content)) : new Delta(),
     isBookmarked: note.isBookmarked,
-    tags: note?.expand?.tags ? note.expand.tags.map(mapTag) : [],
-    updateCount: note?.expand?.updates_via_notes?.length ?? 0,
-    deleted: null,
+    tags: options.tags ?? [],
+    updateCount: 0,
+    deleted: note.deleted ? dayjs.utc(note.deleted).local() : null,
     created: dayjs.utc(note.created).local(),
     updated: dayjs.utc(note.updated).local(),
   };

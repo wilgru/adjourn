@@ -1,8 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { useUser } from "src/Users/hooks/useUser";
 import { useCurrentJournalId } from "src/journals/hooks/useCurrentJournalId";
-import { pb } from "src/pocketbase/utils/connection";
 import { mapUpdate } from "src/updates/utils/mapUpdate";
+import { createUpdate } from "../serverFunctions/createUpdate";
 import type { UseMutateAsyncFunction } from "@tanstack/react-query";
 import type { Update } from "src/updates/Update.type";
 
@@ -23,22 +24,24 @@ export const useCreateUpdate = (): UseCreateUpdateResponse => {
   const { journalId } = useCurrentJournalId();
   const queryClient = useQueryClient();
   const { user } = useUser();
+  const createUpdateFn = useServerFn(createUpdate);
 
   const mutationFn = async ({
     createUpdateData,
   }: CreateUpdateProps): Promise<Update | undefined> => {
-    const createdUpdate = await pb.collection("updates").create(
-      {
-        content: createUpdateData.content,
+    const row = await createUpdateFn({
+      data: {
+        content: createUpdateData.content
+          ? JSON.stringify(createUpdateData.content)
+          : null,
         tint: createUpdateData.tint,
-        notes: createUpdateData.notes.map((n) => n.id),
-        journal: journalId,
-        user: user?.id,
+        noteIds: createUpdateData.notes.map((n) => n.id),
+        journalId: journalId ?? null,
+        userId: user?.id ?? null,
       },
-      { expand: "notes" },
-    );
+    });
 
-    return mapUpdate(createdUpdate);
+    return mapUpdate(row, { notes: createUpdateData.notes });
   };
 
   const onSuccess = () => {

@@ -1,12 +1,16 @@
-import type { RecordModel } from "pocketbase";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc.js";
 import type { TagGroup } from "src/tags/Tag.type";
+import type { TagGroupSchema } from "src/tags/tags.schema";
 
-export const mapTagGroup = (tagGroup: RecordModel): TagGroup => {
+dayjs.extend(utc);
+
+export const mapTagGroup = (tagGroup: TagGroupSchema): TagGroup => {
   return {
     id: tagGroup.id,
     title: tagGroup.title,
     tags: [],
-    created: tagGroup.createdAt,
-    updated: tagGroup.updatedAt,
+    created: dayjs.utc(tagGroup.created).local(),
+    updated: dayjs.utc(tagGroup.updated).local(),
   };
 };

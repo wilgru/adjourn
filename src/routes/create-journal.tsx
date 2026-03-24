@@ -23,7 +23,7 @@ function RouteComponent() {
   const navigate = useNavigate();
   const [journalToCreate, setJournalToCreate] = useState<JournalToCreate>({
     title: "",
-    icon: "bookOpen",
+    icon: "notebook",
     colour: colours.blue,
   });
 

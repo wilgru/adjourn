@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { mapJournal } from "src/journals/utils/mapJournal";
-import { pb } from "src/pocketbase/utils/connection";
+import { updateJournal } from "../serverFunctions/updateJournal";
 import type { UseMutateAsyncFunction } from "@tanstack/react-query";
 import type { Journal } from "src/journals/Journal.type";
 
@@ -32,19 +33,29 @@ type UseUpdateJournalResponse = {
 
 export const useUpdateJournal = (): UseUpdateJournalResponse => {
   const queryClient = useQueryClient();
+  const updateJournalFn = useServerFn(updateJournal);
 
   const mutationFn = async ({
     journalId,
     updateJournalData,
   }: UpdateJournalProps): Promise<Journal | undefined> => {
-    const rawUpdatedJournal = await pb
-      .collection("journals")
-      .update(journalId, {
-        ...updateJournalData,
+    const row = await updateJournalFn({
+      data: {
+        journalId,
+        title: updateJournalData.title,
+        icon: updateJournalData.icon,
         colour: updateJournalData.colour.name,
-      });
+        notesSortBy: updateJournalData.notesSortBy ?? "created",
+        notesSortDirection: updateJournalData.notesSortDirection ?? "asc",
+        notesGroupBy: updateJournalData.notesGroupBy ?? null,
+        bookmarkedSortBy: updateJournalData.bookmarkedSortBy ?? "created",
+        bookmarkedSortDirection:
+          updateJournalData.bookmarkedSortDirection ?? "asc",
+        bookmarkedGroupBy: updateJournalData.bookmarkedGroupBy ?? null,
+      },
+    });
 
-    return mapJournal(rawUpdatedJournal);
+    return mapJournal(row);
   };
 
   const onSuccess = (data: Journal | undefined) => {

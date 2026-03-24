@@ -1,5 +1,5 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
-import isAuthenticated from "src/Users/utils/isAuthenticated";
+import { createFileRoute } from "@tanstack/react-router";
+import requireClientAuth from "src/Users/utils/requireClientAuth";
 import { Toolbar } from "src/common/components/Toolbar/Toolbar";
 import { cn } from "src/common/utils/cn";
 import { Icon } from "src/icons/components/Icon/Icon";
@@ -10,14 +10,7 @@ import { useGetTasks } from "src/tasks/hooks/useGetTasks";
 export const Route = createFileRoute("/_layout/$journalId/tasks")({
   component: RouteComponent,
   beforeLoad: async ({ location }) => {
-    if (!isAuthenticated()) {
-      throw redirect({
-        to: "/login",
-        search: {
-          redirect: location.href,
-        },
-      });
-    }
+    requireClientAuth(location);
   },
 });
 

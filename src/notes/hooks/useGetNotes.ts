@@ -1,9 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
 import { mapNote } from "src/notes/utils/mapNote";
-import { pb } from "src/pocketbase/utils/connection";
+import { useGetTags } from "src/tags/hooks/useGetTags";
 import { useCurrentJournalId } from "../../journals/hooks/useCurrentJournalId";
+import { getNotes } from "../serverFunctions/getNotes";
 import type { Note } from "src/notes/Note.type";
 
 type UseGetNotesResponse = {
@@ -20,17 +22,14 @@ export const useGetNotes = ({
   createdDateString?: string;
 }): UseGetNotesResponse => {
   const { journalId } = useCurrentJournalId();
+  const { tags: allTags } = useGetTags();
+  const getNotesFn = useServerFn(getNotes);
 
   const queryFn = async (): Promise<{
     notes: Note[];
   }> => {
-    const filters = [`journal = '${journalId}'`, "deleted = null"];
-
-    if (isBookmarked !== undefined) {
-      filters.push(
-        isBookmarked ? "isBookmarked = true" : "isBookmarked = false",
-      );
-    }
+    let createdAfter: string | undefined;
+    let createdBefore: string | undefined;
 
     if (createdDateString) {
       const localCreatedDateMidday = dayjs(createdDateString)
@@ -39,29 +38,30 @@ export const useGetNotes = ({
         .second(0)
         .millisecond(0);
 
-      const utcStartOfDate = localCreatedDateMidday
+      createdAfter = localCreatedDateMidday
         .utc()
         .subtract(12, "hour")
-        .format("YYYY-MM-DD HH:mm:ss.SSS[Z]");
+        .toISOString();
 
-      const utcEndOfDate = localCreatedDateMidday
+      createdBefore = localCreatedDateMidday
         .utc()
         .add(12, "hour")
-        .format("YYYY-MM-DD HH:mm:ss.SSS[Z]");
-
-      filters.push(
-        `created >= "${utcStartOfDate}" && created <= "${utcEndOfDate}"`,
-      );
+        .toISOString();
     }
 
-    const rawNotes = await pb
-      .collection("notes")
-      .getList(undefined, undefined, {
-        filter: filters.join(" && "),
-        expand: "tags, updates_via_notes",
-      });
+    const result = await getNotesFn({
+      data: {
+        journalId: journalId ?? "",
+        isBookmarked,
+        createdAfter,
+        createdBefore,
+      },
+    });
 
-    const notes = rawNotes.items.map(mapNote);
+    const notes = result.notes.map((row) => {
+      const tags = allTags.filter((t) => row.tagIds.includes(t.id));
+      return mapNote(row, { tags });
+    });
 
     return { notes };
   };

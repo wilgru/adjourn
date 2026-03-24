@@ -1,11 +1,9 @@
-import type { AuthModel } from "pocketbase";
-import type { User } from "src/Users/User.type";
-
-export const mapUser = (authModel: NonNullable<AuthModel>): User => {
+// Returns a dummy user object
+export const mapUser = () => {
   return {
-    id: authModel.id,
-    username: authModel.username,
-    email: authModel.email,
-    name: authModel.name,
+    id: "dummy-id",
+    username: "dummyuser",
+    email: "dummy@example.com",
+    name: "Dummy User",
   };
 };

@@ -1,20 +1,20 @@
+import type { NoteSchema } from "./notes.schema";
 import type { Dayjs } from "dayjs";
 import type Delta from "quill-delta";
 import type { Tag } from "src/tags/Tag.type";
 import type { Task } from "src/tasks/Task.type";
 
-export type Note = {
-  id: string;
-  isDraft: boolean; // TODO: remove
-  title: string | null;
-  tasks: Task[];
+export type Note = Omit<
+  NoteSchema,
+  "content" | "created" | "updated" | "deleted" | "journal" | "user"
+> & {
   content: Delta;
-  isBookmarked: boolean;
-  tags: Tag[];
-  updateCount: number;
   deleted: Dayjs | null;
   created: Dayjs;
   updated: Dayjs;
+  tasks: Task[];
+  tags: Tag[];
+  updateCount: number;
 };
 
 export type NotesGroup = {

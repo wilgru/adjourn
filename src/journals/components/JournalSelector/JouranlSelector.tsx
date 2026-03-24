@@ -80,7 +80,7 @@ export const JournalSelector = ({
             className="w-56 flex flex-col flex-grow gap-2 bg-white border border-slate-200 rounded-2xl p-2 drop-shadow"
           >
             <DropdownMenu.Label className="pl-2 text-xs text-slate-400">
-              Journals
+              Local
             </DropdownMenu.Label>
 
             {journals.map((journal) => (
@@ -121,13 +121,21 @@ export const JournalSelector = ({
               </DropdownMenu.Item>
             ))}
 
+            <DropdownMenu.Item className="flex items-center gap-2 leading-none text-sm p-2 outline-none rounded-xl cursor-pointer data-[highlighted]:bg-orange-100 data-[highlighted]:text-orange-500 transition-colors">
+              <Link to={"/create-journal"} className="flex items-center gap-2">
+                <Icon iconName="plus" size="sm" />
+                Create new journal
+              </Link>
+            </DropdownMenu.Item>
+
             <DropdownMenu.Separator className="my-1 border-t border-slate-200" />
 
             <DropdownMenu.Item className="flex items-center gap-2 leading-none text-sm p-2 outline-none rounded-xl cursor-pointer data-[highlighted]:bg-orange-100 data-[highlighted]:text-orange-500 transition-colors">
-              <Link to={"/create-journal"} className="flex items-center gap-2">
-                <Icon iconName="plus" size="sm" className="text-slate-500" />
-                Create new journal
-              </Link>
+              <Icon iconName="cloud" size="sm" />
+              <div>
+                <h2 className="text-sm">Connect to Adjourn Cloud instance</h2>
+                <p className="text-xs text-slate-500">(coming soon)</p>
+              </div>
             </DropdownMenu.Item>
           </DropdownMenu.Content>
         </DropdownMenu.Portal>

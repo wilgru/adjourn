@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { mapNote } from "src/notes/utils/mapNote";
-import { pb } from "src/pocketbase/utils/connection";
 import { mapTag } from "src/tags/utils/mapTag";
+import { getTag } from "../serverFunctions/getTag";
 import type {
   QueryObserverResult,
   RefetchOptions,
@@ -24,21 +25,16 @@ type UseTagResponse = {
 };
 
 export const useGetTag = (tagId: string): UseTagResponse => {
+  const getTagFn = useServerFn(getTag);
+
   const queryFn = async (): Promise<{
     tag: Tag;
     notes: Note[];
   }> => {
-    const rawTag = await pb.collection("tags").getOne(tagId, {
-      expand:
-        "notes_via_tags, notes_via_tags.tags, tasks_via_tags, tasks_via_tags.tags",
-    });
-    const tag: Tag = mapTag({
-      ...rawTag,
-      totalNotes: rawTag.expand?.notes_via_tags?.length ?? 0,
-    });
+    const result = await getTagFn({ data: { tagId } });
 
-    const rawNotes = rawTag.expand?.notes_via_tags ?? [];
-    const notes: Note[] = rawNotes.map(mapNote);
+    const tag = mapTag(result.tag, { noteCount: result.noteCount });
+    const notes = result.notes.map((n) => mapNote(n));
 
     return {
       tag,

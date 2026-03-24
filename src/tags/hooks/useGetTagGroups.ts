@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { useCurrentJournalId } from "src/journals/hooks/useCurrentJournalId";
-import { pb } from "src/pocketbase/utils/connection";
 import { mapTag } from "src/tags/utils/mapTag";
 import { mapTagGroup } from "src/tags/utils/mapTagGroup";
+import { getTagGroups } from "../serverFunctions/getTagGroups";
 import type {
   QueryObserverResult,
   RefetchOptions,
@@ -25,26 +26,20 @@ type UseGetTagGroupsResponse = {
 
 export const useGetTagGroups = (): UseGetTagGroupsResponse => {
   const { journalId } = useCurrentJournalId();
+  const getTagGroupsFn = useServerFn(getTagGroups);
 
   const queryFn = async (): Promise<{
     ungroupedTags: Tag[];
     tagGroups: TagGroup[];
   }> => {
-    const filters = [`journal = '${journalId}'`];
+    const result = await getTagGroupsFn({
+      data: { journalId: journalId ?? "" },
+    });
 
-    const rawTagGroups = await pb
-      .collection("tagGroups")
-      .getList(undefined, undefined, {
-        filter: filters.join(" && "),
-      });
-    const mappedTagGroups = rawTagGroups.items.map(mapTagGroup);
-
-    const rawTags = await pb
-      .collection("tagsWithNoteCounts")
-      .getList(undefined, undefined, {
-        filter: filters.join(" && "),
-      });
-    const mappedTags = rawTags.items.map(mapTag);
+    const mappedTagGroups = result.tagGroups.map(mapTagGroup);
+    const mappedTags = result.tags.map((tag) =>
+      mapTag(tag, { noteCount: tag.noteCount }),
+    );
 
     const ungroupedTags: Tag[] = [];
     mappedTags.forEach((tag) => {
