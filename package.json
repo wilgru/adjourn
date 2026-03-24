@@ -8,11 +8,10 @@
     "node": ">=20.0.0"
   },
   "scripts": {
-    "dev": "concurrently -k -n VITE,ELECTRON -c magenta,cyan \"VITE_ELECTRON=true vite\" \"electron-forge start\"",
-    "build": "VITE_ELECTRON=true npm run build:cloud && npm run rebuild && electron-forge make",
-    "rebuild": "electron-rebuild -f -w better-sqlite3",
-    "dev:cloud": "vite",
-    "build:cloud": "tsc && npm run rebuild && vite build",
+    "dev": "npm rebuild && concurrently -k -n VITE,ELECTRON -c magenta,cyan \"VITE_ELECTRON=true vite\" \"electron-forge start\"",
+    "build": "VITE_ELECTRON=true npm run build:cloud && electron-rebuild -f -w better-sqlite3 && electron-forge make && npm rebuild",
+    "dev:cloud": "npm rebuild && vite",
+    "build:cloud": "tsc && npm rebuild && vite build",
     "start:cloud": "node dist-cloud/server/index.mjs",
     "test": "echo 'No test runner specified' && exit 0",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",

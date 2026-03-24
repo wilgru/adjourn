@@ -6,7 +6,10 @@ import { drizzle } from "drizzle-orm/better-sqlite3";
 import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 
 function getDbPath(): string {
-  if (process.env.NODE_ENV === "production") {
+  const isProduction = process.env.NODE_ENV === "production";
+  const isElectron = !!(process.versions && process.versions.electron);
+
+  if (isElectron && isProduction) {
     const platform = process.platform;
     let appDataDir: string;
 
@@ -28,13 +31,21 @@ function getDbPath(): string {
         "Adjourn",
       );
     }
-
     mkdirSync(appDataDir, { recursive: true });
     return path.join(appDataDir, "adjourn.db");
   }
 
-  // In dev, use process.cwd() which is always the project root (works for both web-only and Electron dev modes)
+  // Not Electron: use a standard server location (can be customized)
+  if (isProduction) {
+    const serverDbDir = "/var/lib/adjourn";
+
+    mkdirSync(serverDbDir, { recursive: true });
+    return path.join(serverDbDir, "adjourn.db");
+  }
+
+  // In dev (both for Electron and web modes) use dev-db. Uses process.cwd() which is always the project root
   const devDbDir = path.join(process.cwd(), "dev-db");
+
   mkdirSync(devDbDir, { recursive: true });
   return path.join(devDbDir, "adjourn.db");
 }
