@@ -3,16 +3,19 @@ import debounce from "debounce";
 import { useEffect, useRef, useState } from "react";
 import { colours } from "src/colours/colours.constant";
 import { Button } from "src/common/components/Button/Button";
+import { Toggle } from "src/common/components/Toggle/Toggle";
 import { cn } from "src/common/utils/cn";
 import { Icon } from "src/icons/components/Icon/Icon";
 import { useCreateTask } from "src/tasks/hooks/useCreateTask";
 import { useDeleteTask } from "src/tasks/hooks/useDeleteTask";
 import { useUpdateTask } from "src/tasks/hooks/useUpdateTask";
+import type { Colour } from "src/colours/Colour.type";
 import type { Task } from "src/tasks/Task.type";
 
 type TaskEditorProps = {
   task?: Partial<Task>;
   onSave?: () => void;
+  colour?: Colour;
 };
 
 const getInitialTask = (task: Partial<Task> | undefined): Task => {
@@ -31,7 +34,11 @@ const getInitialTask = (task: Partial<Task> | undefined): Task => {
   };
 };
 
-export const TaskEditor = ({ task, onSave }: TaskEditorProps) => {
+export const TaskEditor = ({
+  task,
+  onSave,
+  colour = colours.orange,
+}: TaskEditorProps) => {
   const { createTask } = useCreateTask();
   const { updateTask } = useUpdateTask();
   const { deleteTask } = useDeleteTask();
@@ -125,8 +132,6 @@ export const TaskEditor = ({ task, onSave }: TaskEditorProps) => {
   return (
     <div
       className="w-full flex gap-2 items-start"
-      onMouseEnter={() => setIsFocused(true)}
-      onMouseLeave={() => setIsFocused(false)}
       onFocus={() => setIsFocused(true)}
       onBlur={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget)) {
@@ -180,25 +185,17 @@ export const TaskEditor = ({ task, onSave }: TaskEditorProps) => {
 
         {isFocused && (
           <div className="flex flex-row flex-wrap items-center gap-1">
-            <button
-              className="p-1 rounded-full transition-colors hover:bg-orange-100"
+            <Toggle
+              isToggled={editedTask.isFlagged}
+              size="sm"
+              colour={colour}
               onClick={() => onUpdateTask({ isFlagged: !editedTask.isFlagged })}
-            >
-              <Icon
-                iconName="flag"
-                size="sm"
-                weight={editedTask.isFlagged ? "fill" : "regular"}
-                className={cn(
-                  "transition-colors",
-                  editedTask.isFlagged
-                    ? "fill-orange-500"
-                    : "fill-slate-400 hover:fill-slate-600",
-                )}
-              />
-            </button>
+              iconName="flag"
+            />
 
             {editedTask.dueDate ? (
               <Button
+                colour={colour}
                 size="sm"
                 className={cn(
                   "text-xs px-2 py-1 rounded-full",
@@ -212,20 +209,21 @@ export const TaskEditor = ({ task, onSave }: TaskEditorProps) => {
                 {editedTask.dueDate.format("MMM D, YYYY")}
               </Button>
             ) : (
-              <Button iconName="calendarDots" variant="ghost" size="sm" />
+              <Button
+                colour={colour}
+                iconName="calendarDots"
+                variant="ghost"
+                size="sm"
+              />
             )}
 
-            <Button
-              colour={colours.blue}
-              variant="ghost"
-              size="sm"
-              iconName="link"
-            />
+            <Button colour={colour} variant="ghost" size="sm" iconName="link" />
 
             <Button
               variant="ghost"
               size="sm"
               iconName="trash"
+              colour={colours.red}
               onClick={() => deleteTask({ taskId: editedTask.id })}
             />
           </div>
