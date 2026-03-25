@@ -3,16 +3,19 @@ import debounce from "debounce";
 import { useEffect, useRef, useState } from "react";
 import { colours } from "src/colours/colours.constant";
 import { Button } from "src/common/components/Button/Button";
+import { Toggle } from "src/common/components/Toggle/Toggle";
 import { cn } from "src/common/utils/cn";
 import { Icon } from "src/icons/components/Icon/Icon";
 import { useCreateTask } from "src/tasks/hooks/useCreateTask";
 import { useDeleteTask } from "src/tasks/hooks/useDeleteTask";
 import { useUpdateTask } from "src/tasks/hooks/useUpdateTask";
+import type { Colour } from "src/colours/Colour.type";
 import type { Task } from "src/tasks/Task.type";
 
 type TaskEditorProps = {
   task?: Partial<Task>;
   onSave?: () => void;
+  colour?: Colour;
 };
 
 const getInitialTask = (task: Partial<Task> | undefined): Task => {
@@ -31,18 +34,26 @@ const getInitialTask = (task: Partial<Task> | undefined): Task => {
   };
 };
 
-export const TaskEditor = ({ task, onSave }: TaskEditorProps) => {
+export const TaskEditor = ({
+  task,
+  onSave,
+  colour = colours.orange,
+}: TaskEditorProps) => {
   const { createTask } = useCreateTask();
   const { updateTask } = useUpdateTask();
   const { deleteTask } = useDeleteTask();
 
   const [editedTask, setEditedTask] = useState<Task>(getInitialTask(task));
+  const [isFocused, setIsFocused] = useState(false);
+
+  // Timer for distinguishing single vs double click on the status circle
+  const clickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Ref that always points to the latest save implementation so the debounced
   // function never closes over stale state.
   const saveRef = useRef<() => void>();
   saveRef.current = () => {
-    if (!editedTask.title && !editedTask.description && !editedTask.link) {
+    if (!editedTask.title && !editedTask.description) {
       deleteTask({ taskId: editedTask.id });
       return;
     }
@@ -68,7 +79,14 @@ export const TaskEditor = ({ task, onSave }: TaskEditorProps) => {
     };
   }, [debouncedSave]);
 
-  // const initialTask = useMemo(() => getInitialTask(task), [task]);
+  // Clear any pending click-timer when the component unmounts.
+  useEffect(() => {
+    return () => {
+      if (clickTimerRef.current) {
+        clearTimeout(clickTimerRef.current);
+      }
+    };
+  }, []);
 
   const onUpdateTask = (updateTaskData?: Partial<Task>) => {
     setEditedTask((currentEditedTask) => ({
@@ -79,40 +97,55 @@ export const TaskEditor = ({ task, onSave }: TaskEditorProps) => {
     debouncedSave();
   };
 
-  return (
-    <div className="w-full flex gap-2 items-start">
-      <button
-        className="pt-px pl-px"
-        onClick={() => {
-          const isCompleted = !!editedTask.completedDate;
-          const isCancelled = !!editedTask.cancelledDate;
+  const handleCircleClick = () => {
+    if (clickTimerRef.current) {
+      // Second click within threshold – treat as double click: toggle cancelled
+      clearTimeout(clickTimerRef.current);
+      clickTimerRef.current = null;
+      const isCancelled = !!editedTask.cancelledDate;
+      if (isCancelled) {
+        onUpdateTask({ completedDate: null, cancelledDate: null });
+      } else {
+        onUpdateTask({ completedDate: null, cancelledDate: dayjs() });
+      }
+    } else {
+      // First click – wait to see if a second click follows
+      clickTimerRef.current = setTimeout(() => {
+        clickTimerRef.current = null;
+        // Single click: toggle done (also clears cancelled if set)
+        const isCompleted = !!editedTask.completedDate;
+        if (isCompleted || !!editedTask.cancelledDate) {
+          onUpdateTask({ completedDate: null, cancelledDate: null });
+        } else {
+          onUpdateTask({ completedDate: dayjs() });
+        }
+      }, 300);
+    }
+  };
 
-          if (isCompleted || isCancelled) {
-            onUpdateTask({
-              completedDate: null,
-              cancelledDate: null,
-            });
-          } else {
-            onUpdateTask({
-              completedDate: dayjs(),
-            });
-          }
-        }}
-      >
+  const isCompleted = !!editedTask.completedDate;
+  const isCancelled = !!editedTask.cancelledDate;
+
+  // Show description when focused (even if empty) or when it has content
+  const showDescription = isFocused || !!editedTask.description;
+
+  return (
+    <div
+      className="w-full flex gap-2 items-start"
+      onFocus={() => setIsFocused(true)}
+      onBlur={(e) => {
+        if (!e.currentTarget.contains(e.relatedTarget)) {
+          setIsFocused(false);
+        }
+      }}
+    >
+      <button className="pt-px pl-px" onClick={handleCircleClick}>
         <Icon
           iconName={
-            editedTask.completedDate
-              ? "checkCircle"
-              : editedTask.cancelledDate
-                ? "minusCircle"
-                : "circle"
+            isCompleted ? "checkCircle" : isCancelled ? "xCircle" : "circle"
           }
           size="md"
-          weight={
-            (editedTask.completedDate ?? editedTask.cancelledDate)
-              ? "fill"
-              : "regular"
-          }
+          weight={isCompleted || isCancelled ? "fill" : "regular"}
           className="fill-slate-400 hover:fill-slate-600 transition-colors"
         />
       </button>
@@ -130,51 +163,71 @@ export const TaskEditor = ({ task, onSave }: TaskEditorProps) => {
             }
             className={cn(
               "h-6 w-full tracking-tight text-md bg-transparent placeholder-slate-400 select-none resize-none outline-none",
-              (editedTask.completedDate ?? editedTask.cancelledDate)
-                ? "text-slate-500"
-                : "text-slate-700",
-              editedTask.cancelledDate && "line-through",
+              isCompleted || isCancelled ? "text-slate-500" : "text-slate-700",
+              isCancelled && "line-through",
             )}
           />
 
-          <textarea
-            name="description"
-            value={editedTask.description ?? ""}
-            placeholder="No description"
-            onChange={(e) =>
-              onUpdateTask({
-                description: e.target.value,
-              })
-            }
-            className="h-6 w-full text-sm font-normal bg-transparent placeholder-slate-400 text-slate-500 select-none resize-none outline-none"
-          />
-        </div>
-
-        <div className="flex flex-row flex-wrap items-center gap-2">
-          {editedTask.dueDate ? (
-            <Button
-              size="sm"
-              className={cn(
-                "text-xs px-2 py-1 rounded-full",
-                editedTask.dueDate.isBefore(dayjs(), "day") &&
-                  !editedTask.completedDate
-                  ? "bg-red-100 text-red-500"
-                  : "bg-gray-100 text-gray-500",
-              )}
-            >
-              {editedTask.dueDate.format("MMM D, YYYY")}
-            </Button>
-          ) : (
-            <Button iconName="calendarDots" variant="ghost" size="sm" />
+          {showDescription && (
+            <textarea
+              name="description"
+              value={editedTask.description ?? ""}
+              placeholder="No description"
+              onChange={(e) =>
+                onUpdateTask({
+                  description: e.target.value,
+                })
+              }
+              className="h-6 w-full text-sm font-normal bg-transparent placeholder-slate-400 text-slate-500 select-none resize-none outline-none"
+            />
           )}
-
-          <Button
-            colour={colours.blue}
-            variant="ghost"
-            size="sm"
-            iconName="link"
-          />
         </div>
+
+        {isFocused && (
+          <div className="flex flex-row flex-wrap items-center gap-1">
+            <Toggle
+              isToggled={editedTask.isFlagged}
+              size="sm"
+              colour={colour}
+              onClick={() => onUpdateTask({ isFlagged: !editedTask.isFlagged })}
+              iconName="flag"
+            />
+
+            {editedTask.dueDate ? (
+              <Button
+                colour={colour}
+                size="sm"
+                className={cn(
+                  "text-xs px-2 py-1 rounded-full",
+                  editedTask.dueDate.isBefore(dayjs(), "day") &&
+                    !isCompleted &&
+                    !isCancelled
+                    ? "bg-red-100 text-red-500"
+                    : "bg-gray-100 text-gray-500",
+                )}
+              >
+                {editedTask.dueDate.format("MMM D, YYYY")}
+              </Button>
+            ) : (
+              <Button
+                colour={colour}
+                iconName="calendarDots"
+                variant="ghost"
+                size="sm"
+              />
+            )}
+
+            <Button colour={colour} variant="ghost" size="sm" iconName="link" />
+
+            <Button
+              variant="ghost"
+              size="sm"
+              iconName="trash"
+              colour={colours.red}
+              onClick={() => deleteTask({ taskId: editedTask.id })}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -198,34 +198,32 @@ const NoteEditor = ({
       {note.tasks && note.tasks.length > 0 && (
         <div className="w-full flex flex-col gap-2 justify-between border-b-2 border-slate-100 pb-4">
           {note.tasks.map((task) => (
-            <TaskEditor key={task.id} task={task} />
+            <TaskEditor key={task.id} task={task} colour={colour} />
           ))}
         </div>
       )}
 
-      <QuillFormattingToolbar
-        toolbarId={QUILL_TOOLBAR_ID}
-        toolbarFormatting={toolbarFormatting}
-        colour={colour}
-      />
+      <div className="flex flex-col gap-5 w-full">
+        <QuillFormattingToolbar
+          toolbarId={QUILL_TOOLBAR_ID}
+          toolbarFormatting={toolbarFormatting}
+          colour={colour}
+        />
 
-      <QuillEditor
-        key={editedNote.id}
-        toolbarId={QUILL_TOOLBAR_ID}
-        value={editedNote.content}
-        colour={colour}
-        onChange={(delta) => onUpdateNote({ content: delta })}
-        onSelectedFormattingChange={(selectionFormatting: StringMap) => {
-          setToolbarFormatting(selectionFormatting);
-        }}
-      />
+        <QuillEditor
+          key={editedNote.id}
+          toolbarId={QUILL_TOOLBAR_ID}
+          value={editedNote.content}
+          colour={colour}
+          onChange={(delta) => onUpdateNote({ content: delta })}
+          onSelectedFormattingChange={(selectionFormatting: StringMap) => {
+            setToolbarFormatting(selectionFormatting);
+          }}
+        />
+      </div>
 
       {(updates.length > 0 || showNewUpdate) && (
-        <div className="w-full flex flex-col pt-4 pr-12">
-          <div className="flex items-center justify-between">
-            <h3 className="font-title text-xl text-slate-500">Updates</h3>
-          </div>
-
+        <div className="w-full flex flex-col pr-12 border-t-2 border-slate-100 pt-6">
           {showNewUpdate && (
             <UpdateEditor
               update={{ notes: [editedNote], tint: null }}

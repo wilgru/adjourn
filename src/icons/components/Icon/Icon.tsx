@@ -23,6 +23,7 @@ import {
   Link,
   CheckCircle,
   MinusCircle,
+  XCircle,
   ListChecks,
   ArrowArcLeft,
   ArrowArcRight,
@@ -120,6 +121,8 @@ const Icon = ({
       return <CheckCircle {...iconProps} />;
     case "minusCircle":
       return <MinusCircle {...iconProps} />;
+    case "xCircle":
+      return <XCircle {...iconProps} />;
     case "listChecks":
       return <ListChecks {...iconProps} />;
     case "arrowArcLeft":
