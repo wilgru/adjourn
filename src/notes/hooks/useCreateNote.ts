@@ -1,8 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { useUser } from "src/Users/hooks/useUser";
-import { mapNote } from "src/notes/utils/mapNote";
-import { pb } from "src/pocketbase/utils/connection";
 import { useCurrentJournalId } from "../../journals/hooks/useCurrentJournalId";
+import { createNote } from "../serverFunctions/createNote";
+import { mapNote } from "../utils/mapNote";
 import type { UseMutateAsyncFunction } from "@tanstack/react-query";
 import type { Note } from "src/notes/Note.type";
 
@@ -26,21 +27,23 @@ export const useCreateNote = (): UseCreateNoteResponse => {
   const { journalId } = useCurrentJournalId();
   const queryClient = useQueryClient();
   const { user } = useUser();
+  const createNoteFn = useServerFn(createNote);
 
   const mutationFn = async ({
     createNoteData,
   }: CreateNoteProps): Promise<Note | undefined> => {
-    const createdNote = await pb.collection("notes").create(
-      {
-        ...createNoteData,
-        tags: createNoteData.tags.map((tag) => tag.id),
-        journal: journalId,
-        user: user?.id,
+    const row = await createNoteFn({
+      data: {
+        title: createNoteData.title,
+        content: JSON.stringify(createNoteData.content),
+        isBookmarked: createNoteData.isBookmarked,
+        tagIds: createNoteData.tags.map((tag) => tag.id),
+        journalId: journalId ?? null,
+        userId: user?.id ?? null,
       },
-      { expand: "tags, updates_via_notes" },
-    );
+    });
 
-    return mapNote(createdNote);
+    return mapNote(row, { tags: createNoteData.tags });
   };
 
   const onSuccess = (data: Note | undefined) => {

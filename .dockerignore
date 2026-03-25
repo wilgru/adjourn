@@ -29,6 +29,3 @@ dist-ssr
 # Docker
 Dockerfile
 docker-compose.yml
-
-# Pocketbase
-pb_data

@@ -6,7 +6,6 @@ import { Button } from "src/common/components/Button/Button";
 import { Input } from "src/common/components/Input/Input";
 import { Label } from "src/common/components/Label/Label";
 import IconPicker from "src/icons/components/IconPicker/IconPicker";
-import { generateId } from "src/pocketbase/utils/generateId";
 import { MultiLinkInput } from "src/tags/components/MultiLinkInput/MultiLinkInput";
 import { useUpdateTag } from "src/tags/hooks/useUpdateTag";
 import { DeleteTagModal } from "../DeleteTagModal/DeleteTagModal";
@@ -43,7 +42,7 @@ export const EditTagModal = ({ tag }: EditTagModalProps) => {
         ...currentTagToEdit,
         links: [
           ...currentTagToEdit.links,
-          { id: generateId(), title: undefined, link: "" },
+          { id: crypto.randomUUID(), title: undefined, link: "" },
         ],
       };
     });

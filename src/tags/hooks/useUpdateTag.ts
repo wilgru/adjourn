@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { pb } from "src/pocketbase/utils/connection";
+import { useServerFn } from "@tanstack/react-start";
 import { mapTag } from "src/tags/utils/mapTag";
+import { updateTag } from "../serverFunctions/updateTag";
 import type { UseMutateAsyncFunction } from "@tanstack/react-query";
 import type { Note } from "src/notes/Note.type";
 import type { Tag } from "src/tags/Tag.type";
@@ -21,23 +22,28 @@ type UseUpdateTagResponse = {
 
 export const useUpdateTag = (): UseUpdateTagResponse => {
   const queryClient = useQueryClient();
+  const updateTagFn = useServerFn(updateTag);
 
   const mutationFn = async ({
     tagId,
     updateTagData,
   }: UpdateTagProps): Promise<Tag | undefined> => {
-    const rawUpdatedTag = await pb.collection("tags").update(
-      tagId,
-      {
-        ...updateTagData,
+    const row = await updateTagFn({
+      data: {
+        tagId,
+        name: updateTagData.name,
         colour: updateTagData.colour.name,
+        icon: updateTagData.icon,
+        description: updateTagData.description,
+        groupBy: updateTagData.groupBy,
+        sortBy: updateTagData.sortBy,
+        sortDirection: updateTagData.sortDirection,
+        links: JSON.stringify(updateTagData.links),
+        tagGroupId: updateTagData.tagGroupId ?? null,
       },
-      {
-        expand: "links",
-      },
-    );
+    });
 
-    return mapTag(rawUpdatedTag);
+    return mapTag(row, { noteCount: updateTagData.noteCount });
   };
 
   const onSuccess = (data: Tag | undefined) => {
@@ -59,7 +65,7 @@ export const useUpdateTag = (): UseUpdateTagResponse => {
 
     // update tag in any notes that have it
     queryClient.setQueryData(["notes.list"], (currentNotes: Note[]) => {
-      return currentNotes.map((note) => {
+      return currentNotes?.map((note) => {
         return note.tags.map((tag) => {
           if (tag.id === data.id) {
             return data;

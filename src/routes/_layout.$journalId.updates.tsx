@@ -1,6 +1,6 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import isAuthenticated from "src/Users/utils/isAuthenticated";
+import requireClientAuth from "src/Users/utils/requireClientAuth";
 import { Button } from "src/common/components/Button/Button";
 import { Toolbar } from "src/common/components/Toolbar/Toolbar";
 import { useCurrentJournal } from "src/journals/hooks/useCurrentJournal";
@@ -10,14 +10,7 @@ import { useGetUpdates } from "src/updates/hooks/useGetUpdates";
 export const Route = createFileRoute("/_layout/$journalId/updates")({
   component: UpdatesComponent,
   beforeLoad: async ({ location }) => {
-    if (!isAuthenticated()) {
-      throw redirect({
-        to: "/login",
-        search: {
-          redirect: location.href,
-        },
-      });
-    }
+    requireClientAuth(location);
   },
 });
 

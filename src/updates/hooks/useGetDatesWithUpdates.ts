@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { useCurrentJournalId } from "src/journals/hooks/useCurrentJournalId";
 import { mapDateWithNotes } from "src/notes/utils/mapDateWithNotes";
-import { pb } from "src/pocketbase/utils/connection";
+import { getDatesWithUpdates } from "../serverFunctions/getDatesWithUpdates";
 import type {
   QueryObserverResult,
   RefetchOptions,
@@ -18,19 +19,18 @@ type UseGetDatesWithUpdatesResponse = {
 export const useGetDatesWithUpdates = (): UseGetDatesWithUpdatesResponse => {
   const { journalId: routeJournalId } = useCurrentJournalId();
   const journalId = routeJournalId;
+  const getDatesWithUpdatesFn = useServerFn(getDatesWithUpdates);
 
   const queryFn = async (): Promise<DateWithNotes[]> => {
     if (!journalId) {
       return [];
     }
 
-    const rawDatesWithUpdates = await pb
-      .collection("datesWithUpdates")
-      .getList(undefined, undefined, {
-        filter: "journal = '" + journalId + "'",
-      });
+    const result = await getDatesWithUpdatesFn({
+      data: { journalId },
+    });
 
-    return rawDatesWithUpdates.items.map(mapDateWithNotes);
+    return result.dates.map(mapDateWithNotes);
   };
 
   const { data, refetch } = useQuery({

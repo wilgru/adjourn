@@ -67,10 +67,12 @@ import {
   Bird,
   HourglassLow,
   CalendarDots,
+  Notebook,
 } from "@phosphor-icons/react";
 
 export const icons = [
   { name: "tag", icon: Tag },
+  { name: "notebook", icon: Notebook },
   { name: "bookOpen", icon: BookOpen },
   { name: "musicNotesSimple", icon: MusicNotesSimple },
   { name: "airplaneTilt", icon: AirplaneTilt },

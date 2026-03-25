@@ -1,4 +1,4 @@
-import { beforeAll } from "vitest";
+import { beforeAll } from "bun:test";
 import { setProjectAnnotations } from "@storybook/react";
 import * as projectAnnotations from "./preview";
 

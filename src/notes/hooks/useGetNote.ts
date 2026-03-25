@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { mapNote } from "src/notes/utils/mapNote";
-import { pb } from "src/pocketbase/utils/connection";
+import { useGetTags } from "src/tags/hooks/useGetTags";
+import { getNote } from "../serverFunctions/getNote";
 import type {
   QueryObserverResult,
   RefetchOptions,
@@ -19,12 +21,13 @@ export const useGetNote = ({
 }: {
   noteId: string | null;
 }): UseGetNoteResponse => {
+  const { tags: allTags } = useGetTags();
+  const getNoteFn = useServerFn(getNote);
+
   const queryFn = async (): Promise<Note> => {
-    const rawNote = await pb.collection("notes").getOne(noteId ?? "", {
-      expand: "tags, tasks_via_note, updates_via_notes",
-    });
-    const note: Note = mapNote(rawNote);
-    return note;
+    const result = await getNoteFn({ data: { noteId: noteId ?? "" } });
+    const tags = allTags.filter((t) => result.tagIds.includes(t.id));
+    return mapNote(result.note, { tags });
   };
 
   const { data, refetch } = useQuery({

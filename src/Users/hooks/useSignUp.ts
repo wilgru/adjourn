@@ -1,5 +1,4 @@
 import { useMutation } from "@tanstack/react-query";
-import { pb } from "src/pocketbase/utils/connection";
 
 const useSignUp = () => {
   const mutationFn = async ({
@@ -13,11 +12,7 @@ const useSignUp = () => {
     password: string;
     passwordConfirm: string;
   }): Promise<void> => {
-    const user = await pb
-      .collection("users")
-      .create({ name, email, password, passwordConfirm, verified: false });
-
-    pb.authStore.save(user.token, user.record);
+    console.log("Sign up data:", { name, email, password, passwordConfirm }); // todo: implement real auth
   };
 
   const { mutateAsync, isPending, isError } = useMutation({

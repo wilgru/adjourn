@@ -8,13 +8,7 @@ module.exports = {
     "plugin:import/recommended",
     "plugin:storybook/recommended",
   ],
-  ignorePatterns: [
-    "dist",
-    ".eslintrc.cjs",
-    "node_modules",
-    "pb_data",
-    "pb_migrations",
-  ],
+  ignorePatterns: ["dist", ".eslintrc.cjs", "node_modules", "drizzle"],
   parser: "@typescript-eslint/parser",
   plugins: ["react-refresh", "import"],
   rules: {

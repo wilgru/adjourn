@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
+import { useServerFn } from "@tanstack/react-start";
 import { useCurrentJournalId } from "src/journals/hooks/useCurrentJournalId";
-import { pb } from "src/pocketbase/utils/connection";
+import { getJournalContentCounts } from "../serverFunctions/getJournalContentCounts";
 
 type JournalContentCounts = {
   noteCount: number;
@@ -17,6 +18,7 @@ type UseGetJournalContentCountsResponse = {
 export const useGetJournalContentCounts =
   (): UseGetJournalContentCountsResponse => {
     const { journalId } = useCurrentJournalId();
+    const getJournalContentCountsFn = useServerFn(getJournalContentCounts);
 
     const queryFn = async (): Promise<JournalContentCounts> => {
       if (!journalId) {
@@ -28,9 +30,9 @@ export const useGetJournalContentCounts =
         };
       }
 
-      const result = await pb
-        .collection("journalContentCounts")
-        .getFirstListItem(`journal = "${journalId}"`);
+      const result = await getJournalContentCountsFn({
+        data: { journalId },
+      });
 
       return {
         noteCount: result.noteCount ?? 0,

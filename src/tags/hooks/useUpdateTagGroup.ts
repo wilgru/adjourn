@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { pb } from "src/pocketbase/utils/connection";
+import { useServerFn } from "@tanstack/react-start";
 import { mapTagGroup } from "src/tags/utils/mapTagGroup";
+import { updateTagGroup } from "../serverFunctions/updateTagGroup";
 import type { UseMutateAsyncFunction } from "@tanstack/react-query";
 import type { TagGroup } from "src/tags/Tag.type";
 
@@ -20,16 +21,20 @@ type UseUpdateTagGroupResponse = {
 
 export const useUpdateTagGroup = (): UseUpdateTagGroupResponse => {
   const queryClient = useQueryClient();
+  const updateTagGroupFn = useServerFn(updateTagGroup);
 
   const mutationFn = async ({
     tagGroupId,
     updateTagGroupData,
   }: UpdateTagGroupProps): Promise<TagGroup | undefined> => {
-    const rawUpdatedTagGroup = await pb
-      .collection("tagGroups")
-      .update(tagGroupId, updateTagGroupData);
+    const row = await updateTagGroupFn({
+      data: {
+        tagGroupId,
+        title: updateTagGroupData.title,
+      },
+    });
 
-    return mapTagGroup(rawUpdatedTagGroup);
+    return mapTagGroup(row);
   };
 
   const onSuccess = (data: TagGroup | undefined) => {

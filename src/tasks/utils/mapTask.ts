@@ -1,19 +1,26 @@
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
-import { mapNote } from "../../notes/utils/mapNote";
-import type { RecordModel } from "pocketbase";
+import type { Note } from "src/notes/Note.type";
 import type { Task } from "src/tasks/Task.type";
+import type { TaskSchema } from "src/tasks/tasks.schema";
 
 dayjs.extend(utc);
 
-export const mapTask = (task: RecordModel): Task => {
+type MapTaskOptions = {
+  note?: Note | null;
+};
+
+export const mapTask = (
+  task: TaskSchema,
+  options: MapTaskOptions = {},
+): Task => {
   return {
     id: task.id,
     title: task.title,
-    description: task.description || null,
+    description: task.description,
     link: task.link || null,
-    isFlagged: task.isFlagged || false,
-    note: task?.expand?.note ? mapNote(task.expand.note) : null,
+    isFlagged: task.isFlagged,
+    note: options.note ?? null,
     dueDate: task.dueDate ? dayjs.utc(task.dueDate).local() : null,
     completedDate: task.completedDate
       ? dayjs.utc(task.completedDate).local()
@@ -22,6 +29,6 @@ export const mapTask = (task: RecordModel): Task => {
       ? dayjs.utc(task.cancelledDate).local()
       : null,
     created: dayjs.utc(task.created).local(),
-    updated: dayjs(task.updated).local(),
+    updated: dayjs.utc(task.updated).local(),
   };
 };

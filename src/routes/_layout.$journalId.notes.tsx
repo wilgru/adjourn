@@ -1,8 +1,8 @@
 import { Check } from "@phosphor-icons/react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute } from "@tanstack/react-router";
 import { useMemo } from "react";
-import isAuthenticated from "src/Users/utils/isAuthenticated";
+import requireClientAuth from "src/Users/utils/requireClientAuth";
 import { Button } from "src/common/components/Button/Button";
 import { Toolbar } from "src/common/components/Toolbar/Toolbar";
 import { cn } from "src/common/utils/cn";
@@ -16,15 +16,7 @@ import { useGetNotes } from "src/notes/hooks/useGetNotes";
 export const Route = createFileRoute("/_layout/$journalId/notes")({
   component: NotesComponent,
   beforeLoad: async ({ location }) => {
-    if (!isAuthenticated()) {
-      throw redirect({
-        to: "/login",
-        search: {
-          // (Do not use `router.state.resolvedLocation` as it can potentially lag behind the actual current location)
-          redirect: location.href,
-        },
-      });
-    }
+    requireClientAuth(location);
   },
   validateSearch: (
     search: Record<string, unknown>,

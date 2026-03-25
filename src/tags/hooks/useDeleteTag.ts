@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { pb } from "src/pocketbase/utils/connection";
+import { useServerFn } from "@tanstack/react-start";
+import { deleteTag } from "../serverFunctions/deleteTag";
 import type { UseMutateAsyncFunction } from "@tanstack/react-query";
 
 type UseDeleteTagResponse = {
@@ -8,15 +9,11 @@ type UseDeleteTagResponse = {
 
 export const useDeleteTag = (): UseDeleteTagResponse => {
   const queryClient = useQueryClient();
+  const deleteTagFn = useServerFn(deleteTag);
 
   const mutationFn = async (tagId: string): Promise<string | undefined> => {
-    const isTagDeleted = await pb.collection("tags").delete(tagId);
-
-    if (isTagDeleted) {
-      return tagId;
-    }
-
-    return undefined;
+    await deleteTagFn({ data: { tagId } });
+    return tagId;
   };
 
   const onSuccess = (data: string | undefined) => {

@@ -6,9 +6,9 @@ build/
 .pnp.cjs
 .DS_Store
 
-# PocketBase local data and migrations
-pocketbase/pb_data/
-pocketbase/pb_migrations/
+# database files
+dev-db/
+drizzle/
 
 # generated files
 src/routeTree.gen.ts

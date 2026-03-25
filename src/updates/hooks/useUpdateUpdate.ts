@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { pb } from "src/pocketbase/utils/connection";
+import { useServerFn } from "@tanstack/react-start";
 import { mapUpdate } from "src/updates/utils/mapUpdate";
+import { updateUpdate } from "../serverFunctions/updateUpdate";
 import type { UseMutateAsyncFunction } from "@tanstack/react-query";
 import type { Update } from "src/updates/Update.type";
 
@@ -20,22 +21,22 @@ type UseUpdateUpdateResponse = {
 
 export const useUpdateUpdate = (): UseUpdateUpdateResponse => {
   const queryClient = useQueryClient();
+  const updateUpdateFn = useServerFn(updateUpdate);
 
   const mutationFn = async ({
     updateId,
     updateData,
   }: UpdateUpdateProps): Promise<Update | undefined> => {
-    const rawUpdatedUpdate = await pb.collection("updates").update(
-      updateId,
-      {
-        content: updateData.content,
-        tint: updateData.tint,
-        notes: updateData.notes?.map((n) => n.id),
+    const row = await updateUpdateFn({
+      data: {
+        updateId,
+        content: updateData.content ? JSON.stringify(updateData.content) : null,
+        tint: updateData.tint ?? null,
+        noteIds: updateData.notes?.map((n) => n.id) ?? [],
       },
-      { expand: "notes" },
-    );
+    });
 
-    return mapUpdate(rawUpdatedUpdate);
+    return mapUpdate(row, { notes: updateData.notes ?? [] });
   };
 
   const onSuccess = () => {

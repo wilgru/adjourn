@@ -1,8 +1,9 @@
+import { ColourName } from "../colours/Colour.type";
 import type { Colour } from "../colours/Colour.type";
 
-export const colours: { [key: string]: Colour } = {
+export const colours: { [key in ColourName]: Colour } = {
   red: {
-    name: "red",
+    name: ColourName.red,
     text: "text-red-400",
     textPill: "text-red-500",
     textPillInverted: "hover:text-red-600",
@@ -12,7 +13,7 @@ export const colours: { [key: string]: Colour } = {
     backgroundGlow: "hover:bg-red-50",
   },
   orange: {
-    name: "orange",
+    name: ColourName.orange,
     text: "text-orange-400",
     textPill: "text-orange-500",
     textPillInverted: "hover:text-orange-600",
@@ -22,7 +23,7 @@ export const colours: { [key: string]: Colour } = {
     backgroundGlow: "hover:bg-orange-50",
   },
   yellow: {
-    name: "yellow",
+    name: ColourName.yellow,
     text: "text-yellow-400",
     textPill: "text-yellow-500",
     textPillInverted: "hover:text-yellow-600",
@@ -32,7 +33,7 @@ export const colours: { [key: string]: Colour } = {
     backgroundGlow: "hover:bg-yellow-50",
   },
   lime: {
-    name: "lime",
+    name: ColourName.lime,
     text: "text-lime-400",
     textPill: "text-lime-500",
     textPillInverted: "hover:text-lime-600",
@@ -42,7 +43,7 @@ export const colours: { [key: string]: Colour } = {
     backgroundGlow: "hover:bg-lime-50",
   },
   green: {
-    name: "green",
+    name: ColourName.green,
     text: "text-green-400",
     textPill: "text-green-500",
     textPillInverted: "hover:text-green-600",
@@ -52,7 +53,7 @@ export const colours: { [key: string]: Colour } = {
     backgroundGlow: "hover:bg-green-50",
   },
   blue: {
-    name: "blue",
+    name: ColourName.blue,
     text: "text-blue-400",
     textPill: "text-blue-500",
     textPillInverted: "hover:text-blue-600",
@@ -62,7 +63,7 @@ export const colours: { [key: string]: Colour } = {
     backgroundGlow: "hover:bg-blue-50",
   },
   cyan: {
-    name: "cyan",
+    name: ColourName.cyan,
     text: "text-cyan-400",
     textPill: "text-cyan-500",
     textPillInverted: "hover:text-cyan-600",
@@ -72,7 +73,7 @@ export const colours: { [key: string]: Colour } = {
     backgroundGlow: "hover:bg-cyan-50",
   },
   pink: {
-    name: "pink",
+    name: ColourName.pink,
     text: "text-pink-400",
     textPill: "text-pink-500",
     textPillInverted: "hover:text-pink-600",
@@ -82,7 +83,7 @@ export const colours: { [key: string]: Colour } = {
     backgroundGlow: "hover:bg-pink-50",
   },
   purple: {
-    name: "purple",
+    name: ColourName.purple,
     text: "text-purple-400",
     textPill: "text-purple-500",
     textPillInverted: "hover:text-purple-600",
@@ -92,7 +93,7 @@ export const colours: { [key: string]: Colour } = {
     backgroundGlow: "hover:bg-purple-50",
   },
   brown: {
-    name: "brown",
+    name: ColourName.brown,
     text: "text-amber-600",
     textPill: "text-amber-700",
     textPillInverted: "hover:text-amber-600",
@@ -102,7 +103,7 @@ export const colours: { [key: string]: Colour } = {
     backgroundGlow: "hover:bg-amber-50",
   },
   grey: {
-    name: "grey",
+    name: ColourName.grey,
     text: "text-gray-400",
     textPill: "text-gray-500",
     textPillInverted: "hover:text-gray-600",

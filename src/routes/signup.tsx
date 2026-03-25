@@ -139,7 +139,7 @@ function SignUpIndexComponent(): JSX.Element {
           <Button
             variant="link"
             onClick={() => {
-              navigate({ to: "/login" });
+              navigate({ to: "/login", search: { redirect: undefined } });
             }}
           >
             Log in

@@ -118,7 +118,7 @@ export const NoteSearchBar = () => {
           onFocus={() => inputValue.length > 0 && setIsOpen(true)}
           onKeyDown={handleKeyDown}
           placeholder="Search notes..."
-          className="w-36 outline-none text-sm placeholder:text-slate-400 bg-transparent"
+          className="w-48 outline-none text-sm placeholder:text-slate-400 bg-transparent"
         />
         {inputValue && (
           <button

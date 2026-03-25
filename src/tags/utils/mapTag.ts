@@ -1,21 +1,29 @@
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc.js";
 import { getColour } from "src/colours/utils/getColour";
-import type { RecordModel } from "pocketbase";
 import type { Tag } from "src/tags/Tag.type";
+import type { TagSchema } from "src/tags/tags.schema";
 
-export const mapTag = (tag: RecordModel): Tag => {
+dayjs.extend(utc);
+
+type MapTagOptions = {
+  noteCount?: number;
+};
+
+export const mapTag = (tag: TagSchema, options: MapTagOptions = {}): Tag => {
   return {
     id: tag.id,
     name: tag.name,
     colour: getColour(tag.colour),
     icon: tag.icon,
     description: tag.description ?? null,
-    noteCount: tag.totalNotes,
-    links: tag.links || [],
-    groupBy: tag.groupBy,
-    sortBy: tag.sortBy ?? "created",
-    sortDirection: tag.sortDirection ?? "asc",
+    noteCount: options.noteCount ?? 0,
+    links: tag.links ? JSON.parse(tag.links) : [],
+    groupBy: (tag.groupBy as "created" | "tag" | null) ?? null,
+    sortBy: (tag.sortBy ?? "created") as "alphabetical" | "created",
+    sortDirection: (tag.sortDirection ?? "asc") as "asc" | "desc",
     tagGroupId: tag.tagGroup || null,
-    created: tag.createdAt,
-    updated: tag.updatedAt,
+    created: dayjs.utc(tag.created).local(),
+    updated: dayjs.utc(tag.updated).local(),
   };
 };
