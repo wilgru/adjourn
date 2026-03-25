@@ -21,6 +21,7 @@ type TasksLayoutProps = {
   showNoteCreateTimeOnly?: boolean;
   description?: string;
   tasks: Task[];
+  noNoteEditorTrigger?: number;
 };
 
 export const TasksLayout = ({
@@ -29,13 +30,31 @@ export const TasksLayout = ({
   colour = colours.orange,
   description,
   tasks,
+  noNoteEditorTrigger,
 }: TasksLayoutProps) => {
   const [navigationId, setNavigationId] = useState("");
 
   const groupedTasks = groupTasks(tasks, "note");
 
+  // When the toolbar plus button is clicked and there's no "no note" group yet,
+  // synthesise one so the TasksSection can render the new-task editor.
+  const hasNoNoteGroup = groupedTasks.some(
+    (g) => g.relevantTaskData.note === null,
+  );
+  const effectiveGroups =
+    !hasNoNoteGroup && noNoteEditorTrigger !== undefined && noNoteEditorTrigger > 0
+      ? [
+          {
+            title: "No Note",
+            tasks: [] as Task[],
+            relevantTaskData: { note: null as null },
+          },
+          ...groupedTasks,
+        ]
+      : groupedTasks;
+
   const tableOfContentItems = useMemo(() => {
-    const noteTOCItems = groupedTasks.map((group) => {
+    const noteTOCItems = effectiveGroups.map((group) => {
       return {
         title: group.title,
         navigationId: group.relevantTaskData.note?.id ?? "no-note",
@@ -43,7 +62,7 @@ export const TasksLayout = ({
     });
 
     return noteTOCItems;
-  }, [groupedTasks]);
+  }, [effectiveGroups]);
 
   // FIXME: pb-16 is the height of the toolbar to fix issue with scrolling body getting cut off. Issue to do with not having a fixed height on consuming element and children elements before this one pushing this one down.
   return (
@@ -53,7 +72,7 @@ export const TasksLayout = ({
           {header}
         </PageHeader>
 
-        {groupedTasks.length === 0 && (
+        {effectiveGroups.length === 0 && (
           <EmptyState
             title="No tasks yet"
             description="Add your first task to start tracking what matters."
@@ -62,10 +81,18 @@ export const TasksLayout = ({
           />
         )}
 
-        {groupedTasks.map((group, index) => (
+        {effectiveGroups.map((group, index) => (
           <Fragment key={group.relevantTaskData.note?.id ?? "no-note"}>
             {index > 0 && <hr className="border-slate-200" />}
-            <TasksSection taskGroup={group} colour={colour} />
+            <TasksSection
+              taskGroup={group}
+              colour={colour}
+              noNoteEditorTrigger={
+                group.relevantTaskData.note === null
+                  ? noNoteEditorTrigger
+                  : undefined
+              }
+            />
           </Fragment>
         ))}
       </div>

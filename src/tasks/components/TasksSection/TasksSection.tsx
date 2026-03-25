@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "src/common/components/Button/Button";
 import { useCurrentJournalId } from "src/journals/hooks/useCurrentJournalId";
 import { TaskEditor } from "src/tasks/components/TaskEditor/TaskEditor";
@@ -9,11 +9,25 @@ import type { TasksGroup } from "src/tasks/Task.type";
 type TasksSectionProps = {
   taskGroup: TasksGroup;
   colour: Colour;
+  /** Incrementing this counter causes the section to open a new task editor. Used by the toolbar plus button. */
+  noNoteEditorTrigger?: number;
 };
 
-export const TasksSection = ({ taskGroup, colour }: TasksSectionProps) => {
+export const TasksSection = ({
+  taskGroup,
+  colour,
+  noNoteEditorTrigger,
+}: TasksSectionProps) => {
   const [isTitleHovered, setIsTitleHovered] = useState(false);
+  const [isAddingTask, setIsAddingTask] = useState(false);
   const { journalId } = useCurrentJournalId();
+
+  // Open the new-task editor whenever the toolbar plus button fires.
+  useEffect(() => {
+    if (noNoteEditorTrigger && noNoteEditorTrigger > 0) {
+      setIsAddingTask(true);
+    }
+  }, [noNoteEditorTrigger]);
 
   const note = taskGroup.relevantTaskData.note;
   const isNoNote = !note;
@@ -22,9 +36,27 @@ export const TasksSection = ({ taskGroup, colour }: TasksSectionProps) => {
     return (
       <section id="no-note">
         <div className="flex flex-col gap-2 p-4 rounded-2xl bg-gray-50">
-          <p className="text-lg text-slate-400 font-title">{taskGroup.title}</p>
+          <div
+            className="flex gap-2 items-center"
+            onMouseOver={() => setIsTitleHovered(true)}
+            onMouseLeave={() => setIsTitleHovered(false)}
+          >
+            <p className="text-lg text-slate-400 font-title">
+              {taskGroup.title}
+            </p>
 
-          {taskGroup.tasks.length === 0 && (
+            {isTitleHovered && (
+              <Button
+                variant="ghost-strong"
+                size="sm"
+                iconName="plus"
+                colour={colour}
+                onClick={() => setIsAddingTask(true)}
+              />
+            )}
+          </div>
+
+          {taskGroup.tasks.length === 0 && !isAddingTask && (
             <div className="w-full p-3 flex flex-col gap-3 items-center">
               <p className="text-slate-500">No task yet</p>
 
@@ -34,7 +66,7 @@ export const TasksSection = ({ taskGroup, colour }: TasksSectionProps) => {
                   size="sm"
                   className="w-full"
                   iconName="plusSquare"
-                  onClick={() => {}}
+                  onClick={() => setIsAddingTask(true)}
                 >
                   Create your first task
                 </Button>
@@ -45,6 +77,13 @@ export const TasksSection = ({ taskGroup, colour }: TasksSectionProps) => {
           {taskGroup.tasks.map((task) => (
             <TaskEditor key={task.id} task={task} onSave={() => {}} />
           ))}
+
+          {isAddingTask && (
+            <TaskEditor
+              task={{ note: null }}
+              onSave={() => setIsAddingTask(false)}
+            />
+          )}
         </div>
       </section>
     );
@@ -59,20 +98,30 @@ export const TasksSection = ({ taskGroup, colour }: TasksSectionProps) => {
       >
         <h2 className="font-title text-3xl">{taskGroup.title}</h2>
 
-        {isTitleHovered && journalId && (
-          <div className="mb-2">
-            <Link
-              to="/$journalId/notes"
-              params={{ journalId }}
-              search={{ noteId: note.id }}
-            >
-              <Button
-                variant="ghost-strong"
-                size="sm"
-                iconName="arrowCircleRight"
-                colour={colour}
-              />
-            </Link>
+        {isTitleHovered && (
+          <div className="mb-2 flex gap-1">
+            <Button
+              variant="ghost-strong"
+              size="sm"
+              iconName="plus"
+              colour={colour}
+              onClick={() => setIsAddingTask(true)}
+            />
+
+            {journalId && (
+              <Link
+                to="/$journalId/notes"
+                params={{ journalId }}
+                search={{ noteId: note.id }}
+              >
+                <Button
+                  variant="ghost-strong"
+                  size="sm"
+                  iconName="arrowCircleRight"
+                  colour={colour}
+                />
+              </Link>
+            )}
           </div>
         )}
       </div>
@@ -81,6 +130,10 @@ export const TasksSection = ({ taskGroup, colour }: TasksSectionProps) => {
         {taskGroup.tasks.map((task) => (
           <TaskEditor key={task.id} task={task} onSave={() => {}} />
         ))}
+
+        {isAddingTask && (
+          <TaskEditor task={{ note }} onSave={() => setIsAddingTask(false)} />
+        )}
       </div>
     </section>
   );
