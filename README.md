@@ -1,8 +1,14 @@
-# Adjourn
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://github.com/user-attachments/assets/0544258a-d3e7-4f49-a7e6-2ccf3b430ba1">
+    <source media="(prefers-color-scheme: light)" srcset="https://github.com/user-attachments/assets/5ecd5541-2402-4d5c-b58f-a96fd7e436ef">
+    <img alt="Adjourn logo" src="https://github.com/user-attachments/assets/5ecd5541-2402-4d5c-b58f-a96fd7e436ef" width="300">
+  </picture>
+</p>
 
-Adjourn is a note taking web app where you can view your notes in different ways.
-
-https://github.com/cheriot/electron-tanstack-demo
+<p align="center">
+  A note taking web app where you can view your notes in different ways.
+</p>
 
 ## Getting Started
 
@@ -27,3 +33,5 @@ https://github.com/cheriot/electron-tanstack-demo
    ```
    npm run dev
    ```
+
+https://github.com/cheriot/electron-tanstack-demo
