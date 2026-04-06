@@ -7,7 +7,7 @@
 </p>
 
 <p align="center">
-  A note taking web app where you can view your notes in different ways.
+  A free and open source notetaking app with modern features while still having a familiar experience
 </p>
 
 ## Getting Started
