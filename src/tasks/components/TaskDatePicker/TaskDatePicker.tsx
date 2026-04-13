@@ -176,6 +176,7 @@ export const TaskDatePicker = ({
                 <Popover.Close asChild key={index}>
                   <button
                     type="button"
+                    aria-label={calendarDay.day.format("MMMM D, YYYY")}
                     onClick={() => onChange(calendarDay.day)}
                     className={cn(
                       "h-7 w-full text-xs text-center leading-7 rounded-full cursor-pointer select-none transition-colors",
@@ -201,6 +202,7 @@ export const TaskDatePicker = ({
             <div className="mt-2 flex justify-center">
               <button
                 type="button"
+                aria-label={`Clear due date ${dueDate.format("MMMM D, YYYY")}`}
                 onClick={() => onChange(null)}
                 className="text-xs text-slate-400 hover:text-slate-600 transition-colors"
               >

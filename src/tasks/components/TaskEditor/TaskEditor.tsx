@@ -174,7 +174,7 @@ export const TaskEditor = ({
                 })
               }
               className={cn(
-                "h-6 tracking-tight text-md bg-transparent placeholder-slate-400 select-none resize-none outline-none",
+                "h-6 flex-1 tracking-tight text-md bg-transparent placeholder-slate-400 select-none resize-none outline-none",
                 isCompleted || isCancelled ? "text-slate-500" : "text-slate-700",
                 isCancelled && "line-through",
               )}
