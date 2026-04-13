@@ -10,6 +10,7 @@ export type UpdateNoteInput = {
   content: string | null;
   isBookmarked: boolean;
   tagIds: string[];
+  links: string;
 };
 
 createIpcHandler(
@@ -20,6 +21,7 @@ createIpcHandler(
     content,
     isBookmarked,
     tagIds,
+    links,
   }: UpdateNoteInput): NoteSchema => {
     const now = new Date().toISOString();
 
@@ -29,6 +31,7 @@ createIpcHandler(
         title: title,
         content: content,
         isBookmarked: isBookmarked,
+        links: links,
         updated: now,
       })
       .where(eq(notes.id, noteId))
@@ -49,6 +52,7 @@ createIpcHandler(
       title: updated.title,
       content: updated.content,
       isBookmarked: updated.isBookmarked,
+      links: updated.links,
       journal: updated.journal,
       user: updated.user,
       deleted: updated.deleted,

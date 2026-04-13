@@ -8,6 +8,7 @@ export type CreateNoteInput = {
   content: string | null;
   isBookmarked: boolean;
   tagIds: string[];
+  links: string;
   journalId: string | null;
   userId: string | null;
 };
@@ -19,6 +20,7 @@ createIpcHandler(
     content,
     isBookmarked,
     tagIds,
+    links,
     journalId,
     userId,
   }: CreateNoteInput): NoteSchema => {
@@ -32,6 +34,7 @@ createIpcHandler(
         title,
         content,
         isBookmarked,
+        links,
         journal: journalId,
         user: userId,
         created: now,
@@ -51,6 +54,7 @@ createIpcHandler(
       title: inserted.title,
       content: inserted.content,
       isBookmarked: inserted.isBookmarked,
+      links: inserted.links,
       journal: inserted.journal,
       user: inserted.user,
       deleted: inserted.deleted,

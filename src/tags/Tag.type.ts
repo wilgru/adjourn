@@ -1,13 +1,10 @@
 import type { TagGroupSchema, TagSchema } from "./tags.schema";
 import type { Dayjs } from "dayjs";
 import type { Colour } from "src/colours/Colour.type";
+import type { Link } from "src/common/types/Link.type";
 import type { Prettify } from "src/common/types/Prettify.type";
 
-export type TagLink = {
-  id: string;
-  title?: string;
-  link: string;
-};
+export type TagLink = Link;
 
 export type Tag = Prettify<
   Omit<

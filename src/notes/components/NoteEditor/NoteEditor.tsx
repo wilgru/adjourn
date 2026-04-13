@@ -1,3 +1,4 @@
+import * as Dialog from "@radix-ui/react-dialog";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import dayjs from "dayjs";
 import debounce from "debounce";
@@ -7,6 +8,8 @@ import { Button } from "src/common/components/Button/Button";
 import { QuillEditor } from "src/common/components/QuillEditor/QuillEditor";
 import { QuillFormattingToolbar } from "src/common/components/QuillFormattingToolbar/QuillFormattingToolbar";
 import { Toggle } from "src/common/components/Toggle/Toggle";
+import { NoteLinkPill } from "src/notes/components/NoteLinkPill/NoteLinkPill";
+import { NoteLinksModal } from "src/notes/components/NoteLinksModal/NoteLinksModal";
 import { useCreateNote } from "src/notes/hooks/useCreateNote";
 import { useDeleteNote } from "src/notes/hooks/useDeleteNote";
 import { useUpdateNote } from "src/notes/hooks/useUpdateNote";
@@ -17,6 +20,7 @@ import { TagMultiSelect } from "../../../tags/components/TagMultiSelect/TagMulti
 import { TaskEditor } from "../../../tasks/components/TaskEditor/TaskEditor";
 import type { StringMap } from "quill";
 import type { Colour } from "src/colours/Colour.type";
+import type { Link } from "src/common/types/Link.type";
 import type { Note } from "src/notes/Note.type";
 
 type NoteEditorProps = {
@@ -103,6 +107,10 @@ const NoteEditor = ({
     debouncedSave();
   };
 
+  const onSaveLinks = (links: Link[]) => {
+    onUpdateNote({ links });
+  };
+
   const onDeleteNote = async () => {
     debouncedSave.clear();
     await deleteNote({ noteId: editedNote.id });
@@ -145,6 +153,10 @@ const NoteEditor = ({
               onChange={(tags) => onUpdateNote({ tags })}
             />
 
+            {editedNote.links.map((link) => (
+              <NoteLinkPill key={link.id} link={link} colour={colour} />
+            ))}
+
             <Button
               size="sm"
               variant="ghost"
@@ -160,6 +172,29 @@ const NoteEditor = ({
               onClick={() => setShowNewUpdate(true)}
               iconName="chatCenteredText"
             />
+
+            <Dialog.Root
+              onOpenChange={(open) => {
+                if (!open) return;
+                // Reset modal state to current links each time it opens
+              }}
+            >
+              <Dialog.Trigger asChild>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  colour={colour}
+                  iconName="link"
+                />
+              </Dialog.Trigger>
+
+              <NoteLinksModal
+                key={JSON.stringify(editedNote.links)}
+                links={editedNote.links}
+                colour={colour}
+                onSave={onSaveLinks}
+              />
+            </Dialog.Root>
 
             <Toggle
               isToggled={editedNote.isBookmarked}
