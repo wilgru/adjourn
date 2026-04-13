@@ -1,4 +1,5 @@
 import {
+  Code,
   CodeBlock,
   LinkSimple,
   ListBullets,
@@ -38,6 +39,7 @@ export const QuillFormattingToolbar = ({
           ...(toolbarFormatting?.italic ? ["italic"] : []),
           ...(toolbarFormatting?.underline ? ["underline"] : []),
           ...(toolbarFormatting?.strike ? ["strike"] : []),
+          ...(toolbarFormatting?.code ? ["code"] : []),
           ...(toolbarFormatting?.list === "ordered" ? ["ordered"] : []),
           ...(toolbarFormatting?.list === "bullet" ? ["bullet"] : []),
           ...(toolbarFormatting?.blockquote ? ["blockquote"] : []),
@@ -60,6 +62,9 @@ export const QuillFormattingToolbar = ({
           </QuillFormattingToolbarButton>
           <QuillFormattingToolbarButton value="strike" colour={colour}>
             <TextStrikethrough size={16} weight="bold" />
+          </QuillFormattingToolbarButton>
+          <QuillFormattingToolbarButton value="code" colour={colour}>
+            <Code size={16} weight="bold" />
           </QuillFormattingToolbarButton>
         </div>
 

@@ -1,0 +1,1 @@
+ALTER TABLE `notes` ADD `links` text DEFAULT '[]' NOT NULL;

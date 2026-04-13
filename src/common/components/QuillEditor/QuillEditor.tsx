@@ -1,4 +1,3 @@
-import "./style.css";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { getColourHex } from "src/colours/utils/getColourHex";
 import {
@@ -128,6 +127,7 @@ const QuillEditor = ({
               italic: createToggleHandler(() => quill, "italic"),
               underline: createToggleHandler(() => quill, "underline"),
               strike: createToggleHandler(() => quill, "strike"),
+              code: createToggleHandler(() => quill, "code"),
               list: createListHandler(() => quill),
               blockquote: createToggleHandler(() => quill, "blockquote"),
               "code-block": createToggleHandler(() => quill, "code-block"),
@@ -140,6 +140,7 @@ const QuillEditor = ({
           "italic",
           "underline",
           "strike",
+          "code",
           "list",
           "blockquote",
           "code-block",

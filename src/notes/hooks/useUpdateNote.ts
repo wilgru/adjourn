@@ -31,6 +31,7 @@ export const useUpdateNote = (): UseUpdateNoteResponse => {
       content: JSON.stringify(updateNoteData.content),
       isBookmarked: updateNoteData.isBookmarked,
       tagIds,
+      links: JSON.stringify(updateNoteData.links),
     });
 
     if (!response.success) throw new Error(response.error);

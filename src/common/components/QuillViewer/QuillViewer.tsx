@@ -1,4 +1,3 @@
-import "./style.css";
 import { useEffect, useRef } from "react";
 import { cn } from "src/common/utils/cn";
 import type Delta from "quill-delta";

@@ -12,6 +12,7 @@ export const notes = sqliteTable("notes", {
   journal: text("journal").references(() => journals.id),
   user: text("user"),
   deleted: text("deleted"),
+  links: text("links").notNull().default("[]"),
   created: text("created").notNull(),
   updated: text("updated").notNull(),
 });

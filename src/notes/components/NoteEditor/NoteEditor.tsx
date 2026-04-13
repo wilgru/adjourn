@@ -1,3 +1,4 @@
+import * as Dialog from "@radix-ui/react-dialog";
 import { useLocation, useNavigate } from "@tanstack/react-router";
 import dayjs from "dayjs";
 import debounce from "debounce";
@@ -7,6 +8,8 @@ import { Button } from "src/common/components/Button/Button";
 import { QuillEditor } from "src/common/components/QuillEditor/QuillEditor";
 import { QuillFormattingToolbar } from "src/common/components/QuillFormattingToolbar/QuillFormattingToolbar";
 import { Toggle } from "src/common/components/Toggle/Toggle";
+import { NoteLinkPill } from "src/notes/components/NoteLinkPill/NoteLinkPill";
+import { NoteLinksModal } from "src/notes/components/NoteLinksModal/NoteLinksModal";
 import { useCreateNote } from "src/notes/hooks/useCreateNote";
 import { useDeleteNote } from "src/notes/hooks/useDeleteNote";
 import { useUpdateNote } from "src/notes/hooks/useUpdateNote";
@@ -17,6 +20,7 @@ import { TagMultiSelect } from "../../../tags/components/TagMultiSelect/TagMulti
 import { TaskEditor } from "../../../tasks/components/TaskEditor/TaskEditor";
 import type { StringMap } from "quill";
 import type { Colour } from "src/colours/Colour.type";
+import type { Link } from "src/common/types/Link.type";
 import type { Note } from "src/notes/Note.type";
 
 type NoteEditorProps = {
@@ -43,8 +47,8 @@ const NoteEditor = ({
 
   const [editedNote, setEditedNote] = useState<Note>(note); // TODO: maybe use key prop when using NoteEditor to force reset instead of having to manage this state and useEffects to reset when the note prop changes.
   const [toolbarFormatting, setToolbarFormatting] = useState<StringMap>();
-  const [updatedDateVisible, setUpdatedDateVisible] = useState<boolean>(false);
   const [showNewUpdate, setShowNewUpdate] = useState(false);
+  const [linksModalKey, setLinksModalKey] = useState(0);
 
   // Ref that always points to the latest save implementation so the debounced
   // function never closes over stale state.
@@ -103,6 +107,10 @@ const NoteEditor = ({
     debouncedSave();
   };
 
+  const onSaveLinks = (links: Link[]) => {
+    onUpdateNote({ links });
+  };
+
   const onDeleteNote = async () => {
     debouncedSave.clear();
     await deleteNote({ noteId: editedNote.id });
@@ -126,24 +134,40 @@ const NoteEditor = ({
           className="h-12 text-5xl font-title tracking-tight overflow-y-hidden bg-white placeholder-slate-400 select-none resize-none outline-none"
         />
 
+        {editedNote.links.map((link) => (
+          <NoteLinkPill key={link.id} link={link} colour={colour} />
+        ))}
+
         <div className="flex flex-row flex-wrap items-center justify-between">
           <div className="flex flex-row flex-wrap gap-2 items-center">
-            <p
-              className={`${
-                updatedDateVisible ? "visible" : "hidden"
-              } text-slate-500 text-xs italic`}
-            >
-              {"(Last edited " +
-                editedNote.updated.format("ddd D MMMM YYYY, hh:mm a") +
-                ")"}
-            </p>
-
             <TagMultiSelect
               key={editedNote.id}
               initialTags={editedNote.tags}
               colour={colour}
               onChange={(tags) => onUpdateNote({ tags })}
             />
+
+            <Dialog.Root
+              onOpenChange={(open) => {
+                if (open) setLinksModalKey((k) => k + 1);
+              }}
+            >
+              <Dialog.Trigger asChild>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  colour={colour}
+                  iconName="link"
+                />
+              </Dialog.Trigger>
+
+              <NoteLinksModal
+                key={linksModalKey}
+                links={editedNote.links}
+                colour={colour}
+                onSave={onSaveLinks}
+              />
+            </Dialog.Root>
 
             <Button
               size="sm"
@@ -171,15 +195,8 @@ const NoteEditor = ({
               iconName="bookmark"
             />
 
-            <p
-              className="text-slate-500 text-xs"
-              onClick={() =>
-                setUpdatedDateVisible(
-                  (currentUpdatedDateVisible) => !currentUpdatedDateVisible,
-                )
-              }
-            >
-              {editedNote.created.format("ddd D MMMM YYYY, hh:mm a")}
+            <p className="text-slate-500 text-xs">
+              {editedNote.created.format("D MMMM YYYY, hh:mm a")}
             </p>
           </div>
 

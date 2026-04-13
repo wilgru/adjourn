@@ -34,6 +34,7 @@ export const useCreateNote = (): UseCreateNoteResponse => {
       content: JSON.stringify(createNoteData.content),
       isBookmarked: createNoteData.isBookmarked,
       tagIds: createNoteData.tags.map((tag) => tag.id),
+      links: JSON.stringify(createNoteData.links),
       journalId: journalId ?? null,
       userId: user?.id ?? null,
     });

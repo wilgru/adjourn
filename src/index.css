@@ -29,6 +29,75 @@ body {
   -webkit-app-region: no-drag;
 }
 
+#quill-editor .ql-editor {
+  padding: 0;
+}
+
+#quill-editor p {
+  font-family: "Helvetica Neue";
+  font-size: 16px;
+}
+
+#quill-editor ul {
+  padding-left: 0;
+}
+
+#quill-editor ul li::before {
+  font-size: 16px;
+  margin-left: 2px;
+  margin-right: 2px;
+  text-align: center;
+  color: #cbd5e1; /* slate-300. Tailwind v4 will let you use var(--color-slate-300) */
+}
+
+#quill-editor ul li {
+  font-size: 16px;
+  padding-left: 0;
+}
+
+#quill-editor ol {
+  padding-left: 0;
+}
+
+#quill-editor ol li {
+  font-size: 16px;
+}
+
+#quill-editor blockquote {
+  font-size: 16px;
+  border-left: 2px solid #cbd5e1; /* slate-300. Tailwind v4 will let you use var(--color-slate-300) */
+  padding-left: 4px;
+}
+
+#quill-editor pre,
+code {
+  font-size: 14px;
+  font-family:
+    "SF Mono", SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier,
+    monospace;
+  background-color: #f1f5f9; /* slate-100. Tailwind v4 will let you use var(--color-slate-100) */
+  padding: 4px;
+  border-radius: 8px;
+}
+
+#quill-editor pre {
+  padding: 4px 8px;
+}
+
+#quill-editor a {
+  color: var(--ql-link-color, #f97316); /* falls back to orange-500 */
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+#quill-editor .ql-editor.ql-blank::before {
+  left: unset;
+  right: unset;
+  color: #94a3b8; /* slate-400. Tailwind v4 will let you use var(--color-slate-400) */
+  font-style: unset;
+  font-size: 16px;
+}
+
 /* 
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
