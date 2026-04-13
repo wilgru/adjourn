@@ -1,9 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import { useUser } from "src/Users/hooks/useUser";
 import { useCurrentJournalId } from "src/journals/hooks/useCurrentJournalId";
 import { mapTagGroup } from "src/tags/utils/mapTagGroup";
-import { createTagGroup } from "../serverFunctions/createTagGroup";
 import type { UseMutateAsyncFunction } from "@tanstack/react-query";
 import type { TagGroup } from "src/tags/Tag.type";
 
@@ -34,20 +32,18 @@ export const useCreateTagGroup = (): UseCreateTagGroupResponse => {
   const { journalId } = useCurrentJournalId();
   const queryClient = useQueryClient();
   const { user } = useUser();
-  const createTagGroupFn = useServerFn(createTagGroup);
 
   const mutationFn = async ({
     createTagGroupData,
   }: CreateTagGroupProps): Promise<TagGroup> => {
-    const row = await createTagGroupFn({
-      data: {
-        title: createTagGroupData.title,
-        journalId: journalId ?? null,
-        userId: user?.id ?? null,
-      },
+    const response = await window.api.createTagGroup({
+      title: createTagGroupData.title,
+      journalId: journalId ?? null,
+      userId: user?.id ?? null,
     });
+    if (!response.success) throw new Error(response.error);
 
-    return mapTagGroup(row);
+    return mapTagGroup(response.data);
   };
 
   const onSuccess = () => {

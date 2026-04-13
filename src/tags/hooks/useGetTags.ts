@@ -1,8 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import { useCurrentJournalId } from "src/journals/hooks/useCurrentJournalId";
 import { mapTag } from "src/tags/utils/mapTag";
-import { getTags } from "../serverFunctions/getTags";
 import type {
   QueryObserverResult,
   RefetchOptions,
@@ -18,14 +16,30 @@ type UseGetTagsResponse = {
 
 export const useGetTags = (): UseGetTagsResponse => {
   const { journalId } = useCurrentJournalId();
-  const getTagsFn = useServerFn(getTags);
 
   const queryFn = async (): Promise<Tag[]> => {
-    const result = await getTagsFn({
-      data: { journalId: journalId ?? "" },
-    });
+    if (!journalId) {
+      return [];
+    }
 
-    return result.tags.map((tag) => mapTag(tag, { noteCount: tag.noteCount }));
+    const [tagsResponse, notesResponse] = await Promise.all([
+      window.api.getTags({ journalId }),
+      window.api.getNotes({ journalId }),
+    ]);
+
+    if (!tagsResponse.success) throw new Error(tagsResponse.error);
+    if (!notesResponse.success) throw new Error(notesResponse.error);
+
+    const noteCountByTag = new Map<string, number>();
+    for (const note of notesResponse.data.notes) {
+      for (const tagId of note.tagIds) {
+        noteCountByTag.set(tagId, (noteCountByTag.get(tagId) ?? 0) + 1);
+      }
+    }
+
+    return tagsResponse.data.tags.map((tag) =>
+      mapTag(tag, { noteCount: noteCountByTag.get(tag.id) ?? 0 }),
+    );
   };
 
   // TODO: consider time caching for better performance

@@ -1,11 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
 import { useCurrentJournalId } from "src/journals/hooks/useCurrentJournalId";
 import { mapNote } from "src/notes/utils/mapNote";
 import { mapTask } from "src/tasks/utils/mapTask";
-import { getTasks } from "../serverFunctions/getTasks";
 import type {
   QueryObserverResult,
   RefetchOptions,
@@ -29,11 +27,14 @@ export const useGetTasks = ({
   dateString?: string;
 }): UseGetTacksResponse => {
   const { journalId } = useCurrentJournalId();
-  const getTasksFn = useServerFn(getTasks);
 
   const queryFn = async (): Promise<Task[]> => {
-    let createdAfter: string | undefined;
-    let createdBefore: string | undefined;
+    if (!journalId) {
+      return [];
+    }
+
+    let createdAfter: dayjs.Dayjs | undefined;
+    let createdBefore: dayjs.Dayjs | undefined;
 
     if (dateString) {
       const localDateMidday = dayjs(dateString)
@@ -42,23 +43,39 @@ export const useGetTasks = ({
         .second(0)
         .millisecond(0);
 
-      createdAfter = localDateMidday.utc().subtract(12, "hour").toISOString();
-
-      createdBefore = localDateMidday.utc().add(12, "hour").toISOString();
+      createdAfter = localDateMidday.utc().subtract(12, "hour");
+      createdBefore = localDateMidday.utc().add(12, "hour");
     }
 
-    const result = await getTasksFn({
-      data: {
-        journalId: journalId ?? "",
-        isFlagged,
-        createdAfter,
-        createdBefore,
-      },
-    });
+    const [tasksResponse, notesResponse] = await Promise.all([
+      window.api.getTasks({ journalId }),
+      window.api.getNotes({ journalId }),
+    ]);
 
-    return result.tasks.map((task) => {
-      const noteData = task.note ? result.notes[task.note] : null;
-      const note = noteData ? mapNote(noteData) : null;
+    if (!tasksResponse.success) throw new Error(tasksResponse.error);
+    if (!notesResponse.success) throw new Error(notesResponse.error);
+
+    const notesById = new Map(
+      notesResponse.data.notes.map((row) => [row.id, mapNote(row)]),
+    );
+
+    let filteredTasks = tasksResponse.data.tasks;
+
+    if (isFlagged !== undefined) {
+      filteredTasks = filteredTasks.filter(
+        (task) => task.isFlagged === isFlagged,
+      );
+    }
+
+    if (createdAfter && createdBefore) {
+      filteredTasks = filteredTasks.filter((task) => {
+        const created = dayjs.utc(task.created);
+        return created.isAfter(createdAfter) && created.isBefore(createdBefore);
+      });
+    }
+
+    return filteredTasks.map((task) => {
+      const note = task.note ? (notesById.get(task.note) ?? null) : null;
       return mapTask(task, { note });
     });
   };

@@ -1,8 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import { mapNote } from "src/notes/utils/mapNote";
 import { mapTag } from "src/tags/utils/mapTag";
-import { getTag } from "../serverFunctions/getTag";
 import type {
   QueryObserverResult,
   RefetchOptions,
@@ -25,16 +23,25 @@ type UseTagResponse = {
 };
 
 export const useGetTag = (tagId: string): UseTagResponse => {
-  const getTagFn = useServerFn(getTag);
-
   const queryFn = async (): Promise<{
     tag: Tag;
     notes: Note[];
   }> => {
-    const result = await getTagFn({ data: { tagId } });
+    const tagResponse = await window.api.getTag({ tagId });
+    if (!tagResponse.success) throw new Error(tagResponse.error);
 
-    const tag = mapTag(result.tag, { noteCount: result.noteCount });
-    const notes = result.notes.map((n) => mapNote(n));
+    const journalId = tagResponse.data.journal;
+    const notesResponse = journalId
+      ? await window.api.getNotes({ journalId })
+      : { success: true as const, data: { notes: [] } };
+
+    if (!notesResponse.success) throw new Error(notesResponse.error);
+
+    const notes = notesResponse.data.notes
+      .filter((note) => note.tagIds.includes(tagId))
+      .map((note) => mapNote(note));
+
+    const tag = mapTag(tagResponse.data, { noteCount: notes.length });
 
     return {
       tag,

@@ -1,7 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import { mapNote } from "src/notes/utils/mapNote";
-import { updateNote } from "../serverFunctions/updateNote";
 import type { UseMutateAsyncFunction } from "@tanstack/react-query";
 import type { Note } from "src/notes/Note.type";
 
@@ -21,25 +19,23 @@ type UseUpdateNoteResponse = {
 
 export const useUpdateNote = (): UseUpdateNoteResponse => {
   const queryClient = useQueryClient();
-  const updateNoteFn = useServerFn(updateNote);
 
   const mutationFn = async ({
     noteId,
     updateNoteData,
   }: UpdateNoteProps): Promise<Note | undefined> => {
     const tagIds = updateNoteData.tags.map((tag) => tag.id);
-
-    const row = await updateNoteFn({
-      data: {
-        noteId,
-        title: updateNoteData.title,
-        content: JSON.stringify(updateNoteData.content),
-        isBookmarked: updateNoteData.isBookmarked,
-        tagIds,
-      },
+    const response = await window.api.updateNote({
+      noteId,
+      title: updateNoteData.title,
+      content: JSON.stringify(updateNoteData.content),
+      isBookmarked: updateNoteData.isBookmarked,
+      tagIds,
     });
 
-    return mapNote(row, {
+    if (!response.success) throw new Error(response.error);
+
+    return mapNote(response.data, {
       tags: updateNoteData.tags,
       tasks: updateNoteData.tasks,
     });

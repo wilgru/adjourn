@@ -1,5 +1,5 @@
 export const useElectronEnvironment = () => {
-  const isElectron = import.meta.env.VITE_ELECTRON === "true";
+  const isElectron = true;
   const isMac =
     typeof navigator !== "undefined" && /Mac/.test(navigator.platform);
 

@@ -1,7 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import { useCurrentJournalId } from "src/journals/hooks/useCurrentJournalId";
-import { getJournalContentCounts } from "../serverFunctions/getJournalContentCounts";
 
 type JournalContentCounts = {
   noteCount: number;
@@ -18,7 +16,6 @@ type UseGetJournalContentCountsResponse = {
 export const useGetJournalContentCounts =
   (): UseGetJournalContentCountsResponse => {
     const { journalId } = useCurrentJournalId();
-    const getJournalContentCountsFn = useServerFn(getJournalContentCounts);
 
     const queryFn = async (): Promise<JournalContentCounts> => {
       if (!journalId) {
@@ -30,15 +27,29 @@ export const useGetJournalContentCounts =
         };
       }
 
-      const result = await getJournalContentCountsFn({
-        data: { journalId },
-      });
+      const [
+        notesResponse,
+        bookmarkedResponse,
+        tasksResponse,
+        updatesResponse,
+      ] = await Promise.all([
+        window.api.getNotes({ journalId }),
+        window.api.getNotes({ journalId, isBookmarked: true }),
+        window.api.getTasks({ journalId }),
+        window.api.getUpdates({ journalId }),
+      ]);
+
+      if (!notesResponse.success) throw new Error(notesResponse.error);
+      if (!bookmarkedResponse.success)
+        throw new Error(bookmarkedResponse.error);
+      if (!tasksResponse.success) throw new Error(tasksResponse.error);
+      if (!updatesResponse.success) throw new Error(updatesResponse.error);
 
       return {
-        noteCount: result.noteCount ?? 0,
-        bookmarkedCount: result.bookmarkedCount ?? 0,
-        taskCount: result.taskCount ?? 0,
-        updateCount: result.updateCount ?? 0,
+        noteCount: notesResponse.data.notes.length,
+        bookmarkedCount: bookmarkedResponse.data.notes.length,
+        taskCount: tasksResponse.data.tasks.length,
+        updateCount: updatesResponse.data.updates.length,
       };
     };
 

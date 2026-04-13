@@ -1,6 +1,4 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
-import { deleteTag } from "../serverFunctions/deleteTag";
 import type { UseMutateAsyncFunction } from "@tanstack/react-query";
 
 type UseDeleteTagResponse = {
@@ -9,10 +7,10 @@ type UseDeleteTagResponse = {
 
 export const useDeleteTag = (): UseDeleteTagResponse => {
   const queryClient = useQueryClient();
-  const deleteTagFn = useServerFn(deleteTag);
 
   const mutationFn = async (tagId: string): Promise<string | undefined> => {
-    await deleteTagFn({ data: { tagId } });
+    const response = await window.api.deleteTag({ tagId });
+    if (!response.success) throw new Error(response.error);
     return tagId;
   };
 

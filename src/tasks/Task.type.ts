@@ -1,8 +1,9 @@
 import type { TaskSchema } from "./tasks.schema";
 import type { Dayjs } from "dayjs";
 import type { Note } from "src/notes/Note.type";
+import type { Prettify } from "src/common/types/Prettify.type";
 
-export type Task = Omit<
+export type Task = Prettify<Omit<
   TaskSchema,
   | "note"
   | "dueDate"
@@ -19,7 +20,7 @@ export type Task = Omit<
   cancelledDate: Dayjs | null;
   created: Dayjs;
   updated: Dayjs;
-};
+}>;
 
 export type TasksGroup = {
   title: string;

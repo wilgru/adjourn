@@ -1,8 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import { useCurrentJournalId } from "src/journals/hooks/useCurrentJournalId";
 import { mapDateWithNotes } from "src/notes/utils/mapDateWithNotes";
-import { getDatesWithUpdates } from "../serverFunctions/getDatesWithUpdates";
 import type {
   QueryObserverResult,
   RefetchOptions,
@@ -19,18 +17,30 @@ type UseGetDatesWithUpdatesResponse = {
 export const useGetDatesWithUpdates = (): UseGetDatesWithUpdatesResponse => {
   const { journalId: routeJournalId } = useCurrentJournalId();
   const journalId = routeJournalId;
-  const getDatesWithUpdatesFn = useServerFn(getDatesWithUpdates);
 
   const queryFn = async (): Promise<DateWithNotes[]> => {
     if (!journalId) {
       return [];
     }
 
-    const result = await getDatesWithUpdatesFn({
-      data: { journalId },
-    });
+    const response = await window.api.getUpdates({ journalId });
+    if (!response.success) throw new Error(response.error);
 
-    return result.dates.map(mapDateWithNotes);
+    const uniqueDates = new Map<string, string>();
+    for (const update of response.data.updates) {
+      const dateStr = update.created.split("T")[0];
+      if (!uniqueDates.has(dateStr)) {
+        uniqueDates.set(dateStr, update.created);
+      }
+    }
+
+    const dates = Array.from(uniqueDates.entries()).map(([id, created]) => ({
+      id,
+      created,
+      hasBookmarked: false,
+    }));
+
+    return dates.map(mapDateWithNotes);
   };
 
   const { data, refetch } = useQuery({

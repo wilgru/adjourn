@@ -1,7 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import { useGetTags } from "src/tags/hooks/useGetTags";
-import { deleteNote } from "../serverFunctions/deleteNote";
 import { useGetNotes } from "./useGetNotes";
 import type { UseMutateAsyncFunction } from "@tanstack/react-query";
 
@@ -22,22 +20,17 @@ export const useDeleteNote = (): UseDeleteNoteResponse => {
   const queryClient = useQueryClient();
   const { notes } = useGetNotes({ isBookmarked: false });
   const { refetchTags } = useGetTags();
-  const deleteNoteFn = useServerFn(deleteNote);
 
   const mutationFn = async ({
     noteId,
   }: deleteNoteProps): Promise<string | undefined> => {
     const noteToDelete = notes.find((note) => note.id === noteId);
+    if (!noteToDelete) return;
 
-    if (!noteToDelete) {
-      return;
-    }
+    const response = await window.api.deleteNote({ noteId });
 
-    await deleteNoteFn({ data: { noteId } });
-
-    if (noteToDelete.tags.length) {
-      await refetchTags();
-    }
+    if (!response.success) throw new Error(response.error);
+    if (noteToDelete.tags.length) await refetchTags();
 
     return noteId;
   };

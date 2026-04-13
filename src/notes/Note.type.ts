@@ -1,21 +1,24 @@
 import type { NoteSchema } from "./notes.schema";
 import type { Dayjs } from "dayjs";
 import type Delta from "quill-delta";
+import type { Prettify } from "src/common/types/Prettify.type";
 import type { Tag } from "src/tags/Tag.type";
 import type { Task } from "src/tasks/Task.type";
 
-export type Note = Omit<
-  NoteSchema,
-  "content" | "created" | "updated" | "deleted" | "journal" | "user"
-> & {
-  content: Delta;
-  deleted: Dayjs | null;
-  created: Dayjs;
-  updated: Dayjs;
-  tasks: Task[];
-  tags: Tag[];
-  updateCount: number;
-};
+export type Note = Prettify<
+  Omit<
+    NoteSchema,
+    "content" | "created" | "updated" | "deleted" | "journal" | "user"
+  > & {
+    content: Delta;
+    deleted: Dayjs | null;
+    created: Dayjs;
+    updated: Dayjs;
+    tasks: Task[];
+    tags: Tag[];
+    updateCount: number;
+  }
+>;
 
 export type NotesGroup = {
   title: string | null;

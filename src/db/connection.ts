@@ -54,7 +54,7 @@ const sqlite = new Database(getDbPath());
 sqlite.pragma("journal_mode = WAL");
 
 const db = drizzle(sqlite);
-await migrate(db, {
+migrate(db, {
   migrationsFolder:
     process.env.NODE_ENV === "production"
       ? path.join(process.resourcesPath, "drizzle")

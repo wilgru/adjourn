@@ -1,9 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import { mapNote } from "src/notes/utils/mapNote";
 import { useGetTags } from "src/tags/hooks/useGetTags";
 import { useGetTasks } from "src/tasks/hooks/useGetTasks";
-import { getNote } from "../serverFunctions/getNote";
 import type {
   QueryObserverResult,
   RefetchOptions,
@@ -24,13 +22,17 @@ export const useGetNote = ({
 }): UseGetNoteResponse => {
   const { tags: allTags } = useGetTags();
   const { tasks: allTasks } = useGetTasks({});
-  const getNoteFn = useServerFn(getNote);
 
   const queryFn = async (): Promise<Note> => {
-    const result = await getNoteFn({ data: { noteId: noteId ?? "" } });
-    const tags = allTags.filter((tag) => result.tagIds.includes(tag.id));
-    const tasks = allTasks.filter((task) => task.note?.id === result.note.id);
-    return mapNote(result.note, { tags, tasks });
+    const response = await window.api.getNote({ noteId: noteId ?? "" });
+    if (!response.success) throw new Error(response.error);
+
+    const noteRow = response.data;
+
+    const tags = allTags.filter((tag) => noteRow.tagIds.includes(tag.id));
+    const tasks = allTasks.filter((task) => task.note?.id === noteRow.note.id);
+
+    return mapNote(noteRow.note, { tags, tasks });
   };
 
   const { data, refetch } = useQuery({

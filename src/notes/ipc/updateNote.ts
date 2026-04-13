@@ -1,10 +1,10 @@
-import { createServerFn } from "@tanstack/react-start";
 import { eq } from "drizzle-orm";
+import { createIpcHandler } from "src/common/utils/createIpcHandler";
 import { db } from "src/db/connection";
 import { notes, noteTags } from "src/notes/notes.schema";
 import type { NoteSchema } from "src/notes/notes.schema";
 
-type UpdateNoteInput = {
+export type UpdateNoteInput = {
   noteId: string;
   title: string | null;
   content: string | null;
@@ -12,29 +12,35 @@ type UpdateNoteInput = {
   tagIds: string[];
 };
 
-export const updateNote = createServerFn({ method: "POST" })
-  .inputValidator((input: UpdateNoteInput) => input)
-  .handler(async ({ data }): Promise<NoteSchema> => {
+createIpcHandler(
+  "notes:update",
+  ({
+    noteId,
+    title,
+    content,
+    isBookmarked,
+    tagIds,
+  }: UpdateNoteInput): NoteSchema => {
     const now = new Date().toISOString();
 
     const [updated] = db
       .update(notes)
       .set({
-        title: data.title,
-        content: data.content,
-        isBookmarked: data.isBookmarked,
+        title: title,
+        content: content,
+        isBookmarked: isBookmarked,
         updated: now,
       })
-      .where(eq(notes.id, data.noteId))
+      .where(eq(notes.id, noteId))
       .returning()
       .all();
 
     // Replace tags: delete existing, insert new
-    db.delete(noteTags).where(eq(noteTags.noteId, data.noteId)).run();
+    db.delete(noteTags).where(eq(noteTags.noteId, noteId)).run();
 
-    if (data.tagIds.length > 0) {
+    if (tagIds.length > 0) {
       db.insert(noteTags)
-        .values(data.tagIds.map((tagId) => ({ noteId: data.noteId, tagId })))
+        .values(tagIds.map((tagId) => ({ noteId: noteId, tagId })))
         .run();
     }
 
@@ -49,4 +55,5 @@ export const updateNote = createServerFn({ method: "POST" })
       created: updated.created,
       updated: updated.updated,
     };
-  });
+  },
+);

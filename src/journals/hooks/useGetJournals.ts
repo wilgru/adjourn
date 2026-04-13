@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
+import { useUser } from "src/Users/hooks/useUser";
 import { mapJournal } from "src/journals/utils/mapJournal";
-import { getJournals } from "../serverFunctions/getJournals";
 import type { Journal } from "src/journals/Journal.type";
 
 type UseGetJournalsResponse = {
@@ -10,18 +9,17 @@ type UseGetJournalsResponse = {
 };
 
 export const useGetJournals = (): UseGetJournalsResponse => {
-  const getJournalsFn = useServerFn(getJournals);
+  const { user } = useUser();
 
   const queryFn = async (): Promise<{
     journals: Journal[];
   }> => {
-    const result = await getJournalsFn();
+    const response = await window.api.getJournals({ userId: user?.id ?? null });
+    if (!response.success) throw new Error(response.error);
 
-    const journals = result.journals.map((journal) => ({
-      ...mapJournal(journal),
-      noteCount: journal.noteCount,
-      taskCount: journal.taskCount,
-    }));
+    const journals = response.data.journals.map((journal) =>
+      mapJournal(journal),
+    );
 
     return { journals };
   };

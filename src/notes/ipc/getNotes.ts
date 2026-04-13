@@ -1,38 +1,40 @@
-import { createServerFn } from "@tanstack/react-start";
 import { and, eq, gte, isNull, lte } from "drizzle-orm";
+import { createIpcHandler } from "src/common/utils/createIpcHandler";
 import { db } from "src/db/connection";
 import { notes, noteTags } from "src/notes/notes.schema";
 import type { NoteSchema } from "src/notes/notes.schema";
 
-type GetNotesInput = {
+export type GetNotesInput = {
   journalId: string;
   isBookmarked?: boolean;
   createdAfter?: string;
   createdBefore?: string;
 };
 
-type GetNotesResult = {
+export type GetNotesResult = {
   notes: Array<NoteSchema & { tagIds: string[] }>;
 };
 
-export const getNotes = createServerFn({ method: "GET" })
-  .inputValidator((input: GetNotesInput) => input)
-  .handler(async ({ data }): Promise<GetNotesResult> => {
-    const conditions = [
-      eq(notes.journal, data.journalId),
-      isNull(notes.deleted),
-    ];
+createIpcHandler(
+  "notes:getAll",
+  ({
+    journalId,
+    isBookmarked,
+    createdAfter,
+    createdBefore,
+  }: GetNotesInput): GetNotesResult => {
+    const conditions = [eq(notes.journal, journalId), isNull(notes.deleted)];
 
-    if (data.isBookmarked !== undefined) {
-      conditions.push(eq(notes.isBookmarked, data.isBookmarked));
+    if (isBookmarked !== undefined) {
+      conditions.push(eq(notes.isBookmarked, isBookmarked));
     }
 
-    if (data.createdAfter) {
-      conditions.push(gte(notes.created, data.createdAfter));
+    if (createdAfter) {
+      conditions.push(gte(notes.created, createdAfter));
     }
 
-    if (data.createdBefore) {
-      conditions.push(lte(notes.created, data.createdBefore));
+    if (createdBefore) {
+      conditions.push(lte(notes.created, createdBefore));
     }
 
     const rows = db
@@ -44,10 +46,10 @@ export const getNotes = createServerFn({ method: "GET" })
     const allNoteTags = rows.length > 0 ? db.select().from(noteTags).all() : [];
 
     const tagsByNoteId = new Map<string, string[]>();
-    for (const nt of allNoteTags) {
-      const existing = tagsByNoteId.get(nt.noteId) ?? [];
-      existing.push(nt.tagId);
-      tagsByNoteId.set(nt.noteId, existing);
+    for (const noteTag of allNoteTags) {
+      const existing = tagsByNoteId.get(noteTag.noteId) ?? [];
+      existing.push(noteTag.tagId);
+      tagsByNoteId.set(noteTag.noteId, existing);
     }
 
     return {
@@ -64,4 +66,5 @@ export const getNotes = createServerFn({ method: "GET" })
         tagIds: tagsByNoteId.get(row.id) ?? [],
       })),
     };
-  });
+  },
+);

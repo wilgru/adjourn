@@ -1,8 +1,9 @@
 import type { JournalSchema } from "./journals.schema";
 import type { Dayjs } from "dayjs";
 import type { Colour } from "src/colours/Colour.type";
+import type { Prettify } from "src/common/types/Prettify.type";
 
-export type Journal = Omit<
+export type Journal = Prettify<Omit<
   JournalSchema,
   | "colour"
   | "notesSortBy"
@@ -26,4 +27,4 @@ export type Journal = Omit<
   bookmarkedSortBy?: "alphabetical" | "created";
   bookmarkedSortDirection?: "asc" | "desc";
   bookmarkedGroupBy?: "created" | "tag" | null;
-};
+}>;

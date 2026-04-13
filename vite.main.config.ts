@@ -1,11 +1,18 @@
+import { resolve } from "path";
 import { defineConfig } from "vite";
 
 export default defineConfig({
   build: {
     rollupOptions: {
+      external: ["better-sqlite3"],
       output: {
         entryFileNames: "[name].cjs",
       },
+    },
+  },
+  resolve: {
+    alias: {
+      src: resolve(__dirname, "src"),
     },
   },
   // build: {

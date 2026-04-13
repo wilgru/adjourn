@@ -1,18 +1,37 @@
 import path from "node:path";
-import { app, BrowserWindow, session } from "electron";
+import { app, BrowserWindow } from "electron";
 import log from "electron-log";
-// import started from "electron-squirrel-startup";
-import { startServer, stopServer } from "./server";
+import "src/notes/ipc/createNote";
+import "src/notes/ipc/getNote";
+import "src/notes/ipc/getNotes";
+import "src/notes/ipc/updateNote";
+import "src/notes/ipc/deleteNote";
+import "src/journals/ipc/createJournal";
+import "src/journals/ipc/getJournal";
+import "src/journals/ipc/getJournals";
+import "src/journals/ipc/updateJournal";
+import "src/journals/ipc/deleteJournal";
+import "src/tasks/ipc/createTask";
+import "src/tasks/ipc/getTask";
+import "src/tasks/ipc/getTasks";
+import "src/tasks/ipc/updateTask";
+import "src/tasks/ipc/deleteTask";
+import "src/tags/ipc/createTag";
+import "src/tags/ipc/getTag";
+import "src/tags/ipc/getTags";
+import "src/tags/ipc/updateTag";
+import "src/tags/ipc/deleteTag";
+import "src/tags/ipc/createTagGroup";
+import "src/tags/ipc/updateTagGroup";
+import "src/tags/ipc/deleteTagGroup";
+import "src/updates/ipc/createUpdate";
+import "src/updates/ipc/getUpdate";
+import "src/updates/ipc/getUpdates";
+import "src/updates/ipc/updateUpdate";
+import "src/updates/ipc/deleteUpdate";
 
-//https://www.answeroverflow.com/m/1456061475960524902
-//github.com/cheriot/electron-tanstack-demo/blob/master/desktop/forge.config.ts
-
-// Single source of truth for server URL
-function getServerUrl(port: number): string {
-  return app.isPackaged
-    ? `http://127.0.0.1:${port}`
-    : `http://localhost:${port}`;
-}
+declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string;
+declare const MAIN_WINDOW_VITE_NAME: string;
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 // if (started) {
@@ -23,35 +42,10 @@ app.setName("Adjourn");
 log.initialize();
 
 let mainWindow: BrowserWindow | null = null;
-let serverPort = 0;
 
-const createWindow = async () => {
+const createWindow = () => {
   const isMac = process.platform === "darwin";
 
-  // Generate auth secret and start the embedded Nitro server
-  try {
-    serverPort = await startServer();
-    log.info(`Server available on port ${serverPort}`);
-  } catch (error) {
-    log.error("Failed to start server:", error);
-    app.quit();
-    return;
-  }
-
-  // Much of the code below is for security. See Electron's security best practices for detail.
-  // https://www.electronjs.org/docs/latest/tutorial/security)
-
-  const serverUrl = getServerUrl(serverPort);
-
-  // Security: Deny all permission requests by default
-  session.defaultSession.setPermissionRequestHandler(
-    (_, permission, callback) => {
-      log.warn("Denied permission request:", permission);
-      callback(false); // Deny all by default
-    },
-  );
-
-  // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
@@ -63,35 +57,19 @@ const createWindow = async () => {
         }
       : {}),
     webPreferences: {
-      preload: path.join(__dirname, "preload.mjs"),
+      preload: path.join(__dirname, "preload.js"),
       nodeIntegration: false,
       contextIsolation: true,
     },
   });
 
-  // Security: Restrict navigation to localhost only
-  mainWindow.webContents.on("will-navigate", (event, url) => {
-    const parsedUrl = new URL(url);
-    // Only allow navigation to localhost/127.0.0.1
-    if (!["localhost", "127.0.0.1"].includes(parsedUrl.hostname)) {
-      event.preventDefault();
-      log.warn("Blocked navigation to:", url);
-    }
-  });
-
-  // Security: Control new window creation
-  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
-    const parsedUrl = new URL(url);
-    // Deny all new windows, or only allow specific localhost URLs
-    if (["localhost", "127.0.0.1"].includes(parsedUrl.hostname)) {
-      return { action: "allow" };
-    }
-    log.warn("Blocked window.open to:", url);
-    return { action: "deny" };
-  });
-
-  // Load from the server
-  mainWindow.loadURL(serverUrl);
+  if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
+    mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
+  } else {
+    mainWindow.loadFile(
+      path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`),
+    );
+  }
   if (!app.isPackaged) {
     mainWindow.webContents.openDevTools();
   }
@@ -105,8 +83,7 @@ app.on("ready", createWindow);
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
 // explicitly with Cmd + Q.
-app.on("window-all-closed", async () => {
-  await stopServer();
+app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
   }
@@ -118,8 +95,4 @@ app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createWindow();
   }
-});
-
-app.on("before-quit", async () => {
-  await stopServer();
 });

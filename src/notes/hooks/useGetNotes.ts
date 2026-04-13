@@ -1,11 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
 import { mapNote } from "src/notes/utils/mapNote";
 import { useGetTags } from "src/tags/hooks/useGetTags";
 import { useCurrentJournalId } from "../../journals/hooks/useCurrentJournalId";
-import { getNotes } from "../serverFunctions/getNotes";
 import type { Note } from "src/notes/Note.type";
 
 type UseGetNotesResponse = {
@@ -23,7 +21,6 @@ export const useGetNotes = ({
 }): UseGetNotesResponse => {
   const { journalId } = useCurrentJournalId();
   const { tags: allTags } = useGetTags();
-  const getNotesFn = useServerFn(getNotes);
 
   const queryFn = async (): Promise<{
     notes: Note[];
@@ -49,14 +46,15 @@ export const useGetNotes = ({
         .toISOString();
     }
 
-    const result = await getNotesFn({
-      data: {
-        journalId: journalId ?? "",
-        isBookmarked,
-        createdAfter,
-        createdBefore,
-      },
+    const response = await window.api.getNotes({
+      journalId: journalId ?? "",
+      isBookmarked,
+      createdAfter,
+      createdBefore,
     });
+
+    if (!response.success) throw new Error(response.error);
+    const result = response.data;
 
     const notes = result.notes.map((row) => {
       const tags = allTags.filter((t) => row.tagIds.includes(t.id));

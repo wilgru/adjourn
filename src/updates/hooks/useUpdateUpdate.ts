@@ -1,7 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import { mapUpdate } from "src/updates/utils/mapUpdate";
-import { updateUpdate } from "../serverFunctions/updateUpdate";
 import type { UseMutateAsyncFunction } from "@tanstack/react-query";
 import type { Update } from "src/updates/Update.type";
 
@@ -21,22 +19,20 @@ type UseUpdateUpdateResponse = {
 
 export const useUpdateUpdate = (): UseUpdateUpdateResponse => {
   const queryClient = useQueryClient();
-  const updateUpdateFn = useServerFn(updateUpdate);
 
   const mutationFn = async ({
     updateId,
     updateData,
   }: UpdateUpdateProps): Promise<Update | undefined> => {
-    const row = await updateUpdateFn({
-      data: {
-        updateId,
-        content: updateData.content ? JSON.stringify(updateData.content) : null,
-        tint: updateData.tint ?? null,
-        noteIds: updateData.notes?.map((n) => n.id) ?? [],
-      },
+    const response = await window.api.updateUpdate({
+      updateId,
+      content: updateData.content ? JSON.stringify(updateData.content) : null,
+      tint: updateData.tint ?? null,
+      noteIds: updateData.notes?.map((n) => n.id) ?? [],
     });
+    if (!response.success) throw new Error(response.error);
 
-    return mapUpdate(row, { notes: updateData.notes ?? [] });
+    return mapUpdate(response.data, { notes: updateData.notes ?? [] });
   };
 
   const onSuccess = () => {

@@ -1,6 +1,4 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
-import { deleteUpdate } from "../serverFunctions/deleteUpdate";
 import type { UseMutateAsyncFunction } from "@tanstack/react-query";
 
 type DeleteUpdateProps = {
@@ -18,12 +16,12 @@ type UseDeleteUpdateResponse = {
 
 export const useDeleteUpdate = (): UseDeleteUpdateResponse => {
   const queryClient = useQueryClient();
-  const deleteUpdateFn = useServerFn(deleteUpdate);
 
   const mutationFn = async ({
     updateId,
   }: DeleteUpdateProps): Promise<string | undefined> => {
-    await deleteUpdateFn({ data: { updateId } });
+    const response = await window.api.deleteUpdate({ updateId });
+    if (!response.success) throw new Error(response.error);
     return updateId;
   };
 

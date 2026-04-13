@@ -1,6 +1,4 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
-import { deleteTagGroup } from "../serverFunctions/deleteTagGroup";
 import type { UseMutateAsyncFunction } from "@tanstack/react-query";
 
 type UseDeleteTagGroupResponse = {
@@ -14,12 +12,12 @@ type UseDeleteTagGroupResponse = {
 
 export const useDeleteTagGroup = (): UseDeleteTagGroupResponse => {
   const queryClient = useQueryClient();
-  const deleteTagGroupFn = useServerFn(deleteTagGroup);
 
   const mutationFn = async (
     tagGroupId: string,
   ): Promise<string | undefined> => {
-    await deleteTagGroupFn({ data: { tagGroupId } });
+    const response = await window.api.deleteTagGroup({ tagGroupId });
+    if (!response.success) throw new Error(response.error);
     return tagGroupId;
   };
 

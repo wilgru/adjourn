@@ -1,7 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import { mapTag } from "src/tags/utils/mapTag";
-import { updateTag } from "../serverFunctions/updateTag";
 import type { UseMutateAsyncFunction } from "@tanstack/react-query";
 import type { Note } from "src/notes/Note.type";
 import type { Tag } from "src/tags/Tag.type";
@@ -22,28 +20,26 @@ type UseUpdateTagResponse = {
 
 export const useUpdateTag = (): UseUpdateTagResponse => {
   const queryClient = useQueryClient();
-  const updateTagFn = useServerFn(updateTag);
 
   const mutationFn = async ({
     tagId,
     updateTagData,
   }: UpdateTagProps): Promise<Tag | undefined> => {
-    const row = await updateTagFn({
-      data: {
-        tagId,
-        name: updateTagData.name,
-        colour: updateTagData.colour.name,
-        icon: updateTagData.icon,
-        description: updateTagData.description,
-        groupBy: updateTagData.groupBy,
-        sortBy: updateTagData.sortBy,
-        sortDirection: updateTagData.sortDirection,
-        links: JSON.stringify(updateTagData.links),
-        tagGroupId: updateTagData.tagGroupId ?? null,
-      },
+    const response = await window.api.updateTag({
+      tagId,
+      name: updateTagData.name,
+      colour: updateTagData.colour.name,
+      icon: updateTagData.icon,
+      description: updateTagData.description,
+      groupBy: updateTagData.groupBy,
+      sortBy: updateTagData.sortBy,
+      sortDirection: updateTagData.sortDirection,
+      links: JSON.stringify(updateTagData.links),
+      tagGroupId: updateTagData.tagGroupId ?? null,
     });
+    if (!response.success) throw new Error(response.error);
 
-    return mapTag(row, { noteCount: updateTagData.noteCount });
+    return mapTag(response.data, { noteCount: updateTagData.noteCount });
   };
 
   const onSuccess = (data: Tag | undefined) => {

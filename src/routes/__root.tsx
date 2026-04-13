@@ -1,17 +1,10 @@
 // import { TanStackDevtools } from "@tanstack/react-devtools";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 // import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
-import {
-  createRootRoute,
-  HeadContent,
-  Navigate,
-  Outlet,
-  Scripts,
-} from "@tanstack/react-router";
+import { createRootRoute, Navigate, Outlet } from "@tanstack/react-router";
 // import { TanStackRouterDevtoolsPanel } from "@tanstack/router-devtools";
 import { useState } from "react";
 import requireClientAuth from "src/Users/utils/requireClientAuth";
-import appCss from "src/index.css?url";
 import { useNavigateToLastUsedJournal } from "src/journals/hooks/useGetLastUsedJournal";
 
 const NotFoundComponent = () => {
@@ -41,14 +34,9 @@ function RootComponent() {
   const [queryClient] = useState(() => new QueryClient());
 
   return (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        <QueryClientProvider client={queryClient}>
-          <Outlet />
-          {/* <TanStackDevtools
+    <QueryClientProvider client={queryClient}>
+      <Outlet />
+      {/* <TanStackDevtools
             plugins={[
               {
                 name: "TanStack Query",
@@ -60,31 +48,11 @@ function RootComponent() {
               },
             ]}
           /> */}
-        </QueryClientProvider>
-        <Scripts />
-      </body>
-    </html>
+    </QueryClientProvider>
   );
 }
 
 export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: "utf-8" },
-      { name: "viewport", content: "width=device-width, initial-scale=1.0" },
-      { title: "Adjourn" },
-    ],
-    links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
-      {
-        rel: "stylesheet",
-        href: "https://cdn.quilljs.com/1.3.7/quill.core.css",
-      },
-    ],
-  }),
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
 });

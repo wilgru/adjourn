@@ -23,5 +23,6 @@
     "baseUrl": "./"
   },
   "include": ["src", "electron"],
+  "exclude": ["src/server.ts", "src/**/serverFunctions/**"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

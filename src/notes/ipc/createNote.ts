@@ -1,9 +1,9 @@
-import { createServerFn } from "@tanstack/react-start";
+import { createIpcHandler } from "src/common/utils/createIpcHandler";
 import { db } from "src/db/connection";
 import { notes, noteTags } from "src/notes/notes.schema";
 import type { NoteSchema } from "src/notes/notes.schema";
 
-type CreateNoteInput = {
+export type CreateNoteInput = {
   title: string | null;
   content: string | null;
   isBookmarked: boolean;
@@ -12,9 +12,16 @@ type CreateNoteInput = {
   userId: string | null;
 };
 
-export const createNote = createServerFn({ method: "POST" })
-  .inputValidator((input: CreateNoteInput) => input)
-  .handler(async ({ data }): Promise<NoteSchema> => {
+createIpcHandler(
+  "notes:create",
+  ({
+    title,
+    content,
+    isBookmarked,
+    tagIds,
+    journalId,
+    userId,
+  }: CreateNoteInput): NoteSchema => {
     const now = new Date().toISOString();
     const id = crypto.randomUUID();
 
@@ -22,20 +29,20 @@ export const createNote = createServerFn({ method: "POST" })
       .insert(notes)
       .values({
         id,
-        title: data.title,
-        content: data.content,
-        isBookmarked: data.isBookmarked,
-        journal: data.journalId,
-        user: data.userId,
+        title,
+        content,
+        isBookmarked,
+        journal: journalId,
+        user: userId,
         created: now,
         updated: now,
       })
       .returning()
       .all();
 
-    if (data.tagIds.length > 0) {
+    if (tagIds.length > 0) {
       db.insert(noteTags)
-        .values(data.tagIds.map((tagId) => ({ noteId: id, tagId })))
+        .values(tagIds.map((tagId) => ({ noteId: id, tagId })))
         .run();
     }
 
@@ -50,4 +57,5 @@ export const createNote = createServerFn({ method: "POST" })
       created: inserted.created,
       updated: inserted.updated,
     };
-  });
+  },
+);

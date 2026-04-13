@@ -1,8 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import { useUser } from "src/Users/hooks/useUser";
 import { mapJournal } from "src/journals/utils/mapJournal";
-import { createJournal } from "../serverFunctions/createJournal";
 import type { UseMutateAsyncFunction } from "@tanstack/react-query";
 import type { Journal } from "src/journals/Journal.type";
 
@@ -23,28 +21,19 @@ type UseCreateJournalResponse = {
 export const useCreateJournal = (): UseCreateJournalResponse => {
   const queryClient = useQueryClient();
   const { user } = useUser();
-  const createJournalFn = useServerFn(createJournal);
 
   const mutationFn = async ({
     createJournalData,
   }: CreateJournalProps): Promise<Journal | undefined> => {
-    const row = await createJournalFn({
-      data: {
-        title: createJournalData.title,
-        icon: createJournalData.icon,
-        colour: createJournalData.colour.name,
-        notesSortBy: createJournalData.notesSortBy ?? "created",
-        notesSortDirection: createJournalData.notesSortDirection ?? "asc",
-        notesGroupBy: createJournalData.notesGroupBy ?? null,
-        bookmarkedSortBy: createJournalData.bookmarkedSortBy ?? "created",
-        bookmarkedSortDirection:
-          createJournalData.bookmarkedSortDirection ?? "asc",
-        bookmarkedGroupBy: createJournalData.bookmarkedGroupBy ?? null,
-        userId: user?.id ?? null,
-      },
+    const response = await window.api.createJournal({
+      title: createJournalData.title,
+      icon: createJournalData.icon,
+      colour: createJournalData.colour.name,
+      userId: user?.id ?? null,
     });
+    if (!response.success) throw new Error(response.error);
 
-    return mapJournal(row);
+    return mapJournal(response.data);
   };
 
   const onSuccess = (data: Journal | undefined) => {
