@@ -10,7 +10,7 @@ export const SidebarBookmarkSection = () => {
   const { journalId } = useCurrentJournalId();
   const { notes } = useGetNotes({ isBookmarked: true });
 
-  if (!journalId) {
+  if (!journalId || notes.length === 0) {
     return null;
   }
 
@@ -18,7 +18,7 @@ export const SidebarBookmarkSection = () => {
     <section className="flex flex-col gap-1">
       <div>
         <div className="flex flex-row items-center gap-1">
-          <h1 className="font-title text-slate-400 text-md">Bookmarked</h1>
+          <h1 className="font-title text-slate-400 text-md">Bookmarks</h1>
         </div>
 
         <div className="flex flex-col gap-1 mt-1">
@@ -31,12 +31,6 @@ export const SidebarBookmarkSection = () => {
             />
           ))}
         </div>
-
-        {notes.length === 0 && (
-          <p className="mt-1 text-xs italic text-slate-300">
-            No bookmarked notes yet
-          </p>
-        )}
       </div>
     </section>
   );
@@ -84,7 +78,7 @@ const BookmarkNavItem = ({
             size="sm"
             weight={isHovered || isActive ? "fill" : "regular"}
           />
-          {title}
+          <p className="truncate">{title === "" ? "Untitled Note" : title}</p>
         </div>
       )}
     </Link>

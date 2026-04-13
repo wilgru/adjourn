@@ -32,7 +32,7 @@ export const Toolbar = ({
   return (
     <div
       className={cn(
-        "bg-white w-full h-16 flex items-center justify-between p-3",
+        "bg-white w-full min-h-16 flex items-center justify-between p-3",
         isMacElectron ? "electron-drag-region" : "",
       )}
     >

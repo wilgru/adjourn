@@ -33,7 +33,7 @@ export const Sidebar = () => {
   }
 
   return (
-    <aside className="p-3 bg-slate-50 min-w-60">
+    <aside className="p-3 bg-slate-50 min-w-60 max-w-60">
       <div className="flex flex-col flex-shrink-0 justify-between gap-3 h-full">
         <div className="flex flex-col gap-3 justify-between overflow-y-auto">
           <div
@@ -89,7 +89,6 @@ export const Sidebar = () => {
               colour={currentJournal.colour}
               preview={counts?.updateCount}
             />
-
           </section>
 
           <SidebarBookmarkSection />
