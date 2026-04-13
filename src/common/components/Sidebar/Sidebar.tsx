@@ -152,7 +152,7 @@ export const Sidebar = () => {
                 )}
               >
                 <span className="font-title text-md">Add Section</span>
-                <Icon iconName="plusSquare" size="sm" className="pb-1" />
+                <Icon iconName="plus" size="sm" className="pb-1" />
               </button>
             </Dialog.Trigger>
 
