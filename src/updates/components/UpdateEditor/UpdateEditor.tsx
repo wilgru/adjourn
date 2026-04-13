@@ -263,12 +263,6 @@ export const UpdateEditor = ({
           tintClasses.card,
         )}
       >
-        <QuillViewer
-          content={editedUpdate.content ?? new Delta()}
-          textColor={tintClasses.textColor}
-          onClick={() => setIsEditing(true)}
-        />
-
         {showNotes && (
           <div className="flex justify-between">
             <div className="flex flex-wrap gap-2 items-center">
@@ -301,6 +295,12 @@ export const UpdateEditor = ({
             </div>
           </div>
         )}
+
+        <QuillViewer
+          content={editedUpdate.content ?? new Delta()}
+          textColor={tintClasses.textColor}
+          onClick={() => setIsEditing(true)}
+        />
       </div>
     </div>
   );
