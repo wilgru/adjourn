@@ -6,9 +6,7 @@ import type { JournalSchema } from "src/journals/journals.schema";
 
 dayjs.extend(utc);
 
-export const mapJournal = (
-  journal: JournalSchema & { noteCount?: number; taskCount?: number },
-): Journal => {
+export const mapJournal = (journal: JournalSchema): Journal => {
   return {
     id: journal.id,
     title: journal.title,
@@ -26,7 +24,5 @@ export const mapJournal = (
       (journal.bookmarkedSortDirection as "asc" | "desc") ?? "asc",
     bookmarkedGroupBy:
       (journal.bookmarkedGroupBy as "created" | "tag" | null) ?? null,
-    noteCount: journal.noteCount,
-    taskCount: journal.taskCount,
   };
 };
