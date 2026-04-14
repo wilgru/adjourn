@@ -64,6 +64,7 @@ export const UpdatesLayout = ({
               update={{ notes: [], tint: null }}
               colour={colour}
               onCancel={onCancelNew}
+              onCreated={onCancelNew}
             />
           </div>
         )}
