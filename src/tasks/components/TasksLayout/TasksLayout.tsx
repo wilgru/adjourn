@@ -5,6 +5,7 @@ import { PageHeader } from "src/common/components/PageHeader/PageHeader";
 import TableOfContents from "src/tableOfContents/TableOfContents/TableOfContents";
 import { groupTasks } from "src/tasks/utils/groupTasks";
 import { TasksSection } from "../TasksSection/TasksSection";
+import type { ActionBadge } from "src/common/components/PageHeader/PageHeader";
 import type { Colour } from "src/colours/Colour.type";
 import type { Task } from "src/tasks/Task.type";
 
@@ -20,6 +21,8 @@ type TasksLayoutProps = {
   colour?: Colour;
   showNoteCreateTimeOnly?: boolean;
   description?: string;
+  secondaryBadges?: string[];
+  actionBadges?: ActionBadge[];
   tasks: Task[];
   noNoteEditorTrigger?: number;
 };
@@ -29,6 +32,8 @@ export const TasksLayout = ({
   title,
   colour = colours.orange,
   description,
+  secondaryBadges,
+  actionBadges,
   tasks,
   noNoteEditorTrigger,
 }: TasksLayoutProps) => {
@@ -68,7 +73,7 @@ export const TasksLayout = ({
   return (
     <div className="h-full max-w-[1000px] w-full min-w-0 pb-16 flex items-center">
       <div className="h-full w-full p-12 flex flex-col gap-6 overflow-y-scroll">
-        <PageHeader colour={colour} description={description}>
+        <PageHeader colour={colour} description={description} secondaryBadges={secondaryBadges} actionBadges={actionBadges}>
           {header}
         </PageHeader>
 

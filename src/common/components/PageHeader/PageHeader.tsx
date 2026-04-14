@@ -5,11 +5,17 @@ import { getDisplayUrl } from "src/tags/utils/getDisplayUrl";
 import type { Colour } from "src/colours/Colour.type";
 import type { TagLink } from "src/tags/Tag.type";
 
+export type ActionBadge = {
+  label: string;
+  onClick: () => void;
+};
+
 type PageHeaderProps = {
   children: React.ReactNode;
   colour?: Colour;
   primaryBadges?: TagLink[];
   secondaryBadges?: string[];
+  actionBadges?: ActionBadge[];
   description?: string;
 };
 
@@ -18,6 +24,7 @@ export const PageHeader = ({
   colour = colours.orange,
   primaryBadges,
   secondaryBadges,
+  actionBadges,
   description,
 }: PageHeaderProps) => {
   return (
@@ -55,6 +62,20 @@ export const PageHeader = ({
           >
             {secondaryBadge}
           </h3>
+        ))}
+
+        {actionBadges?.map((actionBadge, index) => (
+          <button
+            key={index}
+            onClick={actionBadge.onClick}
+            className={cn(
+              "px-2 py-0.5 text-sm rounded-full transition-colors hover:opacity-80",
+              colour.backgroundPill,
+              colour.textPill,
+            )}
+          >
+            {actionBadge.label}
+          </button>
         ))}
       </div>
     </div>

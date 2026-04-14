@@ -63,57 +63,41 @@ function RouteComponent() {
         />
       </Toolbar>
 
-      <TasksLayout
-        header={
-          <div className="flex gap-3 items-end">
-            <Icon
-              className={cn("pb-1", currentJournal?.colour?.text)}
-              iconName="checkCircle"
-              size="xl"
-            />
+      <Dialog.Root open={completedModalOpen} onOpenChange={setCompletedModalOpen}>
+        <TasksLayout
+          header={
+            <div className="flex gap-3">
+              <Icon
+                className={cn("pb-1", currentJournal?.colour?.text)}
+                iconName="checkCircle"
+                size="xl"
+              />
 
-            <h1 className="font-title text-5xl">Tasks</h1>
-
-            <div className="flex items-center gap-2 pb-1.5">
-              <span
-                className={cn(
-                  "px-2 py-0.5 rounded-full text-sm font-medium bg-slate-100 text-slate-500",
-                )}
-              >
-                {incompleteTasks.length}
-              </span>
-
-              {completedTodayTasks.length > 0 && (
-                <Dialog.Root
-                  open={completedModalOpen}
-                  onOpenChange={setCompletedModalOpen}
-                >
-                  <Dialog.Trigger asChild>
-                    <button
-                      className={cn(
-                        "px-2 py-0.5 rounded-full text-sm font-medium transition-colors",
-                        currentJournal?.colour?.backgroundPill,
-                        currentJournal?.colour?.textPill,
-                        "hover:opacity-80",
-                      )}
-                    >
-                      {completedTodayTasks.length} done
-                    </button>
-                  </Dialog.Trigger>
-                  <CompletedTasksModal
-                    tasks={completedTodayTasks}
-                    colour={currentJournal?.colour}
-                  />
-                </Dialog.Root>
-              )}
+              <h1 className="font-title text-5xl">Tasks</h1>
             </div>
-          </div>
-        }
-        title="Tasks"
-        tasks={visibleTasks}
-        colour={currentJournal?.colour}
-        noNoteEditorTrigger={noNoteEditorTrigger}
-      />
+          }
+          title="Tasks"
+          tasks={visibleTasks}
+          colour={currentJournal?.colour}
+          secondaryBadges={[`${incompleteTasks.length}`]}
+          actionBadges={
+            completedTodayTasks.length > 0
+              ? [
+                  {
+                    label: `${completedTodayTasks.length} done`,
+                    onClick: () => setCompletedModalOpen(true),
+                  },
+                ]
+              : []
+          }
+          noNoteEditorTrigger={noNoteEditorTrigger}
+        />
+
+        <CompletedTasksModal
+          tasks={completedTodayTasks}
+          colour={currentJournal?.colour}
+        />
+      </Dialog.Root>
     </div>
   );
 }
