@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useUser } from "src/Users/hooks/useUser";
-import { useCurrentJournalId } from "src/journals/hooks/useCurrentJournalId";
+import { useCurrentPocketbookId } from "src/pocketbooks/hooks/useCurrentPocketbookId";
 import { mapTagGroup } from "src/tags/utils/mapTagGroup";
 import type { UseMutateAsyncFunction } from "@tanstack/react-query";
 import type { TagGroup } from "src/tags/Tag.type";
@@ -10,7 +10,7 @@ type CreateTagGroupProps = {
     TagGroup,
     | "id"
     | "tags"
-    | "journalId"
+    | "pocketbookId"
     | "groupBy"
     | "user"
     | "noteCount"
@@ -29,7 +29,7 @@ type UseCreateTagGroupResponse = {
 };
 
 export const useCreateTagGroup = (): UseCreateTagGroupResponse => {
-  const { journalId } = useCurrentJournalId();
+  const { pocketbookId } = useCurrentPocketbookId();
   const queryClient = useQueryClient();
   const { user } = useUser();
 
@@ -38,7 +38,7 @@ export const useCreateTagGroup = (): UseCreateTagGroupResponse => {
   }: CreateTagGroupProps): Promise<TagGroup> => {
     const response = await window.api.createTagGroup({
       title: createTagGroupData.title,
-      journalId: journalId ?? null,
+      pocketbookId: pocketbookId ?? null,
       userId: user?.id ?? null,
     });
     if (!response.success) throw new Error(response.error);

@@ -3,14 +3,14 @@ import { useState } from "react";
 import { colours } from "src/colours/colours.constant";
 import { cn } from "src/common/utils/cn";
 import { Icon } from "src/icons/components/Icon/Icon";
-import { useCurrentJournalId } from "src/journals/hooks/useCurrentJournalId";
+import { useCurrentPocketbookId } from "src/pocketbooks/hooks/useCurrentPocketbookId";
 import { useGetNotes } from "src/notes/hooks/useGetNotes";
 
 export const SidebarBookmarkSection = () => {
-  const { journalId } = useCurrentJournalId();
+  const { pocketbookId } = useCurrentPocketbookId();
   const { notes } = useGetNotes({ isBookmarked: true });
 
-  if (!journalId || notes.length === 0) {
+  if (!pocketbookId || notes.length === 0) {
     return null;
   }
 
@@ -26,7 +26,7 @@ export const SidebarBookmarkSection = () => {
             <BookmarkNavItem
               key={note.id}
               title={note.title ?? "Untitled"}
-              journalId={journalId}
+              pocketbookId={pocketbookId}
               noteId={note.id}
             />
           ))}
@@ -38,11 +38,11 @@ export const SidebarBookmarkSection = () => {
 
 const BookmarkNavItem = ({
   title,
-  journalId,
+  pocketbookId,
   noteId,
 }: {
   title: string;
-  journalId: string;
+  pocketbookId: string;
   noteId: string;
 }) => {
   const colour = colours.red;
@@ -50,8 +50,8 @@ const BookmarkNavItem = ({
 
   return (
     <Link
-      to={`/$journalId/bookmarked`}
-      params={{ journalId }}
+      to={`/$pocketbookId/bookmarked`}
+      params={{ pocketbookId }}
       search={{ noteId }}
       activeOptions={{ exact: true, includeSearch: true }}
       onMouseOver={() => setIsHovered(true)}

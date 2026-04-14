@@ -5,7 +5,7 @@ import { tasks } from "src/tasks/tasks.schema";
 import type { TaskSchema } from "src/tasks/tasks.schema";
 
 export type GetTasksInput = {
-  journalId: string;
+  pocketbookId: string;
   noteId?: string;
   status?: "incomplete" | "completed" | "cancelled";
 };
@@ -16,8 +16,8 @@ export type GetTasksResult = {
 
 createIpcHandler(
   "tasks:getAll",
-  ({ journalId, noteId, status }: GetTasksInput): GetTasksResult => {
-    const conditions = [eq(tasks.journal, journalId)];
+  ({ pocketbookId, noteId, status }: GetTasksInput): GetTasksResult => {
+    const conditions = [eq(tasks.pocketbook, pocketbookId)];
 
     if (noteId !== undefined) {
       conditions.push(eq(tasks.note, noteId));

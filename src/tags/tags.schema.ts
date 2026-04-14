@@ -1,12 +1,12 @@
 import { sqliteTable, text } from "drizzle-orm/sqlite-core";
-import { journals } from "src/journals/journals.schema";
+import { pocketbooks } from "src/pocketbooks/pocketbooks.schema";
 import type { InferSelectModel } from "drizzle-orm/table";
 import type { ColourName } from "src/colours/Colour.type";
 
 export const tagGroups = sqliteTable("tag_groups", {
   id: text("id").primaryKey(),
   title: text("title").notNull(),
-  journal: text("journal").references(() => journals.id),
+  pocketbook: text("pocketbook").references(() => pocketbooks.id),
   user: text("user"),
   created: text("created").notNull(),
   updated: text("updated").notNull(),
@@ -24,7 +24,7 @@ export const tags = sqliteTable("tags", {
   sortDirection: text("sort_direction").notNull().default("asc"),
   links: text("links").notNull().default("[]"),
   tagGroup: text("tag_group").references(() => tagGroups.id),
-  journal: text("journal").references(() => journals.id),
+  pocketbook: text("pocketbook").references(() => pocketbooks.id),
   user: text("user"),
   created: text("created").notNull(),
   updated: text("updated").notNull(),

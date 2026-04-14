@@ -7,7 +7,7 @@ export type CreateUpdateInput = {
   content: string | null;
   tint: string | null;
   noteIds: string[];
-  journalId: string | null;
+  pocketbookId: string | null;
   userId: string | null;
 };
 
@@ -17,7 +17,7 @@ createIpcHandler(
     content,
     tint,
     noteIds,
-    journalId,
+    pocketbookId,
     userId,
   }: CreateUpdateInput): UpdateSchema => {
     const now = new Date().toISOString();
@@ -29,7 +29,7 @@ createIpcHandler(
         id,
         content,
         tint,
-        journal: journalId,
+        pocketbook: pocketbookId,
         user: userId,
         created: now,
         updated: now,

@@ -15,7 +15,7 @@ export type Tag = Prettify<
     | "sortBy"
     | "sortDirection"
     | "tagGroup"
-    | "journal"
+    | "pocketbook"
     | "user"
     | "created"
     | "updated"
@@ -33,7 +33,7 @@ export type Tag = Prettify<
 >;
 
 export type TagGroup = Prettify<
-  Omit<TagGroupSchema, "journal" | "user" | "created" | "updated"> & {
+  Omit<TagGroupSchema, "pocketbook" | "user" | "created" | "updated"> & {
     tags: Tag[];
     created: Dayjs;
     updated: Dayjs;

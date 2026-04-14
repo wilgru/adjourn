@@ -6,9 +6,9 @@ import { NavItem } from "src/common/components/NavItem/NavItem";
 import { useElectronEnvironment } from "src/common/hooks/useElectronEnvironment";
 import { cn } from "src/common/utils/cn";
 import { Icon } from "src/icons/components/Icon/Icon";
-import { JournalSelector } from "src/journals/components/JournalSelector/JouranlSelector";
-import { useCurrentJournal } from "src/journals/hooks/useCurrentJournal";
-import { useGetJournalContentCounts } from "src/journals/hooks/useGetJournalContentCounts";
+import { PocketbookSelector } from "src/pocketbooks/components/PocketbookSelector/PocketbookSelector";
+import { useCurrentPocketbook } from "src/pocketbooks/hooks/useCurrentPocketbook";
+import { useGetPocketbookContentCounts } from "src/pocketbooks/hooks/useGetPocketbookContentCounts";
 import { CreateTagGroupModal } from "src/tags/components/CreateTagGroupModal/CreateTagGroupModal";
 import { useGetTagGroups } from "src/tags/hooks/useGetTagGroups";
 import { SidebarBookmarkSection } from "./SidebarBookmarkSection";
@@ -17,18 +17,18 @@ import { SidebarTagSection } from "./SidebarTagSection";
 export const Sidebar = () => {
   const { isElectron, isMacElectron } = useElectronEnvironment();
 
-  const { journalId, currentJournal, journals, isFetchingJournals } =
-    useCurrentJournal();
+  const { pocketbookId, currentPocketbook, pocketbooks, isFetchingPocketbooks } =
+    useCurrentPocketbook();
   const { ungroupedTags, tagGroups } = useGetTagGroups();
-  const { counts } = useGetJournalContentCounts();
+  const { counts } = useGetPocketbookContentCounts();
 
   const setIsSidebarVisible = useSetAtom(isSideBarVisibleAtom);
 
-  if (isFetchingJournals) {
+  if (isFetchingPocketbooks) {
     return null;
   }
 
-  if (!journalId || !currentJournal) {
+  if (!pocketbookId || !currentPocketbook) {
     return null;
   }
 
@@ -51,15 +51,15 @@ export const Sidebar = () => {
               className={isMacElectron ? "electron-no-drag" : ""}
               variant="ghost"
               size="sm"
-              colour={currentJournal.colour}
+              colour={currentPocketbook.colour}
               onClick={() => setIsSidebarVisible(false)}
               iconName="arrowLineLeft"
             />
           </div>
 
-          <JournalSelector
-            currentJournal={currentJournal}
-            journals={journals}
+          <PocketbookSelector
+            currentPocketbook={currentPocketbook}
+            pocketbooks={pocketbooks}
           />
 
           <section className="flex flex-col gap-1">
@@ -67,8 +67,8 @@ export const Sidebar = () => {
               ghost
               iconName="pencil"
               title="Notes"
-              to={`/${journalId}/notes/`}
-              colour={currentJournal.colour}
+              to={`/${pocketbookId}/notes/`}
+              colour={currentPocketbook.colour}
               preview={counts?.noteCount}
             />
 
@@ -76,8 +76,8 @@ export const Sidebar = () => {
               ghost
               iconName="checkCircle"
               title="Tasks"
-              to={`/${journalId}/tasks/`}
-              colour={currentJournal.colour}
+              to={`/${pocketbookId}/tasks/`}
+              colour={currentPocketbook.colour}
               preview={counts?.taskCount}
             />
 
@@ -85,8 +85,8 @@ export const Sidebar = () => {
               ghost
               iconName="chatCenteredText"
               title="Updates"
-              to={`/${journalId}/updates`}
-              colour={currentJournal.colour}
+              to={`/${pocketbookId}/updates`}
+              colour={currentPocketbook.colour}
               preview={counts?.updateCount}
             />
           </section>
@@ -95,7 +95,7 @@ export const Sidebar = () => {
 
           <SidebarTagSection
             title={"Tags"}
-            colour={currentJournal.colour}
+            colour={currentPocketbook.colour}
             isEmpty={ungroupedTags.length === 0}
           >
             {ungroupedTags.map((tag) => (
@@ -103,7 +103,7 @@ export const Sidebar = () => {
                 colour={tag.colour}
                 title={tag.name}
                 preview={tag.noteCount}
-                to={`/${journalId}/tags/${tag.id}`}
+                to={`/${pocketbookId}/tags/${tag.id}`}
                 key={tag.id}
                 iconName={tag.icon}
               />
@@ -114,7 +114,7 @@ export const Sidebar = () => {
             <SidebarTagSection
               title={tagGroup.title}
               tagGroup={tagGroup}
-              colour={currentJournal.colour}
+              colour={currentPocketbook.colour}
               isEmpty={tagGroup.tags.length === 0}
               key={tagGroup.id}
             >
@@ -125,7 +125,7 @@ export const Sidebar = () => {
                     colour={tag.colour}
                     title={tag.name}
                     preview={tag.noteCount}
-                    to={`/${journalId}/tags/${tag.id}`}
+                    to={`/${pocketbookId}/tags/${tag.id}`}
                     key={tag.id}
                   />
                 ))}
@@ -141,7 +141,7 @@ export const Sidebar = () => {
                 type="button"
                 className={cn(
                   "mt-1 w-fit flex items-center gap-1 text-slate-400 transition-colors",
-                  `hover:${currentJournal.colour.textPill}`,
+                  `hover:${currentPocketbook.colour.textPill}`,
                 )}
               >
                 <span className="font-title text-md">Add Section</span>

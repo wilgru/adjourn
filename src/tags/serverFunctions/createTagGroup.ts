@@ -5,7 +5,7 @@ import type { TagGroupSchema } from "src/tags/tags.schema";
 
 type CreateTagGroupInput = {
   title: string;
-  journalId: string | null;
+  pocketbookId: string | null;
   userId: string | null;
 };
 
@@ -20,7 +20,7 @@ export const createTagGroup = createServerFn({ method: "POST" })
       .values({
         id,
         title: data.title,
-        journal: data.journalId,
+        pocketbook: data.pocketbookId,
         user: data.userId,
         created: now,
         updated: now,

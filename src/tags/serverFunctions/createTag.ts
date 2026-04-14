@@ -13,7 +13,7 @@ type CreateTagInput = {
   sortDirection: string;
   links: string;
   tagGroupId: string | null;
-  journalId: string | null;
+  pocketbookId: string | null;
   userId: string | null;
 };
 
@@ -36,7 +36,7 @@ export const createTag = createServerFn({ method: "POST" })
         sortDirection: data.sortDirection,
         links: data.links,
         tagGroup: data.tagGroupId,
-        journal: data.journalId,
+        pocketbook: data.pocketbookId,
         user: data.userId,
         created: now,
         updated: now,

@@ -15,6 +15,13 @@
       "when": 1776079248254,
       "tag": "0001_add_links_to_notes",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1744596972000,
+      "tag": "0002_rename_journals_to_pocketbooks",
+      "breakpoints": true
     }
   ]
 }

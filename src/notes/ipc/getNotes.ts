@@ -5,7 +5,7 @@ import { notes, noteTags } from "src/notes/notes.schema";
 import type { NoteSchema } from "src/notes/notes.schema";
 
 export type GetNotesInput = {
-  journalId: string;
+  pocketbookId: string;
   isBookmarked?: boolean;
   createdAfter?: string;
   createdBefore?: string;
@@ -18,12 +18,12 @@ export type GetNotesResult = {
 createIpcHandler(
   "notes:getAll",
   ({
-    journalId,
+    pocketbookId,
     isBookmarked,
     createdAfter,
     createdBefore,
   }: GetNotesInput): GetNotesResult => {
-    const conditions = [eq(notes.journal, journalId), isNull(notes.deleted)];
+    const conditions = [eq(notes.pocketbook, pocketbookId), isNull(notes.deleted)];
 
     if (isBookmarked !== undefined) {
       conditions.push(eq(notes.isBookmarked, isBookmarked));
@@ -59,7 +59,7 @@ createIpcHandler(
         content: row.content,
         isBookmarked: row.isBookmarked,
         links: row.links,
-        journal: row.journal,
+        pocketbook: row.pocketbook,
         user: row.user,
         deleted: row.deleted,
         created: row.created,

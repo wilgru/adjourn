@@ -53,7 +53,7 @@ createIpcHandler(
       content: updated.content,
       isBookmarked: updated.isBookmarked,
       links: updated.links,
-      journal: updated.journal,
+      pocketbook: updated.pocketbook,
       user: updated.user,
       deleted: updated.deleted,
       created: updated.created,

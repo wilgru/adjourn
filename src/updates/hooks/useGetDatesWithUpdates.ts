@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useCurrentJournalId } from "src/journals/hooks/useCurrentJournalId";
+import { useCurrentPocketbookId } from "src/pocketbooks/hooks/useCurrentPocketbookId";
 import { mapDateWithNotes } from "src/notes/utils/mapDateWithNotes";
 import type {
   QueryObserverResult,
@@ -15,15 +15,15 @@ type UseGetDatesWithUpdatesResponse = {
 };
 
 export const useGetDatesWithUpdates = (): UseGetDatesWithUpdatesResponse => {
-  const { journalId: routeJournalId } = useCurrentJournalId();
-  const journalId = routeJournalId;
+  const { pocketbookId: routePocketbookId } = useCurrentPocketbookId();
+  const pocketbookId = routePocketbookId;
 
   const queryFn = async (): Promise<DateWithNotes[]> => {
-    if (!journalId) {
+    if (!pocketbookId) {
       return [];
     }
 
-    const response = await window.api.getUpdates({ journalId });
+    const response = await window.api.getUpdates({ pocketbookId });
     if (!response.success) throw new Error(response.error);
 
     const uniqueDates = new Map<string, string>();
@@ -44,9 +44,9 @@ export const useGetDatesWithUpdates = (): UseGetDatesWithUpdatesResponse => {
   };
 
   const { data, refetch } = useQuery({
-    queryKey: ["datesWithUpdates.list", journalId],
+    queryKey: ["datesWithUpdates.list", pocketbookId],
     queryFn,
-    enabled: Boolean(journalId),
+    enabled: Boolean(pocketbookId),
   });
 
   return { datesWithUpdates: data ?? [], refetchDatesWithUpdates: refetch };

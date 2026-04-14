@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useCurrentJournalId } from "src/journals/hooks/useCurrentJournalId";
+import { useCurrentPocketbookId } from "src/pocketbooks/hooks/useCurrentPocketbookId";
 import { mapNote } from "src/notes/utils/mapNote";
 import { mapUpdate } from "src/updates/utils/mapUpdate";
 import type { Note } from "src/notes/Note.type";
@@ -14,14 +14,14 @@ export const useGetUpdates = ({
 }: {
   noteId?: string;
 } = {}): UseGetUpdatesResponse => {
-  const { journalId } = useCurrentJournalId();
+  const { pocketbookId } = useCurrentPocketbookId();
 
   const queryFn = async (): Promise<Update[]> => {
-    if (!journalId) return [];
+    if (!pocketbookId) return [];
 
     const [updatesResponse, notesResponse] = await Promise.all([
-      window.api.getUpdates({ journalId }),
-      window.api.getNotes({ journalId }),
+      window.api.getUpdates({ pocketbookId }),
+      window.api.getNotes({ pocketbookId }),
     ]);
 
     if (!updatesResponse.success) throw new Error(updatesResponse.error);
@@ -46,7 +46,7 @@ export const useGetUpdates = ({
   };
 
   const { data } = useQuery({
-    queryKey: ["updates.list", journalId, noteId],
+    queryKey: ["updates.list", pocketbookId, noteId],
     queryFn,
   });
 

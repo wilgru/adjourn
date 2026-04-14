@@ -15,7 +15,7 @@ type CreateTaskInput = {
   dueDate: string | null;
   completedDate: string | null;
   cancelledDate: string | null;
-  journalId: string | null;
+  pocketbookId: string | null;
   userId: string | null;
 };
 
@@ -42,7 +42,7 @@ export const createTask = createServerFn({ method: "POST" })
         dueDate: data.dueDate,
         completedDate: data.completedDate,
         cancelledDate: data.cancelledDate,
-        journal: data.journalId,
+        pocketbook: data.pocketbookId,
         user: data.userId,
         created: now,
         updated: now,

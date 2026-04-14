@@ -5,7 +5,7 @@ import { tags, tagGroups } from "src/tags/tags.schema";
 import type { TagSchema, TagGroupSchema } from "src/tags/tags.schema";
 
 export type GetTagsInput = {
-  journalId: string;
+  pocketbookId: string;
 };
 
 export type GetTagsResult = {
@@ -15,17 +15,17 @@ export type GetTagsResult = {
 
 createIpcHandler(
   "tags:getAll",
-  ({ journalId }: GetTagsInput): GetTagsResult => {
+  ({ pocketbookId }: GetTagsInput): GetTagsResult => {
     const tagRows = db
       .select()
       .from(tags)
-      .where(eq(tags.journal, journalId))
+      .where(eq(tags.pocketbook, pocketbookId))
       .all();
 
     const tagGroupRows = db
       .select()
       .from(tagGroups)
-      .where(eq(tagGroups.journal, journalId))
+      .where(eq(tagGroups.pocketbook, pocketbookId))
       .all();
 
     return { tags: tagRows, tagGroups: tagGroupRows };

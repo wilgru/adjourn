@@ -7,15 +7,15 @@ import type { GetNotesInput } from "src/notes/ipc/getNotes";
 import type { GetNotesResult } from "src/notes/ipc/getNotes";
 import type { UpdateNoteInput } from "src/notes/ipc/updateNote";
 import type { NoteSchema } from "src/notes/notes.schema";
-import type { CreateJournalInput } from "src/journals/ipc/createJournal";
-import type { GetJournalInput } from "src/journals/ipc/getJournal";
+import type { CreatePocketbookInput } from "src/pocketbooks/ipc/createPocketbook";
+import type { GetPocketbookInput } from "src/pocketbooks/ipc/getPocketbook";
 import type {
-  GetJournalsInput,
-  GetJournalsResult,
-} from "src/journals/ipc/getJournals";
-import type { UpdateJournalInput } from "src/journals/ipc/updateJournal";
-import type { DeleteJournalInput } from "src/journals/ipc/deleteJournal";
-import type { JournalSchema } from "src/journals/journals.schema";
+  GetPocketbooksInput,
+  GetPocketbooksResult,
+} from "src/pocketbooks/ipc/getPocketbooks";
+import type { UpdatePocketbookInput } from "src/pocketbooks/ipc/updatePocketbook";
+import type { DeletePocketbookInput } from "src/pocketbooks/ipc/deletePocketbook";
+import type { PocketbookSchema } from "src/pocketbooks/pocketbooks.schema";
 import type { CreateTaskInput } from "src/tasks/ipc/createTask";
 import type { GetTaskInput } from "src/tasks/ipc/getTask";
 import type { GetTasksInput, GetTasksResult } from "src/tasks/ipc/getTasks";
@@ -53,11 +53,11 @@ declare global {
       updateNote: IpcApiMethod<UpdateNoteInput, NoteSchema>;
       deleteNote: IpcApiMethod<DeleteNoteInput, string>;
 
-      createJournal: IpcApiMethod<CreateJournalInput, JournalSchema>;
-      getJournals: IpcApiMethod<GetJournalsInput, GetJournalsResult>;
-      getJournal: IpcApiMethod<GetJournalInput, JournalSchema>;
-      updateJournal: IpcApiMethod<UpdateJournalInput, JournalSchema>;
-      deleteJournal: IpcApiMethod<DeleteJournalInput, string>;
+      createPocketbook: IpcApiMethod<CreatePocketbookInput, PocketbookSchema>;
+      getPocketbooks: IpcApiMethod<GetPocketbooksInput, GetPocketbooksResult>;
+      getPocketbook: IpcApiMethod<GetPocketbookInput, PocketbookSchema>;
+      updatePocketbook: IpcApiMethod<UpdatePocketbookInput, PocketbookSchema>;
+      deletePocketbook: IpcApiMethod<DeletePocketbookInput, string>;
 
       createTask: IpcApiMethod<CreateTaskInput, TaskSchema>;
       getTasks: IpcApiMethod<GetTasksInput, GetTasksResult>;

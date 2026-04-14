@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc.js";
-import { useCurrentJournalId } from "src/journals/hooks/useCurrentJournalId";
+import { useCurrentPocketbookId } from "src/pocketbooks/hooks/useCurrentPocketbookId";
 import { mapNote } from "src/notes/utils/mapNote";
 import { mapTask } from "src/tasks/utils/mapTask";
 import type {
@@ -26,10 +26,10 @@ export const useGetTasks = ({
   isFlagged?: boolean;
   dateString?: string;
 }): UseGetTacksResponse => {
-  const { journalId } = useCurrentJournalId();
+  const { pocketbookId } = useCurrentPocketbookId();
 
   const queryFn = async (): Promise<Task[]> => {
-    if (!journalId) {
+    if (!pocketbookId) {
       return [];
     }
 
@@ -48,8 +48,8 @@ export const useGetTasks = ({
     }
 
     const [tasksResponse, notesResponse] = await Promise.all([
-      window.api.getTasks({ journalId }),
-      window.api.getNotes({ journalId }),
+      window.api.getTasks({ pocketbookId }),
+      window.api.getNotes({ pocketbookId }),
     ]);
 
     if (!tasksResponse.success) throw new Error(tasksResponse.error);
@@ -82,7 +82,7 @@ export const useGetTasks = ({
 
   // TODO: consider time caching for better performance
   const { data, refetch } = useQuery({
-    queryKey: ["tasks.list", journalId, isFlagged, dateString],
+    queryKey: ["tasks.list", pocketbookId, isFlagged, dateString],
     queryFn,
     // staleTime: 2 * 60 * 1000,
     // gcTime: 2 * 60 * 1000,

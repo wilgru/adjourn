@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Button } from "src/common/components/Button/Button";
-import { useCurrentJournalId } from "src/journals/hooks/useCurrentJournalId";
+import { useCurrentPocketbookId } from "src/pocketbooks/hooks/useCurrentPocketbookId";
 import { TaskEditor } from "src/tasks/components/TaskEditor/TaskEditor";
 import type { Colour } from "src/colours/Colour.type";
 import type { TasksGroup } from "src/tasks/Task.type";
@@ -20,7 +20,7 @@ export const TasksSection = ({
 }: TasksSectionProps) => {
   const [isTitleHovered, setIsTitleHovered] = useState(false);
   const [isAddingTask, setIsAddingTask] = useState(false);
-  const { journalId } = useCurrentJournalId();
+  const { pocketbookId } = useCurrentPocketbookId();
 
   // Open the new-task editor whenever the toolbar plus button fires.
   useEffect(() => {
@@ -108,10 +108,10 @@ export const TasksSection = ({
               onClick={() => setIsAddingTask(true)}
             />
 
-            {journalId && (
+            {pocketbookId && (
               <Link
-                to="/$journalId/notes"
-                params={{ journalId }}
+                to="/$pocketbookId/notes"
+                params={{ pocketbookId }}
                 search={{ noteId: note.id }}
               >
                 <Button

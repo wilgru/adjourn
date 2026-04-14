@@ -4,7 +4,7 @@ import { db } from "src/db/connection";
 import { updates } from "src/updates/updates.schema";
 
 type GetDatesWithUpdatesInput = {
-  journalId: string;
+  pocketbookId: string;
 };
 
 type DateWithUpdatesRow = {
@@ -23,7 +23,7 @@ export const getDatesWithUpdates = createServerFn({ method: "GET" })
     const rows = db
       .select({ created: updates.created })
       .from(updates)
-      .where(eq(updates.journal, data.journalId))
+      .where(eq(updates.pocketbook, data.pocketbookId))
       .all();
 
     const uniqueDates = new Map<string, string>();

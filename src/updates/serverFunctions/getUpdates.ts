@@ -7,7 +7,7 @@ import type { NoteSchema } from "src/notes/notes.schema";
 import type { UpdateSchema } from "src/updates/updates.schema";
 
 type GetUpdatesInput = {
-  journalId: string;
+  pocketbookId: string;
   noteId?: string;
 };
 
@@ -34,7 +34,7 @@ export const getUpdates = createServerFn({ method: "GET" })
       }
     }
 
-    const conditions = [eq(updates.journal, data.journalId)];
+    const conditions = [eq(updates.pocketbook, data.pocketbookId)];
     if (updateIds) {
       conditions.push(inArray(updates.id, updateIds));
     }

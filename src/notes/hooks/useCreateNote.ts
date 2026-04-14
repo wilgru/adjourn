@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useUser } from "src/Users/hooks/useUser";
-import { useCurrentJournalId } from "../../journals/hooks/useCurrentJournalId";
+import { useCurrentPocketbookId } from "../../pocketbooks/hooks/useCurrentPocketbookId";
 import { mapNote } from "../utils/mapNote";
 import type { UseMutateAsyncFunction } from "@tanstack/react-query";
 import type { Note } from "src/notes/Note.type";
@@ -22,7 +22,7 @@ type UseCreateNoteResponse = {
 };
 
 export const useCreateNote = (): UseCreateNoteResponse => {
-  const { journalId } = useCurrentJournalId();
+  const { pocketbookId } = useCurrentPocketbookId();
   const queryClient = useQueryClient();
   const { user } = useUser();
 
@@ -35,7 +35,7 @@ export const useCreateNote = (): UseCreateNoteResponse => {
       isBookmarked: createNoteData.isBookmarked,
       tagIds: createNoteData.tags.map((tag) => tag.id),
       links: JSON.stringify(createNoteData.links),
-      journalId: journalId ?? null,
+      pocketbookId: pocketbookId ?? null,
       userId: user?.id ?? null,
     });
 

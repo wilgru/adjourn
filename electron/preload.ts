@@ -4,11 +4,11 @@ import type { DeleteNoteInput } from "src/notes/ipc/deleteNote";
 import type { GetNoteInput } from "src/notes/ipc/getNote";
 import type { GetNotesInput } from "src/notes/ipc/getNotes";
 import type { UpdateNoteInput } from "src/notes/ipc/updateNote";
-import type { CreateJournalInput } from "src/journals/ipc/createJournal";
-import type { GetJournalInput } from "src/journals/ipc/getJournal";
-import type { GetJournalsInput } from "src/journals/ipc/getJournals";
-import type { UpdateJournalInput } from "src/journals/ipc/updateJournal";
-import type { DeleteJournalInput } from "src/journals/ipc/deleteJournal";
+import type { CreatePocketbookInput } from "src/pocketbooks/ipc/createPocketbook";
+import type { GetPocketbookInput } from "src/pocketbooks/ipc/getPocketbook";
+import type { GetPocketbooksInput } from "src/pocketbooks/ipc/getPocketbooks";
+import type { UpdatePocketbookInput } from "src/pocketbooks/ipc/updatePocketbook";
+import type { DeletePocketbookInput } from "src/pocketbooks/ipc/deletePocketbook";
 import type { CreateTaskInput } from "src/tasks/ipc/createTask";
 import type { GetTaskInput } from "src/tasks/ipc/getTask";
 import type { GetTasksInput } from "src/tasks/ipc/getTasks";
@@ -38,16 +38,16 @@ contextBridge.exposeInMainWorld("api", {
   deleteNote: (data: DeleteNoteInput) =>
     ipcRenderer.invoke("notes:delete", data),
 
-  createJournal: (data: CreateJournalInput) =>
-    ipcRenderer.invoke("journals:create", data),
-  getJournals: (data: GetJournalsInput) =>
-    ipcRenderer.invoke("journals:getAll", data),
-  getJournal: (data: GetJournalInput) =>
-    ipcRenderer.invoke("journals:getOne", data),
-  updateJournal: (data: UpdateJournalInput) =>
-    ipcRenderer.invoke("journals:update", data),
-  deleteJournal: (data: DeleteJournalInput) =>
-    ipcRenderer.invoke("journals:delete", data),
+  createPocketbook: (data: CreatePocketbookInput) =>
+    ipcRenderer.invoke("pocketbooks:create", data),
+  getPocketbooks: (data: GetPocketbooksInput) =>
+    ipcRenderer.invoke("pocketbooks:getAll", data),
+  getPocketbook: (data: GetPocketbookInput) =>
+    ipcRenderer.invoke("pocketbooks:getOne", data),
+  updatePocketbook: (data: UpdatePocketbookInput) =>
+    ipcRenderer.invoke("pocketbooks:update", data),
+  deletePocketbook: (data: DeletePocketbookInput) =>
+    ipcRenderer.invoke("pocketbooks:delete", data),
 
   createTask: (data: CreateTaskInput) =>
     ipcRenderer.invoke("tasks:create", data),

@@ -11,7 +11,7 @@ export type NoteLink = Link;
 export type Note = Prettify<
   Omit<
     NoteSchema,
-    "content" | "created" | "updated" | "deleted" | "journal" | "user" | "links"
+    "content" | "created" | "updated" | "deleted" | "pocketbook" | "user" | "links"
   > & {
     content: Delta;
     deleted: Dayjs | null;

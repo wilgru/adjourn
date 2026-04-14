@@ -10,7 +10,7 @@ export type CreateTagInput = {
   icon: string;
   description: string | null;
   tagGroupId: string | null;
-  journalId: string | null;
+  pocketbookId: string | null;
   userId: string | null;
 };
 
@@ -22,7 +22,7 @@ createIpcHandler(
     icon,
     description,
     tagGroupId,
-    journalId,
+    pocketbookId,
     userId,
   }: CreateTagInput): TagSchema => {
     const now = new Date().toISOString();
@@ -37,7 +37,7 @@ createIpcHandler(
         icon,
         description,
         tagGroup: tagGroupId,
-        journal: journalId,
+        pocketbook: pocketbookId,
         user: userId,
         created: now,
         updated: now,

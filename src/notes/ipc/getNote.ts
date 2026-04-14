@@ -31,7 +31,7 @@ createIpcHandler("notes:getOne", ({ noteId }: GetNoteInput): GetNoteResult => {
       content: row.content,
       isBookmarked: row.isBookmarked,
       links: row.links,
-      journal: row.journal,
+      pocketbook: row.pocketbook,
       user: row.user,
       deleted: row.deleted,
       created: row.created,

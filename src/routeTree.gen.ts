@@ -11,13 +11,13 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as CreateJournalRouteImport } from './routes/create-journal'
+import { Route as CreatePocketbookRouteImport } from './routes/create-pocketbook'
 import { Route as LayoutRouteImport } from './routes/_layout'
-import { Route as LayoutJournalIdUpdatesRouteImport } from './routes/_layout.$journalId.updates'
-import { Route as LayoutJournalIdTasksRouteImport } from './routes/_layout.$journalId.tasks'
-import { Route as LayoutJournalIdNotesRouteImport } from './routes/_layout.$journalId.notes'
-import { Route as LayoutJournalIdBookmarkedRouteImport } from './routes/_layout.$journalId.bookmarked'
-import { Route as LayoutJournalIdTagsTagIdRouteImport } from './routes/_layout.$journalId.tags.$tagId'
+import { Route as LayoutPocketbookIdUpdatesRouteImport } from './routes/_layout.$pocketbookId.updates'
+import { Route as LayoutPocketbookIdTasksRouteImport } from './routes/_layout.$pocketbookId.tasks'
+import { Route as LayoutPocketbookIdNotesRouteImport } from './routes/_layout.$pocketbookId.notes'
+import { Route as LayoutPocketbookIdBookmarkedRouteImport } from './routes/_layout.$pocketbookId.bookmarked'
+import { Route as LayoutPocketbookIdTagsTagIdRouteImport } from './routes/_layout.$pocketbookId.tags.$tagId'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -29,116 +29,116 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CreateJournalRoute = CreateJournalRouteImport.update({
-  id: '/create-journal',
-  path: '/create-journal',
+const CreatePocketbookRoute = CreatePocketbookRouteImport.update({
+  id: '/create-pocketbook',
+  path: '/create-pocketbook',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LayoutRoute = LayoutRouteImport.update({
   id: '/_layout',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LayoutJournalIdUpdatesRoute = LayoutJournalIdUpdatesRouteImport.update({
-  id: '/$journalId/updates',
-  path: '/$journalId/updates',
+const LayoutPocketbookIdUpdatesRoute = LayoutPocketbookIdUpdatesRouteImport.update({
+  id: '/$pocketbookId/updates',
+  path: '/$pocketbookId/updates',
   getParentRoute: () => LayoutRoute,
 } as any)
-const LayoutJournalIdTasksRoute = LayoutJournalIdTasksRouteImport.update({
-  id: '/$journalId/tasks',
-  path: '/$journalId/tasks',
+const LayoutPocketbookIdTasksRoute = LayoutPocketbookIdTasksRouteImport.update({
+  id: '/$pocketbookId/tasks',
+  path: '/$pocketbookId/tasks',
   getParentRoute: () => LayoutRoute,
 } as any)
-const LayoutJournalIdNotesRoute = LayoutJournalIdNotesRouteImport.update({
-  id: '/$journalId/notes',
-  path: '/$journalId/notes',
+const LayoutPocketbookIdNotesRoute = LayoutPocketbookIdNotesRouteImport.update({
+  id: '/$pocketbookId/notes',
+  path: '/$pocketbookId/notes',
   getParentRoute: () => LayoutRoute,
 } as any)
-const LayoutJournalIdBookmarkedRoute =
-  LayoutJournalIdBookmarkedRouteImport.update({
-    id: '/$journalId/bookmarked',
-    path: '/$journalId/bookmarked',
+const LayoutPocketbookIdBookmarkedRoute =
+  LayoutPocketbookIdBookmarkedRouteImport.update({
+    id: '/$pocketbookId/bookmarked',
+    path: '/$pocketbookId/bookmarked',
     getParentRoute: () => LayoutRoute,
   } as any)
-const LayoutJournalIdTagsTagIdRoute =
-  LayoutJournalIdTagsTagIdRouteImport.update({
-    id: '/$journalId/tags/$tagId',
-    path: '/$journalId/tags/$tagId',
+const LayoutPocketbookIdTagsTagIdRoute =
+  LayoutPocketbookIdTagsTagIdRouteImport.update({
+    id: '/$pocketbookId/tags/$tagId',
+    path: '/$pocketbookId/tags/$tagId',
     getParentRoute: () => LayoutRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof LayoutRouteWithChildren
-  '/create-journal': typeof CreateJournalRoute
+  '/create-pocketbook': typeof CreatePocketbookRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
-  '/$journalId/bookmarked': typeof LayoutJournalIdBookmarkedRoute
-  '/$journalId/notes': typeof LayoutJournalIdNotesRoute
-  '/$journalId/tasks': typeof LayoutJournalIdTasksRoute
-  '/$journalId/updates': typeof LayoutJournalIdUpdatesRoute
-  '/$journalId/tags/$tagId': typeof LayoutJournalIdTagsTagIdRoute
+  '/$pocketbookId/bookmarked': typeof LayoutPocketbookIdBookmarkedRoute
+  '/$pocketbookId/notes': typeof LayoutPocketbookIdNotesRoute
+  '/$pocketbookId/tasks': typeof LayoutPocketbookIdTasksRoute
+  '/$pocketbookId/updates': typeof LayoutPocketbookIdUpdatesRoute
+  '/$pocketbookId/tags/$tagId': typeof LayoutPocketbookIdTagsTagIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof LayoutRouteWithChildren
-  '/create-journal': typeof CreateJournalRoute
+  '/create-pocketbook': typeof CreatePocketbookRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
-  '/$journalId/bookmarked': typeof LayoutJournalIdBookmarkedRoute
-  '/$journalId/notes': typeof LayoutJournalIdNotesRoute
-  '/$journalId/tasks': typeof LayoutJournalIdTasksRoute
-  '/$journalId/updates': typeof LayoutJournalIdUpdatesRoute
-  '/$journalId/tags/$tagId': typeof LayoutJournalIdTagsTagIdRoute
+  '/$pocketbookId/bookmarked': typeof LayoutPocketbookIdBookmarkedRoute
+  '/$pocketbookId/notes': typeof LayoutPocketbookIdNotesRoute
+  '/$pocketbookId/tasks': typeof LayoutPocketbookIdTasksRoute
+  '/$pocketbookId/updates': typeof LayoutPocketbookIdUpdatesRoute
+  '/$pocketbookId/tags/$tagId': typeof LayoutPocketbookIdTagsTagIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_layout': typeof LayoutRouteWithChildren
-  '/create-journal': typeof CreateJournalRoute
+  '/create-pocketbook': typeof CreatePocketbookRoute
   '/login': typeof LoginRoute
   '/signup': typeof SignupRoute
-  '/_layout/$journalId/bookmarked': typeof LayoutJournalIdBookmarkedRoute
-  '/_layout/$journalId/notes': typeof LayoutJournalIdNotesRoute
-  '/_layout/$journalId/tasks': typeof LayoutJournalIdTasksRoute
-  '/_layout/$journalId/updates': typeof LayoutJournalIdUpdatesRoute
-  '/_layout/$journalId/tags/$tagId': typeof LayoutJournalIdTagsTagIdRoute
+  '/_layout/$pocketbookId/bookmarked': typeof LayoutPocketbookIdBookmarkedRoute
+  '/_layout/$pocketbookId/notes': typeof LayoutPocketbookIdNotesRoute
+  '/_layout/$pocketbookId/tasks': typeof LayoutPocketbookIdTasksRoute
+  '/_layout/$pocketbookId/updates': typeof LayoutPocketbookIdUpdatesRoute
+  '/_layout/$pocketbookId/tags/$tagId': typeof LayoutPocketbookIdTagsTagIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/create-journal'
+    | '/create-pocketbook'
     | '/login'
     | '/signup'
-    | '/$journalId/bookmarked'
-    | '/$journalId/notes'
-    | '/$journalId/tasks'
-    | '/$journalId/updates'
-    | '/$journalId/tags/$tagId'
+    | '/$pocketbookId/bookmarked'
+    | '/$pocketbookId/notes'
+    | '/$pocketbookId/tasks'
+    | '/$pocketbookId/updates'
+    | '/$pocketbookId/tags/$tagId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/create-journal'
+    | '/create-pocketbook'
     | '/login'
     | '/signup'
-    | '/$journalId/bookmarked'
-    | '/$journalId/notes'
-    | '/$journalId/tasks'
-    | '/$journalId/updates'
-    | '/$journalId/tags/$tagId'
+    | '/$pocketbookId/bookmarked'
+    | '/$pocketbookId/notes'
+    | '/$pocketbookId/tasks'
+    | '/$pocketbookId/updates'
+    | '/$pocketbookId/tags/$tagId'
   id:
     | '__root__'
     | '/_layout'
-    | '/create-journal'
+    | '/create-pocketbook'
     | '/login'
     | '/signup'
-    | '/_layout/$journalId/bookmarked'
-    | '/_layout/$journalId/notes'
-    | '/_layout/$journalId/tasks'
-    | '/_layout/$journalId/updates'
-    | '/_layout/$journalId/tags/$tagId'
+    | '/_layout/$pocketbookId/bookmarked'
+    | '/_layout/$pocketbookId/notes'
+    | '/_layout/$pocketbookId/tasks'
+    | '/_layout/$pocketbookId/updates'
+    | '/_layout/$pocketbookId/tags/$tagId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   LayoutRoute: typeof LayoutRouteWithChildren
-  CreateJournalRoute: typeof CreateJournalRoute
+  CreatePocketbookRoute: typeof CreatePocketbookRoute
   LoginRoute: typeof LoginRoute
   SignupRoute: typeof SignupRoute
 }
@@ -159,11 +159,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/create-journal': {
-      id: '/create-journal'
-      path: '/create-journal'
-      fullPath: '/create-journal'
-      preLoaderRoute: typeof CreateJournalRouteImport
+    '/create-pocketbook': {
+      id: '/create-pocketbook'
+      path: '/create-pocketbook'
+      fullPath: '/create-pocketbook'
+      preLoaderRoute: typeof CreatePocketbookRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_layout': {
@@ -173,58 +173,58 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/_layout/$journalId/updates': {
-      id: '/_layout/$journalId/updates'
-      path: '/$journalId/updates'
-      fullPath: '/$journalId/updates'
-      preLoaderRoute: typeof LayoutJournalIdUpdatesRouteImport
+    '/_layout/$pocketbookId/updates': {
+      id: '/_layout/$pocketbookId/updates'
+      path: '/$pocketbookId/updates'
+      fullPath: '/$pocketbookId/updates'
+      preLoaderRoute: typeof LayoutPocketbookIdUpdatesRouteImport
       parentRoute: typeof LayoutRoute
     }
-    '/_layout/$journalId/tasks': {
-      id: '/_layout/$journalId/tasks'
-      path: '/$journalId/tasks'
-      fullPath: '/$journalId/tasks'
-      preLoaderRoute: typeof LayoutJournalIdTasksRouteImport
+    '/_layout/$pocketbookId/tasks': {
+      id: '/_layout/$pocketbookId/tasks'
+      path: '/$pocketbookId/tasks'
+      fullPath: '/$pocketbookId/tasks'
+      preLoaderRoute: typeof LayoutPocketbookIdTasksRouteImport
       parentRoute: typeof LayoutRoute
     }
-    '/_layout/$journalId/notes': {
-      id: '/_layout/$journalId/notes'
-      path: '/$journalId/notes'
-      fullPath: '/$journalId/notes'
-      preLoaderRoute: typeof LayoutJournalIdNotesRouteImport
+    '/_layout/$pocketbookId/notes': {
+      id: '/_layout/$pocketbookId/notes'
+      path: '/$pocketbookId/notes'
+      fullPath: '/$pocketbookId/notes'
+      preLoaderRoute: typeof LayoutPocketbookIdNotesRouteImport
       parentRoute: typeof LayoutRoute
     }
-    '/_layout/$journalId/bookmarked': {
-      id: '/_layout/$journalId/bookmarked'
-      path: '/$journalId/bookmarked'
-      fullPath: '/$journalId/bookmarked'
-      preLoaderRoute: typeof LayoutJournalIdBookmarkedRouteImport
+    '/_layout/$pocketbookId/bookmarked': {
+      id: '/_layout/$pocketbookId/bookmarked'
+      path: '/$pocketbookId/bookmarked'
+      fullPath: '/$pocketbookId/bookmarked'
+      preLoaderRoute: typeof LayoutPocketbookIdBookmarkedRouteImport
       parentRoute: typeof LayoutRoute
     }
-    '/_layout/$journalId/tags/$tagId': {
-      id: '/_layout/$journalId/tags/$tagId'
-      path: '/$journalId/tags/$tagId'
-      fullPath: '/$journalId/tags/$tagId'
-      preLoaderRoute: typeof LayoutJournalIdTagsTagIdRouteImport
+    '/_layout/$pocketbookId/tags/$tagId': {
+      id: '/_layout/$pocketbookId/tags/$tagId'
+      path: '/$pocketbookId/tags/$tagId'
+      fullPath: '/$pocketbookId/tags/$tagId'
+      preLoaderRoute: typeof LayoutPocketbookIdTagsTagIdRouteImport
       parentRoute: typeof LayoutRoute
     }
   }
 }
 
 interface LayoutRouteChildren {
-  LayoutJournalIdBookmarkedRoute: typeof LayoutJournalIdBookmarkedRoute
-  LayoutJournalIdNotesRoute: typeof LayoutJournalIdNotesRoute
-  LayoutJournalIdTasksRoute: typeof LayoutJournalIdTasksRoute
-  LayoutJournalIdUpdatesRoute: typeof LayoutJournalIdUpdatesRoute
-  LayoutJournalIdTagsTagIdRoute: typeof LayoutJournalIdTagsTagIdRoute
+  LayoutPocketbookIdBookmarkedRoute: typeof LayoutPocketbookIdBookmarkedRoute
+  LayoutPocketbookIdNotesRoute: typeof LayoutPocketbookIdNotesRoute
+  LayoutPocketbookIdTasksRoute: typeof LayoutPocketbookIdTasksRoute
+  LayoutPocketbookIdUpdatesRoute: typeof LayoutPocketbookIdUpdatesRoute
+  LayoutPocketbookIdTagsTagIdRoute: typeof LayoutPocketbookIdTagsTagIdRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
-  LayoutJournalIdBookmarkedRoute: LayoutJournalIdBookmarkedRoute,
-  LayoutJournalIdNotesRoute: LayoutJournalIdNotesRoute,
-  LayoutJournalIdTasksRoute: LayoutJournalIdTasksRoute,
-  LayoutJournalIdUpdatesRoute: LayoutJournalIdUpdatesRoute,
-  LayoutJournalIdTagsTagIdRoute: LayoutJournalIdTagsTagIdRoute,
+  LayoutPocketbookIdBookmarkedRoute: LayoutPocketbookIdBookmarkedRoute,
+  LayoutPocketbookIdNotesRoute: LayoutPocketbookIdNotesRoute,
+  LayoutPocketbookIdTasksRoute: LayoutPocketbookIdTasksRoute,
+  LayoutPocketbookIdUpdatesRoute: LayoutPocketbookIdUpdatesRoute,
+  LayoutPocketbookIdTagsTagIdRoute: LayoutPocketbookIdTagsTagIdRoute,
 }
 
 const LayoutRouteWithChildren =
@@ -232,7 +232,7 @@ const LayoutRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   LayoutRoute: LayoutRouteWithChildren,
-  CreateJournalRoute: CreateJournalRoute,
+  CreatePocketbookRoute: CreatePocketbookRoute,
   LoginRoute: LoginRoute,
   SignupRoute: SignupRoute,
 }

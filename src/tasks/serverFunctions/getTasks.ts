@@ -18,7 +18,7 @@ import type { NoteSchema } from "src/notes/notes.schema";
 import type { TaskSchema } from "src/tasks/tasks.schema";
 
 type GetTasksInput = {
-  journalId: string;
+  pocketbookId: string;
   isFlagged?: boolean;
   createdAfter?: string;
   createdBefore?: string;
@@ -32,7 +32,7 @@ type GetTasksResult = {
 export const getTasks = createServerFn({ method: "GET" })
   .inputValidator((input: GetTasksInput) => input)
   .handler(async ({ data }): Promise<GetTasksResult> => {
-    const conditions: (SQL | undefined)[] = [eq(tasks.journal, data.journalId)];
+    const conditions: (SQL | undefined)[] = [eq(tasks.pocketbook, data.pocketbookId)];
 
     if (data.isFlagged !== undefined) {
       conditions.push(eq(tasks.isFlagged, data.isFlagged));

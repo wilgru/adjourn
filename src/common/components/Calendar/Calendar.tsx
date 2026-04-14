@@ -12,7 +12,7 @@ import type { Colour } from "src/colours/Colour.type";
 import type { DateWithNotes } from "src/notes/Note.type";
 
 type CalendarProps = {
-  journalId: string;
+  pocketbookId: string;
   colour?: Colour;
 };
 
@@ -38,7 +38,7 @@ const MONTH_NAMES = [
 
 type CalendarItem = {
   key: number;
-  journalId: string;
+  pocketbookId: string;
   colour: Colour;
   datesWithUpdates: DateWithNotes[];
   today: Dayjs;
@@ -48,7 +48,7 @@ type CalendarItem = {
 
 const CalendarItem = ({
   key,
-  journalId,
+  pocketbookId,
   colour,
   datesWithUpdates,
   today,
@@ -67,9 +67,9 @@ const CalendarItem = ({
       )}
     >
       <Link
-        to="/$journalId/updates"
+        to="/$pocketbookId/updates"
         params={{
-          journalId: journalId,
+          pocketbookId: pocketbookId,
         }}
         itemID="todo"
         key={key}
@@ -107,7 +107,7 @@ const CalendarItem = ({
 };
 
 export const Calendar = ({
-  journalId,
+  pocketbookId,
   colour = colours.orange,
 }: CalendarProps): JSX.Element => {
   const { datesWithUpdates } = useGetDatesWithUpdates();
@@ -251,7 +251,7 @@ export const Calendar = ({
         {calendarDays.map((calendarDay, index) => (
           <CalendarItem
             key={index}
-            journalId={journalId}
+            pocketbookId={pocketbookId}
             colour={colour}
             calendarDay={calendarDay}
             datesWithUpdates={datesWithUpdates}

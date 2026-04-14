@@ -8,7 +8,7 @@ export type UpdateTint = "red" | "yellow" | "green" | "blue";
 
 export type Update = Prettify<Omit<
   UpdateSchema,
-  "content" | "tint" | "journal" | "user" | "created" | "updated"
+  "content" | "tint" | "pocketbook" | "user" | "created" | "updated"
 > & {
   content: Delta;
   tint: UpdateTint | null;

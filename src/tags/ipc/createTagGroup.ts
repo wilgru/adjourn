@@ -5,13 +5,13 @@ import type { TagGroupSchema } from "src/tags/tags.schema";
 
 export type CreateTagGroupInput = {
   title: string;
-  journalId: string | null;
+  pocketbookId: string | null;
   userId: string | null;
 };
 
 createIpcHandler(
   "tagGroups:create",
-  ({ title, journalId, userId }: CreateTagGroupInput): TagGroupSchema => {
+  ({ title, pocketbookId, userId }: CreateTagGroupInput): TagGroupSchema => {
     const now = new Date().toISOString();
     const id = crypto.randomUUID();
 
@@ -20,7 +20,7 @@ createIpcHandler(
       .values({
         id,
         title,
-        journal: journalId,
+        pocketbook: pocketbookId,
         user: userId,
         created: now,
         updated: now,

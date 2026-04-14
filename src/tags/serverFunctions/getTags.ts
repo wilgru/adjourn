@@ -6,7 +6,7 @@ import { tags } from "src/tags/tags.schema";
 import type { TagSchema } from "src/tags/tags.schema";
 
 type GetTagsInput = {
-  journalId: string;
+  pocketbookId: string;
 };
 
 type GetTagsResult = {
@@ -19,7 +19,7 @@ export const getTags = createServerFn({ method: "GET" })
     const tagRows = db
       .select()
       .from(tags)
-      .where(eq(tags.journal, data.journalId))
+      .where(eq(tags.pocketbook, data.pocketbookId))
       .all();
 
     const allNoteTags =

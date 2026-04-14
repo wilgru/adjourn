@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useUser } from "src/Users/hooks/useUser";
-import { useCurrentJournalId } from "src/journals/hooks/useCurrentJournalId";
+import { useCurrentPocketbookId } from "src/pocketbooks/hooks/useCurrentPocketbookId";
 import { mapTag } from "src/tags/utils/mapTag";
 import type { UseMutateAsyncFunction } from "@tanstack/react-query";
 import type { Tag } from "src/tags/Tag.type";
@@ -9,7 +9,7 @@ type CreateTagProps = {
   createTagData: Omit<
     Tag,
     | "id"
-    | "journalId"
+    | "pocketbookId"
     | "groupBy"
     | "user"
     | "noteCount"
@@ -23,7 +23,7 @@ type UseCreateTagResponse = {
 };
 
 export const useCreateTag = (): UseCreateTagResponse => {
-  const { journalId } = useCurrentJournalId();
+  const { pocketbookId } = useCurrentPocketbookId();
   const queryClient = useQueryClient();
   const { user } = useUser();
 
@@ -36,7 +36,7 @@ export const useCreateTag = (): UseCreateTagResponse => {
       icon: createTagData.icon,
       description: createTagData.description,
       tagGroupId: createTagData.tagGroupId ?? null,
-      journalId: journalId ?? null,
+      pocketbookId: pocketbookId ?? null,
       userId: user?.id ?? null,
     });
     if (!response.success) throw new Error(response.error);

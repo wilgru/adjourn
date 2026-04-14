@@ -1,5 +1,5 @@
 import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core";
-import { journals } from "src/journals/journals.schema";
+import { pocketbooks } from "src/pocketbooks/pocketbooks.schema";
 import type { InferSelectModel } from "drizzle-orm/table";
 
 export const notes = sqliteTable("notes", {
@@ -9,7 +9,7 @@ export const notes = sqliteTable("notes", {
   isBookmarked: integer("is_bookmarked", { mode: "boolean" })
     .notNull()
     .default(false),
-  journal: text("journal").references(() => journals.id),
+  pocketbook: text("pocketbook").references(() => pocketbooks.id),
   user: text("user"),
   deleted: text("deleted"),
   links: text("links").notNull().default("[]"),

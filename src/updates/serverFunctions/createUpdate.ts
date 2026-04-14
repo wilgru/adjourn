@@ -7,7 +7,7 @@ type CreateUpdateInput = {
   content: string | null;
   tint: string | null;
   noteIds: string[];
-  journalId: string | null;
+  pocketbookId: string | null;
   userId: string | null;
 };
 
@@ -23,7 +23,7 @@ export const createUpdate = createServerFn({ method: "POST" })
         id,
         content: data.content,
         tint: data.tint,
-        journal: data.journalId,
+        pocketbook: data.pocketbookId,
         user: data.userId,
         created: now,
         updated: now,

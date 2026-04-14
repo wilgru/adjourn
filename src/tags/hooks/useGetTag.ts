@@ -30,9 +30,9 @@ export const useGetTag = (tagId: string): UseTagResponse => {
     const tagResponse = await window.api.getTag({ tagId });
     if (!tagResponse.success) throw new Error(tagResponse.error);
 
-    const journalId = tagResponse.data.journal;
-    const notesResponse = journalId
-      ? await window.api.getNotes({ journalId })
+    const pocketbookId = tagResponse.data.pocketbook;
+    const notesResponse = pocketbookId
+      ? await window.api.getNotes({ pocketbookId })
       : { success: true as const, data: { notes: [] } };
 
     if (!notesResponse.success) throw new Error(notesResponse.error);

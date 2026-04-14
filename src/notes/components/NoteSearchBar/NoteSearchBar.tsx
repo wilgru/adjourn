@@ -4,7 +4,7 @@ import { matchSorter } from "match-sorter";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { colours } from "src/colours/colours.constant";
 import { cn } from "src/common/utils/cn";
-import { useCurrentJournal } from "src/journals/hooks/useCurrentJournal";
+import { useCurrentPocketbook } from "src/pocketbooks/hooks/useCurrentPocketbook";
 import { useGetNotes } from "src/notes/hooks/useGetNotes";
 import { NoteListItem } from "../NotesList/NoteListItem";
 import type Delta from "quill-delta";
@@ -24,8 +24,8 @@ export const NoteSearchBar = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const { journalId, currentJournal } = useCurrentJournal();
-  const colour = currentJournal?.colour ?? colours.orange;
+  const { pocketbookId, currentPocketbook } = useCurrentPocketbook();
+  const colour = currentPocketbook?.colour ?? colours.orange;
 
   const { notes } = useGetNotes({});
 
@@ -95,9 +95,9 @@ export const NoteSearchBar = () => {
     }
   };
 
-  const notesPath = journalId ? `/${journalId}/notes` : undefined;
+  const notesPath = pocketbookId ? `/${pocketbookId}/notes` : undefined;
 
-  if (!journalId) {
+  if (!pocketbookId) {
     return null;
   }
 

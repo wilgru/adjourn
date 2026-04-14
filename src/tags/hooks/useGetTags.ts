@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useCurrentJournalId } from "src/journals/hooks/useCurrentJournalId";
+import { useCurrentPocketbookId } from "src/pocketbooks/hooks/useCurrentPocketbookId";
 import { mapTag } from "src/tags/utils/mapTag";
 import type {
   QueryObserverResult,
@@ -15,16 +15,16 @@ type UseGetTagsResponse = {
 };
 
 export const useGetTags = (): UseGetTagsResponse => {
-  const { journalId } = useCurrentJournalId();
+  const { pocketbookId } = useCurrentPocketbookId();
 
   const queryFn = async (): Promise<Tag[]> => {
-    if (!journalId) {
+    if (!pocketbookId) {
       return [];
     }
 
     const [tagsResponse, notesResponse] = await Promise.all([
-      window.api.getTags({ journalId }),
-      window.api.getNotes({ journalId }),
+      window.api.getTags({ pocketbookId }),
+      window.api.getNotes({ pocketbookId }),
     ]);
 
     if (!tagsResponse.success) throw new Error(tagsResponse.error);
@@ -44,7 +44,7 @@ export const useGetTags = (): UseGetTagsResponse => {
 
   // TODO: consider time caching for better performance
   const { data, refetch } = useQuery({
-    queryKey: ["tags.list", journalId],
+    queryKey: ["tags.list", pocketbookId],
     queryFn,
     // staleTime: 2 * 60 * 1000,
     // gcTime: 2 * 60 * 1000,

@@ -4,7 +4,7 @@ import utc from "dayjs/plugin/utc.js";
 import { useMemo } from "react";
 import { mapNote } from "src/notes/utils/mapNote";
 import { useGetTags } from "src/tags/hooks/useGetTags";
-import { useCurrentJournalId } from "../../journals/hooks/useCurrentJournalId";
+import { useCurrentPocketbookId } from "../../pocketbooks/hooks/useCurrentPocketbookId";
 import type { Note } from "src/notes/Note.type";
 import type { GetNotesResult } from "src/notes/ipc/getNotes";
 
@@ -21,7 +21,7 @@ export const useGetNotes = ({
   isBookmarked?: boolean;
   createdDateString?: string;
 }): UseGetNotesResponse => {
-  const { journalId } = useCurrentJournalId();
+  const { pocketbookId } = useCurrentPocketbookId();
   const { tags: allTags } = useGetTags();
 
   const queryFn = async (): Promise<GetNotesResult> => {
@@ -47,7 +47,7 @@ export const useGetNotes = ({
     }
 
     const response = await window.api.getNotes({
-      journalId: journalId ?? "",
+      pocketbookId: pocketbookId ?? "",
       isBookmarked,
       createdAfter,
       createdBefore,
@@ -59,7 +59,7 @@ export const useGetNotes = ({
 
   // TODO: consider time caching for better performance
   const { data } = useQuery({
-    queryKey: ["notes.list", journalId, isBookmarked, createdDateString],
+    queryKey: ["notes.list", pocketbookId, isBookmarked, createdDateString],
     queryFn,
     // staleTime: 2 * 60 * 1000,
     // gcTime: 2 * 60 * 1000,

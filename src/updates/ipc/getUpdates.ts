@@ -5,7 +5,7 @@ import { updates, updateNotes } from "src/updates/updates.schema";
 import type { UpdateSchema } from "src/updates/updates.schema";
 
 export type GetUpdatesInput = {
-  journalId: string;
+  pocketbookId: string;
 };
 
 export type GetUpdatesResult = {
@@ -14,11 +14,11 @@ export type GetUpdatesResult = {
 
 createIpcHandler(
   "updates:getAll",
-  ({ journalId }: GetUpdatesInput): GetUpdatesResult => {
+  ({ pocketbookId }: GetUpdatesInput): GetUpdatesResult => {
     const rows = db
       .select()
       .from(updates)
-      .where(eq(updates.journal, journalId))
+      .where(eq(updates.pocketbook, pocketbookId))
       .all();
 
     const allUpdateNotes =

@@ -9,7 +9,7 @@ export type CreateNoteInput = {
   isBookmarked: boolean;
   tagIds: string[];
   links: string;
-  journalId: string | null;
+  pocketbookId: string | null;
   userId: string | null;
 };
 
@@ -21,7 +21,7 @@ createIpcHandler(
     isBookmarked,
     tagIds,
     links,
-    journalId,
+    pocketbookId,
     userId,
   }: CreateNoteInput): NoteSchema => {
     const now = new Date().toISOString();
@@ -35,7 +35,7 @@ createIpcHandler(
         content,
         isBookmarked,
         links,
-        journal: journalId,
+        pocketbook: pocketbookId,
         user: userId,
         created: now,
         updated: now,
@@ -55,7 +55,7 @@ createIpcHandler(
       content: inserted.content,
       isBookmarked: inserted.isBookmarked,
       links: inserted.links,
-      journal: inserted.journal,
+      pocketbook: inserted.pocketbook,
       user: inserted.user,
       deleted: inserted.deleted,
       created: inserted.created,

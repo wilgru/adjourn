@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useUser } from "src/Users/hooks/useUser";
-import { useCurrentJournalId } from "src/journals/hooks/useCurrentJournalId";
+import { useCurrentPocketbookId } from "src/pocketbooks/hooks/useCurrentPocketbookId";
 import { mapTask } from "src/tasks/utils/mapTask";
 import type { UseMutateAsyncFunction } from "@tanstack/react-query";
 import type { Task } from "src/tasks/Task.type";
@@ -19,7 +19,7 @@ type UseCreateTaskResponse = {
 };
 
 export const useCreateTask = (): UseCreateTaskResponse => {
-  const { journalId } = useCurrentJournalId();
+  const { pocketbookId } = useCurrentPocketbookId();
   const queryClient = useQueryClient();
   const { user } = useUser();
 
@@ -33,7 +33,7 @@ export const useCreateTask = (): UseCreateTaskResponse => {
       isFlagged: createTaskData.isFlagged,
       noteId: createTaskData.note?.id ?? null,
       dueDate: createTaskData.dueDate?.toISOString() ?? null,
-      journalId: journalId ?? null,
+      pocketbookId: pocketbookId ?? null,
       userId: user?.id ?? null,
     });
     if (!response.success) throw new Error(response.error);

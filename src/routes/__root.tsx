@@ -5,25 +5,25 @@ import { createRootRoute, Navigate, Outlet } from "@tanstack/react-router";
 // import { TanStackRouterDevtoolsPanel } from "@tanstack/router-devtools";
 import { useState } from "react";
 import requireClientAuth from "src/Users/utils/requireClientAuth";
-import { useNavigateToLastUsedJournal } from "src/journals/hooks/useGetLastUsedJournal";
+import { useNavigateToLastUsedPocketbook } from "src/pocketbooks/hooks/useGetLastUsedPocketbook";
 
 const NotFoundComponent = () => {
-  const { lastUsedJournal, isFetching } = useNavigateToLastUsedJournal();
+  const { lastUsedPocketbook, isFetching } = useNavigateToLastUsedPocketbook();
 
   requireClientAuth();
 
   if (isFetching) {
-    return <div>Loading journals...</div>; // TODO: handle this better, use a spinner/loading component?
+    return <div>Loading pocketbooks...</div>; // TODO: handle this better, use a spinner/loading component?
   }
 
-  if (!lastUsedJournal) {
-    return <Navigate to="/create-journal" replace={true} />;
+  if (!lastUsedPocketbook) {
+    return <Navigate to="/create-pocketbook" replace={true} />;
   }
 
   return (
     <Navigate
-      to="/$journalId/notes"
-      params={{ journalId: lastUsedJournal.id }}
+      to="/$pocketbookId/notes"
+      params={{ pocketbookId: lastUsedPocketbook.id }}
       search={{ noteId: null }}
       replace={true}
     />

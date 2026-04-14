@@ -12,7 +12,7 @@ type ToolbarProps = {
   iconName?: string;
   title: string;
   colour?: Colour;
-  journalColour?: Colour;
+  pocketbookColour?: Colour;
   children?: JSX.Element;
 };
 
@@ -20,7 +20,7 @@ export const Toolbar = ({
   iconName,
   title,
   colour = colours.orange,
-  journalColour,
+  pocketbookColour,
   children,
 }: ToolbarProps) => {
   const { isMacElectron } = useElectronEnvironment();
@@ -44,7 +44,7 @@ export const Toolbar = ({
             <Button
               variant="ghost"
               size="sm"
-              colour={journalColour ?? colour}
+              colour={pocketbookColour ?? colour}
               iconName="arrowLineRight"
               onClick={() => setValue(true)}
             />
