@@ -43,7 +43,9 @@ export const NoteLinksModal = ({
         className="fixed top-[50%] left-[50%] max-h-[85vh] w-[90vw] max-w-[450px] translate-x-[-50%] translate-y-[-50%] overflow-y-scroll p-4 focus:outline-none bg-white border border-slate-300 rounded-2xl shadow-2xl data-[state=open]:animate-contentShow"
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
-        <Dialog.Title className="mb-5">Manage links</Dialog.Title>
+        <Dialog.Title className="mb-5 font-title text-xl">
+          Manage links
+        </Dialog.Title>
 
         <div className="flex flex-col gap-4">
           <MultiLinkInput
