@@ -70,7 +70,7 @@ function LoginIndexComponent(): JSX.Element {
       )}
       <div className="flex flex-col gap-6 p-6 border bg-white border-slate-300 rounded-lg max-w-sm w-full drop-shadow">
         <h1 className="text-4xl font-normal font-title tracking-tight ">
-          Adjourn
+          Pocketbook
         </h1>
         <form className="space-y-6" onSubmit={onSubmit}>
           <div>
@@ -109,7 +109,7 @@ function LoginIndexComponent(): JSX.Element {
           </div>
 
           <div className="flex items-baseline">
-            <p className="text-sm">New to Adjourn?&nbsp;</p>
+            <p className="text-sm">New to Pocketbook?&nbsp;</p>
             <Button
               variant="link"
               onClick={() => {

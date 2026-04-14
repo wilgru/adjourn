@@ -6,7 +6,9 @@ import type { PocketbookSchema } from "src/pocketbooks/pocketbooks.schema";
 
 dayjs.extend(utc);
 
-export const mapPocketbook = (pocketbook: PocketbookSchema): Pocketbook => {
+export const mapPocketbook = (
+  pocketbook: PocketbookSchema & { noteCount?: number; taskCount?: number },
+): Pocketbook => {
   return {
     id: pocketbook.id,
     title: pocketbook.title,
@@ -24,5 +26,7 @@ export const mapPocketbook = (pocketbook: PocketbookSchema): Pocketbook => {
       (pocketbook.bookmarkedSortDirection as "asc" | "desc") ?? "asc",
     bookmarkedGroupBy:
       (pocketbook.bookmarkedGroupBy as "created" | "tag" | null) ?? null,
+    noteCount: pocketbook.noteCount,
+    taskCount: pocketbook.taskCount,
   };
 };

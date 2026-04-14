@@ -7,9 +7,9 @@ export default create({
   fontBase: '"Helvetica Neue", sans-serif',
   fontCode: "monospace",
 
-  brandTitle: "Adjourn",
-  brandUrl: "https://github.com/wilgru/adjourn-react-app",
-  // brandImage: "https://github.com/wilgru/adjourn-react-app",
+  brandTitle: "Pocketbook",
+  brandUrl: "https://github.com/wilgru/pocketbook-react-app",
+  // brandImage: "https://github.com/wilgru/pocketbook-react-app",
   brandTarget: "_self",
 
   //

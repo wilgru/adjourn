@@ -44,7 +44,7 @@ export const Sidebar = () => {
             )}
           >
             {!isElectron && (
-              <h1 className="font-title text-slate-500 text-xl">Adjourn</h1>
+              <h1 className="font-title text-slate-500 text-xl">Pocketbook</h1>
             )}
 
             <Button

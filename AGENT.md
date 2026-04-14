@@ -4,7 +4,7 @@ This file defines custom agent instructions for GitHub Copilot Chat in this repo
 
 ## Project Context
 
-Adjourn is a desktop app built with Electron. There is only one build target — the Electron app with a local SQLite database.
+Pocketbook is a desktop app built with Electron. There is only one build target — the Electron app with a local SQLite database.
 
 ## Tech Stack
 
@@ -32,6 +32,9 @@ Adjourn is a desktop app built with Electron. There is only one build target —
 - Use absolute imports from `src/`
 - Write concise, well-documented code
 - Always check for relevant skills before acting
+- Avoid type assertions (`as`) unless absolutely necessary; prefer explicit type annotations instead
+- When typing a variable, look for an existing type in `.type.ts` files rather than deriving one with `typeof`
+- Use full, unabbreviated names for iteration callback parameters (e.g. `objects.map((object) => {})` not `objects.map((obj) => {})`)
 
 ## Electron Guidance
 

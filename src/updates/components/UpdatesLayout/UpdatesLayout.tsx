@@ -30,10 +30,7 @@ export const UpdatesLayout = ({
 
   const groupedUpdates = groupUpdates(updates);
 
-  const secondaryBadges = useMemo(
-    () => [`${updates.length} updates`],
-    [updates.length],
-  );
+  const badges = useMemo(() => [`${updates.length} updates`], [updates.length]);
 
   const tableOfContentItems = useMemo(
     () =>
@@ -47,7 +44,7 @@ export const UpdatesLayout = ({
   return (
     <div className="h-full max-w-[1000px] w-full min-w-0 pb-16 flex items-center">
       <div className="h-full w-full p-12 flex flex-col gap-14 overflow-y-scroll">
-        <PageHeader colour={colour} secondaryBadges={secondaryBadges}>
+        <PageHeader colour={colour} badges={badges}>
           <div className="flex gap-3 items-end">
             <Icon
               className={cn("pb-1", colour.text)}
@@ -64,6 +61,7 @@ export const UpdatesLayout = ({
               update={{ notes: [], tint: null }}
               colour={colour}
               onCancel={onCancelNew}
+              onCreated={onCancelNew}
             />
           </div>
         )}

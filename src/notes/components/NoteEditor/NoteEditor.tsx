@@ -74,7 +74,7 @@ const NoteEditor = ({
     debouncedSave.flush();
     setEditedNote(note);
     setShowNewUpdate(false);
-  }, [note]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [note.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Flush any pending debounced save when the component unmounts (navigation).
   useEffect(() => {

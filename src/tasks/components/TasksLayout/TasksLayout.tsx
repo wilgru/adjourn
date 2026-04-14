@@ -6,6 +6,7 @@ import TableOfContents from "src/tableOfContents/TableOfContents/TableOfContents
 import { groupTasks } from "src/tasks/utils/groupTasks";
 import { TasksSection } from "../TasksSection/TasksSection";
 import type { Colour } from "src/colours/Colour.type";
+import type { ActionBadge } from "src/common/components/PageHeader/PageHeader";
 import type { Task } from "src/tasks/Task.type";
 
 export type TasksLayoutSection<T> = {
@@ -20,6 +21,8 @@ type TasksLayoutProps = {
   colour?: Colour;
   showNoteCreateTimeOnly?: boolean;
   description?: string;
+  badges?: string[];
+  actionBadges?: ActionBadge[];
   tasks: Task[];
   noNoteEditorTrigger?: number;
 };
@@ -29,20 +32,24 @@ export const TasksLayout = ({
   title,
   colour = colours.orange,
   description,
+  badges,
+  actionBadges,
   tasks,
   noNoteEditorTrigger,
 }: TasksLayoutProps) => {
   const [navigationId, setNavigationId] = useState("");
 
-  const groupedTasks = groupTasks(tasks, "note");
+  const groupedTasks = useMemo(() => groupTasks(tasks, "note"), [tasks]);
 
   // When the toolbar plus button is clicked and there's no "no note" group yet,
   // synthesise one so the TasksSection can render the new-task editor.
-  const hasNoNoteGroup = groupedTasks.some(
-    (g) => g.relevantTaskData.note === null,
-  );
-  const effectiveGroups =
-    !hasNoNoteGroup && noNoteEditorTrigger !== undefined && noNoteEditorTrigger > 0
+  const effectiveGroups = useMemo(() => {
+    const hasNoNoteGroup = groupedTasks.some(
+      (g) => g.relevantTaskData.note === null,
+    );
+    return !hasNoNoteGroup &&
+      noNoteEditorTrigger !== undefined &&
+      noNoteEditorTrigger > 0
       ? [
           {
             title: "No Note",
@@ -52,6 +59,7 @@ export const TasksLayout = ({
           ...groupedTasks,
         ]
       : groupedTasks;
+  }, [groupedTasks, noNoteEditorTrigger]);
 
   const tableOfContentItems = useMemo(() => {
     const noteTOCItems = effectiveGroups.map((group) => {
@@ -68,7 +76,12 @@ export const TasksLayout = ({
   return (
     <div className="h-full max-w-[1000px] w-full min-w-0 pb-16 flex items-center">
       <div className="h-full w-full p-12 flex flex-col gap-6 overflow-y-scroll">
-        <PageHeader colour={colour} description={description}>
+        <PageHeader
+          colour={colour}
+          description={description}
+          badges={badges}
+          actionBadges={actionBadges}
+        >
           {header}
         </PageHeader>
 

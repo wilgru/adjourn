@@ -5,6 +5,6 @@ export default defineConfig({
   schema: "./src/**/*.schema.ts", // Schema files are spread across different feature directories
   out: "./drizzle",
   dbCredentials: {
-    url: "dev-db/adjourn.db",
+    url: "dev-db/pocketbook.db",
   },
 });

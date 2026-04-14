@@ -38,7 +38,7 @@ declare const MAIN_WINDOW_VITE_NAME: string;
 //   app.quit();
 // }
 
-app.setName("Adjourn");
+app.setName("Pocketbook");
 log.initialize();
 
 let mainWindow: BrowserWindow | null = null;
@@ -49,7 +49,7 @@ const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 800,
-    title: "Adjourn",
+    title: "Pocketbook",
     ...(isMac
       ? {
           titleBarStyle: "hidden",

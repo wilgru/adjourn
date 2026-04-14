@@ -19,14 +19,12 @@ type QuillFormattingToolbarProps = {
   toolbarId: string;
   toolbarFormatting?: StringMap;
   colour: Colour;
-  dividerClass?: string;
 };
 
 export const QuillFormattingToolbar = ({
   toolbarId,
   toolbarFormatting,
   colour,
-  dividerClass = "border-slate-200",
 }: QuillFormattingToolbarProps) => {
   return (
     <div className="w-full h-fit" id={toolbarId}>
@@ -48,9 +46,7 @@ export const QuillFormattingToolbar = ({
         ]}
         aria-label="Text formatting"
       >
-        <div
-          className={`ql-formats flex flex-row gap-1 pr-1 border-r-2 ${dividerClass}`}
-        >
+        <div className="ql-formats flex flex-row gap-1 pr-1 border-r-2 border-slate-100">
           <QuillFormattingToolbarButton value="bold" colour={colour}>
             <TextB size={16} weight="bold" />
           </QuillFormattingToolbarButton>
@@ -68,9 +64,7 @@ export const QuillFormattingToolbar = ({
           </QuillFormattingToolbarButton>
         </div>
 
-        <div
-          className={`flex flex-row gap-1 px-1 pr-1 border-r-2 ${dividerClass}`}
-        >
+        <div className="flex flex-row gap-1 px-1 pr-1 border-r-2 border-slate-100">
           <QuillFormattingToolbarButton value="ordered" colour={colour}>
             <ListNumbers size={16} weight="bold" />
           </QuillFormattingToolbarButton>

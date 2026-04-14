@@ -49,8 +49,8 @@
     {
       "previewLimit": 50,
       "driver": "SQLite",
-      "name": "Adjourn Dev DB",
-      "database": "/dev-db/adjourn.db"
+      "name": "Pocketbook Dev DB",
+      "database": "/dev-db/pocketbook.db"
     }
   ]
 }

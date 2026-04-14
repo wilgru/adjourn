@@ -18,36 +18,36 @@ function getDbPath(): string {
         homedir(),
         "Library",
         "Application Support",
-        "Adjourn",
+        "Pocketbook",
       );
     } else if (platform === "win32") {
       appDataDir = path.join(
         process.env.APPDATA ?? path.join(homedir(), "AppData", "Roaming"),
-        "Adjourn",
+        "Pocketbook",
       );
     } else {
       appDataDir = path.join(
         process.env.XDG_DATA_HOME ?? path.join(homedir(), ".local", "share"),
-        "Adjourn",
+        "Pocketbook",
       );
     }
     mkdirSync(appDataDir, { recursive: true });
-    return path.join(appDataDir, "adjourn.db");
+    return path.join(appDataDir, "pocketbook.db");
   }
 
   // Not Electron: use a standard server location (can be customized)
   if (isProduction) {
-    const serverDbDir = "/var/lib/adjourn";
+    const serverDbDir = "/var/lib/pocketbook";
 
     mkdirSync(serverDbDir, { recursive: true });
-    return path.join(serverDbDir, "adjourn.db");
+    return path.join(serverDbDir, "pocketbook.db");
   }
 
   // In dev (both for Electron and web modes) use dev-db. Uses process.cwd() which is always the project root
   const devDbDir = path.join(process.cwd(), "dev-db");
 
   mkdirSync(devDbDir, { recursive: true });
-  return path.join(devDbDir, "adjourn.db");
+  return path.join(devDbDir, "pocketbook.db");
 }
 
 const sqlite = new Database(getDbPath());

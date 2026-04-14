@@ -3,7 +3,7 @@ import type { ForgeConfig } from "@electron-forge/shared-types";
 
 const config: ForgeConfig = {
   packagerConfig: {
-    name: "Adjourn",
+    name: "Pocketbook",
     icon: "resources/icon.icon",
     extraResource: ["drizzle"],
   },

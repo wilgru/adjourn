@@ -52,6 +52,10 @@ export const useUpdateNote = (): UseUpdateNoteResponse => {
     });
 
     queryClient.refetchQueries({
+      queryKey: ["notes.get", data.id],
+    });
+
+    queryClient.refetchQueries({
       queryKey: ["tags.get"],
     });
   };
