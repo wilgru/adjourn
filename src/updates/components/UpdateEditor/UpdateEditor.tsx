@@ -46,6 +46,7 @@ const getInitialUpdate = (update: Partial<Update>): Partial<Update> => ({
 
 export const UpdateEditor = ({
   update,
+  colour,
   showNotes = true,
   dateDisplay = "time",
   onCancel,
@@ -74,6 +75,8 @@ export const UpdateEditor = ({
   if (!currentJournal) {
     return null;
   }
+
+  const resolvedColour = colour ?? currentJournal.colour ?? colours.blue;
 
   const onDone = async () => {
     if (editedUpdate.id) {
@@ -139,11 +142,11 @@ export const UpdateEditor = ({
           </div>
         </div>
 
-        <div className="flex-1 rounded-2xl p-4 my-2 flex flex-col gap-3 bg-slate-50">
+        <div className="flex-1 rounded-2xl p-4 my-2 flex flex-col gap-3 bg-white border border-slate-200">
           <div className="flex items-center justify-between flex-wrap gap-2 border-b-2 pb-3 border-slate-100">
             <NoteMultiSelect
               selectedNotes={(editedUpdate.notes ?? []) as Note[]}
-              colour={currentJournal.colour}
+              colour={resolvedColour}
               onChange={(notes) => onUpdateField({ notes })}
             />
 
@@ -178,13 +181,13 @@ export const UpdateEditor = ({
           <QuillFormattingToolbar
             toolbarId={toolbarId}
             toolbarFormatting={toolbarFormatting}
-            colour={currentJournal.colour}
+            colour={resolvedColour}
           />
 
           <QuillEditor
             toolbarId={toolbarId}
             value={editedUpdate.content}
-            colour={currentJournal.colour}
+            colour={resolvedColour}
             onChange={(delta) => onUpdateField({ content: delta })}
             onSelectedFormattingChange={(formatting) =>
               setToolbarFormatting(formatting)
@@ -206,7 +209,7 @@ export const UpdateEditor = ({
               <Button
                 size="sm"
                 variant="ghost"
-                colour={currentJournal.colour}
+                colour={resolvedColour}
                 onClick={onCancelEdit}
               >
                 Discard
@@ -214,7 +217,7 @@ export const UpdateEditor = ({
               <Button
                 size="sm"
                 variant="block"
-                colour={currentJournal.colour}
+                colour={resolvedColour}
                 onClick={onDone}
               >
                 Save
