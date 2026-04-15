@@ -52,6 +52,7 @@ export const TaskEditor = ({
   const [editedTask, setEditedTask] = useState<Task>(getInitialTask(task));
   const [isFocused, setIsFocused] = useState(false);
   const [linksModalKey, setLinksModalKey] = useState(0);
+  const [isLinksModalOpen, setIsLinksModalOpen] = useState(false);
 
   // Timer for distinguishing single vs double click on the status circle
   const clickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -145,7 +146,7 @@ export const TaskEditor = ({
       className="w-full flex gap-2 items-start"
       onFocus={() => setIsFocused(true)}
       onBlur={(e) => {
-        if (!e.currentTarget.contains(e.relatedTarget)) {
+        if (!e.currentTarget.contains(e.relatedTarget) && !isLinksModalOpen) {
           setIsFocused(false);
         }
       }}
@@ -221,27 +222,16 @@ export const TaskEditor = ({
                 onChange={(date) => onUpdateTask({ dueDate: date })}
               />
 
-              <Dialog.Root
-                onOpenChange={(open) => {
-                  if (open) setLinksModalKey((k) => k + 1);
+              <Button
+                colour={colour}
+                variant="ghost"
+                size="sm"
+                iconName="link"
+                onClick={() => {
+                  setLinksModalKey((k) => k + 1);
+                  setIsLinksModalOpen(true);
                 }}
-              >
-                <Dialog.Trigger asChild>
-                  <Button
-                    colour={colour}
-                    variant="ghost"
-                    size="sm"
-                    iconName="link"
-                  />
-                </Dialog.Trigger>
-
-                <TaskLinksModal
-                  key={linksModalKey}
-                  links={editedTask.links}
-                  colour={colour}
-                  onSave={onSaveLinks}
-                />
-              </Dialog.Root>
+              />
 
               <Button
                 variant="ghost"
@@ -264,6 +254,20 @@ export const TaskEditor = ({
           )}
         </div>
       </div>
+
+      <Dialog.Root
+        open={isLinksModalOpen}
+        onOpenChange={(open) => {
+          setIsLinksModalOpen(open);
+        }}
+      >
+        <TaskLinksModal
+          key={linksModalKey}
+          links={editedTask.links}
+          colour={colour}
+          onSave={onSaveLinks}
+        />
+      </Dialog.Root>
     </div>
   );
 };
