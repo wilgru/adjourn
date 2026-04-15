@@ -214,16 +214,18 @@ export const TaskEditor = ({
             />
           )}
 
+          {(isFocused || !!editedTask.dueDate) && (
+            <TaskDatePicker
+              dueDate={editedTask.dueDate}
+              colour={colour}
+              isCompleted={isCompleted}
+              isCancelled={isCancelled}
+              onChange={(date) => onUpdateTask({ dueDate: date })}
+            />
+          )}
+
           {isFocused && (
             <>
-              <TaskDatePicker
-                dueDate={editedTask.dueDate}
-                colour={colour}
-                isCompleted={isCompleted}
-                isCancelled={isCancelled}
-                onChange={(date) => onUpdateTask({ dueDate: date })}
-              />
-
               <Button
                 colour={colour}
                 variant="ghost"
@@ -243,16 +245,6 @@ export const TaskEditor = ({
                 onClick={() => deleteTask({ taskId: editedTask.id })}
               />
             </>
-          )}
-
-          {!isFocused && editedTask.dueDate && (
-            <TaskDatePicker
-              dueDate={editedTask.dueDate}
-              colour={colour}
-              isCompleted={isCompleted}
-              isCancelled={isCancelled}
-              onChange={(date) => onUpdateTask({ dueDate: date })}
-            />
           )}
         </div>
       </div>
