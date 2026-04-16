@@ -4,12 +4,14 @@ import path from "node:path";
 import Database from "better-sqlite3";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import { migrate } from "drizzle-orm/better-sqlite3/migrator";
+import { app } from "electron";
+
+const isPackaged = !!process.versions?.electron && app.isPackaged;
 
 function getDbPath(): string {
   const isProduction = process.env.NODE_ENV === "production";
-  const isElectron = !!(process.versions && process.versions.electron);
 
-  if (isElectron && isProduction) {
+  if (isPackaged) {
     const platform = process.platform;
     let appDataDir: string;
 
@@ -55,10 +57,9 @@ sqlite.pragma("journal_mode = WAL");
 
 const db = drizzle(sqlite);
 migrate(db, {
-  migrationsFolder:
-    process.env.NODE_ENV === "production"
-      ? path.join(process.resourcesPath, "drizzle")
-      : path.join(process.cwd(), "drizzle"),
+  migrationsFolder: isPackaged
+    ? path.join(process.resourcesPath, "drizzle")
+    : path.join(process.cwd(), "drizzle"),
 });
 
 export { db };
