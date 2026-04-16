@@ -30,6 +30,7 @@ type TaskDatePickerProps = {
   isCompleted?: boolean;
   isCancelled?: boolean;
   onChange: (date: Dayjs | null) => void;
+  onOpenChange?: (open: boolean) => void;
 };
 
 export const TaskDatePicker = ({
@@ -38,6 +39,7 @@ export const TaskDatePicker = ({
   isCompleted = false,
   isCancelled = false,
   onChange,
+  onOpenChange,
 }: TaskDatePickerProps) => {
   const today = dayjs();
   const [displayYear, setDisplayYear] = useState(
@@ -47,11 +49,7 @@ export const TaskDatePicker = ({
     dueDate ? dueDate.month() : today.month(),
   );
 
-  const firstDay = dayjs()
-    .year(displayYear)
-    .month(displayMonth)
-    .date(1)
-    .day();
+  const firstDay = dayjs().year(displayYear).month(displayMonth).date(1).day();
   const daysInMonth = dayjs()
     .year(displayYear)
     .month(displayMonth)
@@ -73,7 +71,10 @@ export const TaskDatePicker = ({
 
   for (let i = firstDay - 1; i >= 0; i--) {
     calendarDays.push({
-      day: dayjs().year(prevMonthYear).month(prevMonth).date(prevMonthDays - i),
+      day: dayjs()
+        .year(prevMonthYear)
+        .month(prevMonth)
+        .date(prevMonthDays - i),
       isCurrentMonth: false,
     });
   }
@@ -127,7 +128,7 @@ export const TaskDatePicker = ({
   );
 
   return (
-    <Popover.Root>
+    <Popover.Root onOpenChange={onOpenChange}>
       <Popover.Trigger asChild>{trigger}</Popover.Trigger>
 
       <Popover.Portal>
@@ -200,14 +201,16 @@ export const TaskDatePicker = ({
 
           {dueDate && (
             <div className="mt-2 flex justify-center">
-              <button
-                type="button"
-                aria-label={`Clear due date ${dueDate.format("MMMM D, YYYY")}`}
-                onClick={() => onChange(null)}
-                className="text-xs text-slate-400 hover:text-slate-600 transition-colors"
-              >
-                Clear date
-              </button>
+              <Popover.Close asChild>
+                <button
+                  type="button"
+                  aria-label={`Clear due date ${dueDate.format("MMMM D, YYYY")}`}
+                  onClick={() => onChange(null)}
+                  className="text-xs text-slate-400 hover:text-slate-600 transition-colors"
+                >
+                  Clear date
+                </button>
+              </Popover.Close>
             </div>
           )}
 

@@ -1,5 +1,5 @@
 import { cva } from "class-variance-authority";
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 import { colours } from "src/colours/colours.constant";
 import { cn } from "src/common/utils/cn";
 import { Icon } from "src/icons/components/Icon/Icon";
@@ -135,61 +135,67 @@ const buttonVariants = cva(
   },
 );
 
-export const Button = ({
-  children,
-  type = "button",
-  variant = "block",
-  size = "md",
-  colour = colours.orange,
-  className,
-  disabled = false,
-  onClick,
-  iconName,
-}: ButtonProps) => {
-  const [isButtonHovered, setIsButtonHovered] = useState(false);
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+  (
+    {
+      children,
+      type = "button",
+      variant = "block",
+      size = "md",
+      colour = colours.orange,
+      className,
+      disabled = false,
+      onClick,
+      iconName,
+    },
+    ref,
+  ) => {
+    const [isButtonHovered, setIsButtonHovered] = useState(false);
 
-  const content =
-    iconName && children
-      ? "iconAndText"
-      : iconName && !children
-        ? "icon"
-        : "text";
+    const content =
+      iconName && children
+        ? "iconAndText"
+        : iconName && !children
+          ? "icon"
+          : "text";
 
-  return (
-    <button
-      type={type}
-      className={cn(
-        buttonVariants({
-          size,
-          variant,
-          content,
-        }),
-        variant === "block" && colour.textPill,
-        variant === "block" && colour.backgroundPill,
-        variant === "block" && colour.textPillInverted,
-        variant === "block" && colour.backgroundPillInverted,
-        variant === "ghost" && !disabled && `hover:${colour.textPill}`,
-        variant === "ghost" && !disabled && `hover:${colour.backgroundPill}`,
-        variant === "ghost-strong" && !disabled && `hover:${colour.textPill}`,
-        variant === "ghost-strong" &&
-          !disabled &&
-          `hover:${colour.backgroundPill}`,
-        className,
-      )}
-      disabled={disabled}
-      onMouseEnter={() => setIsButtonHovered(true)}
-      onMouseLeave={() => setIsButtonHovered(false)}
-      onClick={onClick}
-    >
-      {iconName && (
-        <Icon
-          iconName={iconName}
-          size={size}
-          className={cn(isButtonHovered && colour.textPill)}
-          weight={isButtonHovered ? "fill" : "regular"}
-        />
-      )}
-      {children}
-    </button>
-  );
-};
+    return (
+      <button
+        ref={ref}
+        type={type}
+        className={cn(
+          buttonVariants({
+            size,
+            variant,
+            content,
+          }),
+          variant === "block" && colour.textPill,
+          variant === "block" && colour.backgroundPill,
+          variant === "block" && colour.textPillInverted,
+          variant === "block" && colour.backgroundPillInverted,
+          variant === "ghost" && !disabled && `hover:${colour.textPill}`,
+          variant === "ghost" && !disabled && `hover:${colour.backgroundPill}`,
+          variant === "ghost-strong" && !disabled && `hover:${colour.textPill}`,
+          variant === "ghost-strong" &&
+            !disabled &&
+            `hover:${colour.backgroundPill}`,
+          className,
+        )}
+        disabled={disabled}
+        onMouseEnter={() => setIsButtonHovered(true)}
+        onMouseLeave={() => setIsButtonHovered(false)}
+        onClick={onClick}
+      >
+        {iconName && (
+          <Icon
+            iconName={iconName}
+            size={size}
+            className={cn(isButtonHovered && colour.textPill)}
+            weight={isButtonHovered ? "fill" : "regular"}
+          />
+        )}
+        {children}
+      </button>
+    );
+  },
+);

@@ -53,6 +53,7 @@ export const TaskEditor = ({
   const [isFocused, setIsFocused] = useState(false);
   const [linksModalKey, setLinksModalKey] = useState(0);
   const [isLinksModalOpen, setIsLinksModalOpen] = useState(false);
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
 
   // Timer for distinguishing single vs double click on the status circle
   const clickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -146,7 +147,11 @@ export const TaskEditor = ({
       className="w-full flex gap-2 items-start"
       onFocus={() => setIsFocused(true)}
       onBlur={(e) => {
-        if (!e.currentTarget.contains(e.relatedTarget) && !isLinksModalOpen) {
+        if (
+          !e.currentTarget.contains(e.relatedTarget) &&
+          !isLinksModalOpen &&
+          !isDatePickerOpen
+        ) {
           setIsFocused(false);
         }
       }}
@@ -164,7 +169,7 @@ export const TaskEditor = ({
 
       <div className="w-full flex items-start justify-between">
         <div className="flex flex-col grow">
-          <div className="flex gap-2">
+          <div className="flex justify-between gap-2">
             <textarea
               name="title"
               value={editedTask.title ?? ""}
@@ -204,6 +209,19 @@ export const TaskEditor = ({
         </div>
 
         <div className="flex flex-row flex-wrap items-center gap-1 pl-2">
+          {isFocused && (
+            <Button
+              colour={colour}
+              variant="ghost"
+              size="sm"
+              iconName="link"
+              onClick={() => {
+                setLinksModalKey((k) => k + 1);
+                setIsLinksModalOpen(true);
+              }}
+            />
+          )}
+
           {(isFocused || editedTask.isFlagged) && (
             <Toggle
               isToggled={editedTask.isFlagged}
@@ -221,30 +239,18 @@ export const TaskEditor = ({
               isCompleted={isCompleted}
               isCancelled={isCancelled}
               onChange={(date) => onUpdateTask({ dueDate: date })}
+              onOpenChange={setIsDatePickerOpen}
             />
           )}
 
           {isFocused && (
-            <>
-              <Button
-                colour={colour}
-                variant="ghost"
-                size="sm"
-                iconName="link"
-                onClick={() => {
-                  setLinksModalKey((k) => k + 1);
-                  setIsLinksModalOpen(true);
-                }}
-              />
-
-              <Button
-                variant="ghost"
-                size="sm"
-                iconName="trash"
-                colour={colours.red}
-                onClick={() => deleteTask({ taskId: editedTask.id })}
-              />
-            </>
+            <Button
+              variant="ghost"
+              size="sm"
+              iconName="trash"
+              colour={colours.red}
+              onClick={() => deleteTask({ taskId: editedTask.id })}
+            />
           )}
         </div>
       </div>

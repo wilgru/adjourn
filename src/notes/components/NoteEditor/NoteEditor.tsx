@@ -135,11 +135,13 @@ const NoteEditor = ({
           className="h-12 text-5xl font-title tracking-tight overflow-y-hidden bg-white placeholder-slate-400 select-none resize-none outline-none"
         />
 
-        <div className="flex flex-row flex-wrap gap-2 items-center">
-          {editedNote.links.map((link) => (
-            <NoteLinkPill key={link.id} link={link} colour={colour} />
-          ))}
-        </div>
+        {editedNote.links.length > 0 && (
+          <div className="flex flex-row flex-wrap gap-2 items-center">
+            {editedNote.links.map((link) => (
+              <NoteLinkPill key={link.id} link={link} colour={colour} />
+            ))}
+          </div>
+        )}
 
         <div className="flex flex-row flex-wrap items-center justify-between">
           <div className="flex flex-row flex-wrap gap-2 items-center">
