@@ -35,6 +35,7 @@ Pocketbook is a desktop app built with Electron. There is only one build target 
 - Avoid type assertions (`as`) unless absolutely necessary; prefer explicit type annotations instead
 - When typing a variable, look for an existing type in `.type.ts` files rather than deriving one with `typeof`
 - Use full, unabbreviated names for iteration callback parameters (e.g. `objects.map((object) => {})` not `objects.map((obj) => {})`)
+- Check for existing components that can be reused; if a suitable component exists in a feature-specific area, consider extracting it into a generic, shared component and modify it as needed
 
 ## Electron Guidance
 
