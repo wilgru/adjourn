@@ -1,29 +1,29 @@
-import { createServerFn } from "@tanstack/react-start";
 import { eq } from "drizzle-orm";
+import { createIpcHandler } from "src/common/utils/createIpcHandler";
 import { db } from "src/db/connection";
 import { updates } from "src/updates/updates.schema";
 
-type GetDatesWithUpdatesInput = {
+export type GetDatesWithUpdatesInput = {
   pocketbookId: string;
 };
 
-type DateWithUpdatesRow = {
+export type DateWithUpdatesRow = {
   id: string;
   created: string;
   hasBookmarked: boolean;
 };
 
-type GetDatesWithUpdatesResult = {
+export type GetDatesWithUpdatesResult = {
   dates: DateWithUpdatesRow[];
 };
 
-export const getDatesWithUpdates = createServerFn({ method: "GET" })
-  .inputValidator((input: GetDatesWithUpdatesInput) => input)
-  .handler(async ({ data }): Promise<GetDatesWithUpdatesResult> => {
+createIpcHandler(
+  "updates:getDatesWithUpdates",
+  ({ pocketbookId }: GetDatesWithUpdatesInput): GetDatesWithUpdatesResult => {
     const rows = db
       .select({ created: updates.created })
       .from(updates)
-      .where(eq(updates.pocketbook, data.pocketbookId))
+      .where(eq(updates.pocketbook, pocketbookId))
       .all();
 
     const uniqueDates = new Map<string, string>();
@@ -41,4 +41,5 @@ export const getDatesWithUpdates = createServerFn({ method: "GET" })
         hasBookmarked: false,
       })),
     };
-  });
+  },
+);
