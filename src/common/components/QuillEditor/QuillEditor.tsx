@@ -14,6 +14,7 @@ type QuillEditorProps = {
   toolbarId: string;
   value?: Delta;
   colour?: Colour;
+  autoFocus?: boolean;
   onChange: (delta: Delta) => void;
   onSelectedFormattingChange: (selectionFormatting: StringMap) => void;
 };
@@ -27,11 +28,13 @@ const QuillEditor = ({
   toolbarId,
   value,
   colour,
+  autoFocus = false,
   onChange,
   onSelectedFormattingChange,
 }: QuillEditorProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const onChangeRef = useRef(onChange);
+  const autoFocusRef = useRef(autoFocus);
   const [quillEditor, setQuillEditor] = useState<Quill | null>(null);
 
   useLayoutEffect(() => {
@@ -159,6 +162,10 @@ const QuillEditor = ({
 
       editorContainer.addEventListener("click", handleLinkClick);
       setQuillEditor(quill);
+
+      if (autoFocusRef.current) {
+        quill.focus();
+      }
 
       return () => {
         editorContainer.removeEventListener("click", handleLinkClick);

@@ -50,6 +50,8 @@ const NoteEditor = ({
   const [showNewUpdate, setShowNewUpdate] = useState(false);
   const [linksModalKey, setLinksModalKey] = useState(0);
 
+  const newUpdateRef = useRef<HTMLDivElement>(null);
+
   // Ref that always points to the latest save implementation so the debounced
   // function never closes over stale state.
   const saveRef = useRef<() => void>();
@@ -82,6 +84,13 @@ const NoteEditor = ({
       debouncedSave.flush();
     };
   }, [debouncedSave]);
+
+  // Scroll to the new update editor when it appears.
+  useEffect(() => {
+    if (showNewUpdate) {
+      newUpdateRef.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  }, [showNewUpdate]);
 
   const onCreateTask = async () => {
     await createTask({
@@ -247,14 +256,17 @@ const NoteEditor = ({
       {(updates.length > 0 || showNewUpdate) && (
         <div className="w-full flex flex-col pr-12 border-t-2 border-slate-100 pt-6">
           {showNewUpdate && (
-            <UpdateEditor
-              update={{ notes: [editedNote], tint: null }}
-              colour={colour}
-              showNotes={false}
-              dateDisplay="date"
-              onCancel={() => setShowNewUpdate(false)}
-              onCreated={() => setShowNewUpdate(false)}
-            />
+            <div ref={newUpdateRef}>
+              <UpdateEditor
+                update={{ notes: [editedNote], tint: null }}
+                colour={colour}
+                showNotes={false}
+                dateDisplay="date"
+                autoFocus={true}
+                onCancel={() => setShowNewUpdate(false)}
+                onCreated={() => setShowNewUpdate(false)}
+              />
+            </div>
           )}
 
           {updates.length > 0 && (

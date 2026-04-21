@@ -24,6 +24,7 @@ type UpdateEditorProps = {
   colour?: Colour;
   showNotes?: boolean;
   dateDisplay?: "date" | "time";
+  autoFocus?: boolean;
   onCancel?: () => void;
   onCreated?: () => void;
 };
@@ -49,6 +50,7 @@ export const UpdateEditor = ({
   colour,
   showNotes = true,
   dateDisplay = "time",
+  autoFocus = false,
   onCancel,
   onCreated,
 }: UpdateEditorProps) => {
@@ -188,6 +190,7 @@ export const UpdateEditor = ({
             toolbarId={toolbarId}
             value={editedUpdate.content}
             colour={resolvedColour}
+            autoFocus={autoFocus}
             onChange={(delta) => onUpdateField({ content: delta })}
             onSelectedFormattingChange={(formatting) =>
               setToolbarFormatting(formatting)
