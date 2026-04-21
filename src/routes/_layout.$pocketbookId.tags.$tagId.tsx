@@ -62,6 +62,7 @@ export default function TagComponent() {
         content: new Delta(),
         tags: [tag],
         isBookmarked: false,
+        links: [],
       },
     });
 
@@ -317,6 +318,7 @@ export default function TagComponent() {
         prefillNewNoteData={{ tags: [tag] }}
         groupNotesBy={tag.groupBy ?? undefined}
         groupSortDirection={sortDirection}
+        onCreateNote={onCreateNote}
       />
     </div>
   );

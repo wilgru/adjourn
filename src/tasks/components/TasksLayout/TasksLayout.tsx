@@ -86,12 +86,7 @@ export const TasksLayout = ({
         </PageHeader>
 
         {effectiveGroups.length === 0 && (
-          <EmptyState
-            title="No tasks yet"
-            description="Add your first task to start tracking what matters."
-            colour={colour}
-            iconName="checkCircle"
-          />
+          <EmptyState text="No tasks yet" />
         )}
 
         {effectiveGroups.map((group, index) => (
