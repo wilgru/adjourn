@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { colours } from "src/colours/colours.constant";
+import { EmptyState } from "src/common/components/EmptyState/EmptyState";
 import { NoteLinkPill } from "src/common/components/NoteLinkPill/NoteLinkPill";
 import NoteEditor from "src/notes/components/NoteEditor/NoteEditor";
 import { groupNotes } from "src/notes/utils/groupNotes";
@@ -34,6 +35,10 @@ export const NotesLayout = ({
   groupSortDirection = "desc",
 }: NotesLayoutProps) => {
   const noteGroups = useMemo<NotesGroup[]>(() => {
+    if (!notes || notes.length === 0) {
+      return [];
+    }
+
     if (!groupNotesBy) {
       return [
         {
@@ -43,6 +48,7 @@ export const NotesLayout = ({
         },
       ];
     }
+
     return groupNotes(
       notes,
       groupNotesBy,
@@ -69,33 +75,30 @@ export const NotesLayout = ({
           </div>
         )}
 
-        {noteGroups.map((noteGroup) => (
-          <NotesList
-            key={noteGroup.title ?? "no-title"}
-            noteGroup={noteGroup}
-            colour={colour}
-            createdDateFormat={
-              showNoteCreateTimeOnly || groupNotesBy === "created"
-                ? "h:mm a"
-                : undefined
-            }
-          />
-        ))}
+        <div className="h-full">
+          {noteGroups.map((noteGroup) => (
+            <NotesList
+              key={noteGroup.title ?? "no-title"}
+              noteGroup={noteGroup}
+              colour={colour}
+              createdDateFormat={
+                showNoteCreateTimeOnly || groupNotesBy === "created"
+                  ? "h:mm a"
+                  : undefined
+              }
+            />
+          ))}
+
+          {noteGroups.length === 0 && <EmptyState text="No notes yet" />}
+        </div>
       </div>
 
-      <div className="h-full w-full p-12 flex justify-center overflow-y-scroll">
+      <div className="h-full w-full flex justify-center overflow-y-scroll">
         {selectedNote ? (
           <NoteEditor note={selectedNote} colour={colour} />
         ) : (
-          <div className="h-fit w-full max-w-md p-6 rounded-2xl bg-slate-50 flex flex-col items-center gap-2 text-center">
-            <div className="flex flex-col gap-1">
-              <p className="text-base font-semibold text-slate-600">
-                No note selected
-              </p>
-              <p className="text-sm text-slate-500">
-                Pick a note on the left to view and edit it here.
-              </p>
-            </div>
+          <div className="h-full w-full flex flex-col justify-center items-center text-center">
+            <h1 className="text-gray-400 text-lg">No note selected</h1>
           </div>
         )}
       </div>

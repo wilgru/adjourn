@@ -9,12 +9,12 @@ type EmptyStateProps = {
 export const EmptyState = ({ text, onAdd }: EmptyStateProps) => {
   return (
     <div className="h-full w-full flex-1 flex flex-col items-center justify-center gap-3">
-      <p className="text-gray-400 text-sm">{text}</p>
+      <h1 className="text-gray-400 text-lg">{text}</h1>
 
       {onAdd && (
         <Button
-          variant="ghost"
-          size="lg"
+          variant="ghost-strong"
+          size="md"
           colour={colours.grey}
           iconName="plus"
           ariaLabel="Add"

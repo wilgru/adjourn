@@ -1,4 +1,3 @@
-import { EmptyState } from "src/common/components/EmptyState/EmptyState";
 import { NoteListItem } from "./NoteListItem";
 import type { Colour } from "src/colours/Colour.type";
 import type { NotesGroup } from "src/notes/Note.type";
@@ -30,10 +29,6 @@ export const NotesList = ({
           />
         ))}
       </div>
-
-      {noteGroup.notes.length === 0 && (
-        <EmptyState text="No notes yet" />
-      )}
     </section>
   );
 };
