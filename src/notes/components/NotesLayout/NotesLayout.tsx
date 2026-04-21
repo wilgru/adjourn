@@ -20,6 +20,7 @@ type NotesLayoutProps = {
   prefillNewNoteData?: Partial<Note>;
   groupNotesBy?: "created" | "tag";
   groupSortDirection?: "asc" | "desc";
+  onCreateNote?: () => void;
 };
 
 export const NotesLayout = ({
@@ -33,6 +34,7 @@ export const NotesLayout = ({
   prefillNewNoteData,
   groupNotesBy,
   groupSortDirection = "desc",
+  onCreateNote,
 }: NotesLayoutProps) => {
   const noteGroups = useMemo<NotesGroup[]>(() => {
     if (!notes || notes.length === 0) {
@@ -89,7 +91,9 @@ export const NotesLayout = ({
             />
           ))}
 
-          {noteGroups.length === 0 && <EmptyState text="No notes yet" />}
+          {noteGroups.length === 0 && (
+            <EmptyState text="No notes yet" onAdd={onCreateNote} />
+          )}
         </div>
       </div>
 
