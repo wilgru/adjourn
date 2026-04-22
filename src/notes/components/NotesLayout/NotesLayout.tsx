@@ -63,7 +63,7 @@ export const NotesLayout = ({
   // FIXME: pb-16 is the height of the toolbar to fix issue with scrolling body getting cut off. Issue to do with not having a fixed height on consuming element and children elements before this one pushing this one down.
   return (
     <div className="h-full w-full min-w-0 pb-16 flex">
-      <div className="h-full w-80 px-6 flex flex-col gap-6 overflow-y-scroll border-r-2 border-slate-100">
+      <div className="h-full w-80 px-4 flex flex-col gap-6 overflow-y-scroll border-r-2 border-slate-100">
         {(description || (links && links.length > 0)) && (
           <div className="bg-slate-50 p-4 rounded-xl flex flex-col gap-2">
             {description && (
@@ -77,7 +77,7 @@ export const NotesLayout = ({
           </div>
         )}
 
-        <div className="h-full">
+        <div className="h-full flex flex-col gap-4">
           {noteGroups.map((noteGroup) => (
             <NotesList
               key={noteGroup.title ?? "no-title"}
