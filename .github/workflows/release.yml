@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    outputs:
+      sha: ${{ steps.push.outputs.sha }}
 
     steps:
       - name: Checkout
@@ -29,6 +31,10 @@ jobs:
           git commit -m "bump version to $VERSION [skip ci]"
           git push origin HEAD:main
 
+      - name: Output commit SHA
+        id: push
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
   build-macos:
     name: Build macOS
     runs-on: macos-latest
@@ -40,7 +46,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ needs.prepare.outputs.sha }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -72,7 +78,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ needs.prepare.outputs.sha }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
