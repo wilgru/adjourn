@@ -271,7 +271,7 @@ const NoteEditor = ({
 
           {updates.length > 0 && (
             <div className="flex flex-col relative">
-              {updates.map((upd) => (
+              {[...updates].reverse().map((upd) => (
                 <UpdateEditor
                   key={upd.id}
                   update={upd}
