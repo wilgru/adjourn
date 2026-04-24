@@ -9,7 +9,6 @@
   },
   "scripts": {
     "dev": "electron-rebuild -f -w better-sqlite3 && electron-forge start",
-    "build": "electron-rebuild -f -w better-sqlite3 && electron-forge make",
     "build:mac": "electron-rebuild -f -w better-sqlite3 && electron-forge make --platform darwin",
     "build:win": "electron-rebuild -f -w better-sqlite3 && electron-forge make --platform win32",
     "test": "echo 'No test runner specified'",
