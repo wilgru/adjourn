@@ -74,14 +74,14 @@ export const QuillFormattingToolbar = ({
         </div>
 
         <div className="flex flex-row gap-1 px-1 pr-1">
+          <QuillFormattingToolbarButton value="link" colour={colour}>
+            <LinkSimple size={16} weight="bold" />
+          </QuillFormattingToolbarButton>
           <QuillFormattingToolbarButton value="blockquote" colour={colour}>
             <Quotes size={16} weight="bold" />
           </QuillFormattingToolbarButton>
           <QuillFormattingToolbarButton value="code-block" colour={colour}>
             <CodeBlock size={16} weight="bold" />
-          </QuillFormattingToolbarButton>
-          <QuillFormattingToolbarButton value="link" colour={colour}>
-            <LinkSimple size={16} weight="bold" />
           </QuillFormattingToolbarButton>
         </div>
       </ToggleGroup.Root>

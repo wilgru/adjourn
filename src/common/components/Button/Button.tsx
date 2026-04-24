@@ -15,6 +15,7 @@ type ButtonProps = {
   disabled?: boolean;
   onClick?: () => void;
   iconName?: string;
+  ariaLabel?: string;
 };
 
 const buttonVariants = cva(
@@ -147,6 +148,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       disabled = false,
       onClick,
       iconName,
+      ariaLabel,
     },
     ref,
   ) => {
@@ -182,6 +184,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           className,
         )}
         disabled={disabled}
+        aria-label={ariaLabel}
         onMouseEnter={() => setIsButtonHovered(true)}
         onMouseLeave={() => setIsButtonHovered(false)}
         onClick={onClick}

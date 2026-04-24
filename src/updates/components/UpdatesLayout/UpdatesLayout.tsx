@@ -67,14 +67,7 @@ export const UpdatesLayout = ({
         )}
 
         {groupedUpdates.length === 0 && !pendingNew && (
-          <EmptyState
-            title="No updates yet"
-            description="Add an update when there is progress to track."
-            colour={colour}
-            iconName="chatCenteredText"
-            createFirstButtonText="Create your first update"
-            onCreateFirst={onCreateNew}
-          />
+          <EmptyState text="No updates yet" onAdd={onCreateNew} />
         )}
 
         {groupedUpdates.map((group) => (

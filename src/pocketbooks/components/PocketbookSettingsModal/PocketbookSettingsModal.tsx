@@ -28,6 +28,7 @@ export const PocketbookSettingsModal = ({
     await updatePocketbook({
       pocketbookId: pocketbook.id,
       updatePocketbookData: {
+        ...pocketbook,
         title: editedPocketbook.title,
         icon: editedPocketbook.icon,
         colour: editedPocketbook.colour,
