@@ -145,6 +145,7 @@ const QuillEditor = ({
           "strike",
           "code",
           "list",
+          "indent",
           "blockquote",
           "code-block",
           "link",
