@@ -232,40 +232,43 @@ export const UpdateEditor = ({
       className={cn(
         "rounded-2xl p-4 my-2 flex flex-col gap-3 transition-colors",
         tintClasses.card,
+        tintClasses.cardBorder,
       )}
     >
       {(dateStr || (showNotes && (editedUpdate.notes ?? []).length > 0)) && (
-        <div className="flex flex-wrap gap-2 items-center">
-          {dateStr && (
-            <span className="text-xs text-slate-400 shrink-0">{dateStr}</span>
-          )}
-          {showNotes &&
-            ((editedUpdate.notes ?? []) as Note[]).map((note) => (
-              <button
-                key={note.id}
-                onClick={(event) => {
-                  event.stopPropagation();
-                  navigate({
-                    to: `/${pocketbookId ?? ""}/notes`,
-                    search: { noteId: note.id },
-                  });
-                }}
-                className={cn(
-                  "flex items-center gap-1 pl-2 pr-1 py-1 text-xs rounded-full transition-colors",
-                  tintClasses.notePill,
-                )}
-              >
-                {note.title ?? "Untitled Note"}
+        <>
+          <div className="flex flex-wrap gap-2 items-center">
+            {dateStr && (
+              <span className="text-xs text-slate-500 shrink-0">{dateStr}</span>
+            )}
+            {showNotes &&
+              ((editedUpdate.notes ?? []) as Note[]).map((note) => (
+                <button
+                  key={note.id}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    navigate({
+                      to: `/${pocketbookId ?? ""}/notes`,
+                      search: { noteId: note.id },
+                    });
+                  }}
+                  className={cn(
+                    "flex items-center gap-1 pl-2 pr-1 py-1 text-xs rounded-full transition-colors",
+                    tintClasses.notePill,
+                  )}
+                >
+                  {note.title ?? "Untitled Note"}
 
-                <Icon iconName="arrowCircleRight" size="sm" />
-              </button>
-            ))}
-        </div>
+                  <Icon iconName="arrowCircleRight" size="sm" />
+                </button>
+              ))}
+          </div>
+          <div className={cn("border-t", tintClasses.toolbarDivider)} />
+        </>
       )}
 
       <QuillViewer
         content={editedUpdate.content ?? new Delta()}
-        textColor={tintClasses.textColor}
         onClick={() => setIsEditing(true)}
       />
     </div>

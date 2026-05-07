@@ -6,7 +6,6 @@ type QuillViewerProps = {
   content: Delta;
   smallViewer?: boolean;
   className?: string;
-  textColor?: string;
   onClick?: () => void;
 };
 
@@ -14,7 +13,6 @@ export default function QuillViewer({
   content,
   smallViewer = false,
   className,
-  textColor,
   onClick,
 }: QuillViewerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -55,17 +53,6 @@ export default function QuillViewer({
       });
 
       quillEditor.setContents(content);
-
-      // Directly apply tint color to the .ql-editor element so it overrides
-      // any color that Quill or its container may set via CSS.
-      if (textColor) {
-        const editorEl = editorContainer.querySelector(
-          ".ql-editor",
-        ) as HTMLElement | null;
-        if (editorEl) {
-          editorEl.style.color = textColor;
-        }
-      }
     };
 
     void initializeViewer();
@@ -74,7 +61,7 @@ export default function QuillViewer({
       isMounted = false;
       container.innerHTML = "";
     };
-  }, [content, textColor]);
+  }, [content]);
 
   return (
     <div
