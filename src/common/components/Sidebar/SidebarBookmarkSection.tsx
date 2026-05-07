@@ -74,7 +74,7 @@ const BookmarkNavItem = ({
         >
           <Icon
             iconName="bookmark"
-            className={colour.textPill}
+            className={cn(colour.textPill, "flex-shrink-0")}
             size="sm"
             weight={isHovered || isActive ? "fill" : "regular"}
           />
