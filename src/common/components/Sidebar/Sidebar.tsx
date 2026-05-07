@@ -58,7 +58,7 @@ export const Sidebar = () => {
         />
       </div>
 
-      <div className={cn("flex flex-col gap-3 overflow-y-auto px-3 pb-3 flex-1", isWindows && "scrollbar-hide")}>
+      <div className={cn("flex flex-col gap-3 overflow-y-auto overflow-x-hidden px-3 pb-3 flex-1", isWindows && "scrollbar-hide")}>
           <PocketbookSelector
             currentPocketbook={currentPocketbook}
             pocketbooks={pocketbooks}
