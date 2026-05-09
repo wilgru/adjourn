@@ -31,7 +31,7 @@ export const useCreateTask = (): UseCreateTaskResponse => {
       description: createTaskData.description,
       link: createTaskData.link,
       links: JSON.stringify(createTaskData.links),
-      isFlagged: createTaskData.isFlagged,
+      isImportant: createTaskData.isImportant,
       noteId: createTaskData.note?.id ?? null,
       dueDate: createTaskData.dueDate?.toISOString() ?? null,
       pocketbookId: pocketbookId ?? null,

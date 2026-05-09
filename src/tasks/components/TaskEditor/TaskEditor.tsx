@@ -40,7 +40,7 @@ const getInitialTask = (task: Partial<Task> | undefined): Task => {
     dueDate: task?.dueDate || null,
     completedDate: task?.completedDate || null,
     cancelledDate: task?.cancelledDate || null,
-    isFlagged: task?.isFlagged || false,
+    isImportant: task?.isImportant || false,
     created: task?.created || dayjs(),
     updated: task?.updated || dayjs(),
   };
@@ -124,7 +124,7 @@ export const TaskEditor = ({
   // Stable refs so callbacks stored in the atom always call the latest implementation.
   const onFlagCallbackRef = useRef<() => void>();
   onFlagCallbackRef.current = () =>
-    onUpdateTask({ isFlagged: !editedTask.isFlagged });
+    onUpdateTask({ isImportant: !editedTask.isImportant });
 
   const onDueDateCallbackRef = useRef<(date: Dayjs | null) => void>();
   onDueDateCallbackRef.current = (date) => onUpdateTask({ dueDate: date });
@@ -161,7 +161,7 @@ export const TaskEditor = ({
       setTaskEditorState({
         isTaskFocused: true,
         colour,
-        isFlagged: editedTask.isFlagged,
+        isImportant: editedTask.isImportant,
         dueDate: editedTask.dueDate,
         isCompleted: !!editedTask.completedDate,
         isCancelled: !!editedTask.cancelledDate,
@@ -178,24 +178,24 @@ export const TaskEditor = ({
     }
   }, [isFocused, colour, setTaskEditorState]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Keep toolbar display data (flag, due date, completion) in sync while focused.
+  // Keep toolbar display data (important, due date, completion) in sync while focused.
   useEffect(() => {
     if (!isFocused) return;
     setTaskEditorState((current) => ({
       ...current,
-      isFlagged: editedTask.isFlagged,
+      isImportant: editedTask.isImportant,
       dueDate: editedTask.dueDate,
       isCompleted: !!editedTask.completedDate,
       isCancelled: !!editedTask.cancelledDate,
     }));
   }, [
-    editedTask.isFlagged,
+    editedTask.isImportant,
     editedTask.dueDate,
     editedTask.completedDate,
     editedTask.cancelledDate,
     isFocused,
     setTaskEditorState,
-  ]); // eslint-disable-line react-hooks/exhaustive-deps
+  ]);
 
   // Clear atom on unmount if this task was the focused one.
   useEffect(() => {
@@ -276,26 +276,43 @@ export const TaskEditor = ({
 
       <div className="w-full flex items-start justify-between">
         <div className="flex flex-col grow">
-          <div className="flex justify-between gap-2">
-            <textarea
-              ref={titleRef}
-              rows={1}
-              name="title"
-              value={editedTask.title ?? ""}
-              placeholder="No Title"
-              onChange={(e) =>
-                onUpdateTask({
-                  title: e.target.value,
-                })
-              }
-              className={cn(
-                "flex-1 tracking-tight text-md bg-transparent placeholder-slate-400 select-none resize-none outline-none",
-                isCompleted || isCancelled
-                  ? "text-slate-500"
-                  : "text-slate-700",
-                isCancelled && "line-through",
+          <div className="flex justify-between items-center gap-2">
+            <div className="flex items-start gap-1 flex-1">
+              {editedTask.isImportant && (
+                <Icon
+                  iconName="exclamationMark"
+                  size="sm"
+                  className={cn(
+                    "mt-[3px] -mx-1 shrink-0",
+                    isCompleted || isCancelled
+                      ? "text-slate-500"
+                      : "text-red-500",
+                  )}
+                />
               )}
-            />
+
+              <textarea
+                ref={titleRef}
+                rows={1}
+                name="title"
+                value={editedTask.title ?? ""}
+                placeholder="No Title"
+                onChange={(e) =>
+                  onUpdateTask({
+                    title: e.target.value,
+                  })
+                }
+                className={cn(
+                  "flex-1 tracking-tight text-md bg-transparent placeholder-slate-400 select-none resize-none outline-none",
+                  isCompleted || isCancelled
+                    ? "text-slate-500"
+                    : editedTask.isImportant
+                      ? "text-red-500"
+                      : "text-slate-700",
+                  isCancelled && "line-through",
+                )}
+              />
+            </div>
 
             {editedTask.links.map((link) => (
               <LinkPill key={link.id} link={link} colour={colour} />
@@ -320,15 +337,6 @@ export const TaskEditor = ({
         </div>
 
         <div className="flex flex-row flex-wrap items-center gap-1 pl-2">
-          {editedTask.isFlagged && (
-            <Icon
-              iconName="flag"
-              size="sm"
-              weight="fill"
-              className="text-slate-400"
-            />
-          )}
-
           {!!editedTask.dueDate && (
             <span
               className={cn(

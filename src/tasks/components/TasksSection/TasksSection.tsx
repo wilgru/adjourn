@@ -31,7 +31,7 @@ export const TasksSection = ({
       createTaskData: {
         note: note ?? null,
         title: "",
-        isFlagged: false,
+        isImportant: false,
         link: null,
         links: [],
         description: "",

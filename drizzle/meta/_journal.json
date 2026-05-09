@@ -36,6 +36,13 @@
       "when": 1777934053989,
       "tag": "0004_set_desc_as_default_sort_direction",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1778366855349,
+      "tag": "0005_rename_is_flagged_to_is_important",
+      "breakpoints": true
     }
   ]
 }

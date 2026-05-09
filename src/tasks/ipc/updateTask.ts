@@ -10,7 +10,7 @@ export type UpdateTaskInput = {
   description: string;
   link: string | null;
   links: string;
-  isFlagged: boolean;
+  isImportant: boolean;
   noteId: string | null;
   dueDate: string | null;
   completedDate: string | null;
@@ -25,7 +25,7 @@ createIpcHandler(
     description,
     link,
     links,
-    isFlagged,
+    isImportant,
     noteId,
     dueDate,
     completedDate,
@@ -40,7 +40,7 @@ createIpcHandler(
         description,
         link,
         links,
-        isFlagged,
+        isImportant,
         note: noteId,
         dueDate,
         completedDate,

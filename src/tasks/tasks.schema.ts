@@ -9,7 +9,7 @@ export const tasks = sqliteTable("tasks", {
   description: text("description").notNull().default(""),
   link: text("link"),
   links: text("links").notNull().default("[]"),
-  isFlagged: integer("is_flagged", { mode: "boolean" })
+  isImportant: integer("is_important", { mode: "boolean" })
     .notNull()
     .default(false),
   note: text("note").references(() => notes.id),

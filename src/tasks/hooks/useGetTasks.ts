@@ -20,10 +20,10 @@ type UseGetTacksResponse = {
 dayjs.extend(utc);
 
 export const useGetTasks = ({
-  isFlagged,
+  isImportant,
   dateString,
 }: {
-  isFlagged?: boolean;
+  isImportant?: boolean;
   dateString?: string;
 }): UseGetTacksResponse => {
   const { pocketbookId } = useCurrentPocketbookId();
@@ -61,9 +61,9 @@ export const useGetTasks = ({
 
     let filteredTasks = tasksResponse.data.tasks;
 
-    if (isFlagged !== undefined) {
+    if (isImportant !== undefined) {
       filteredTasks = filteredTasks.filter(
-        (task) => task.isFlagged === isFlagged,
+        (task) => task.isImportant === isImportant,
       );
     }
 
@@ -82,7 +82,7 @@ export const useGetTasks = ({
 
   // TODO: consider time caching for better performance
   const { data, refetch } = useQuery({
-    queryKey: ["tasks.list", pocketbookId, isFlagged, dateString],
+    queryKey: ["tasks.list", pocketbookId, isImportant, dateString],
     queryFn,
     // staleTime: 2 * 60 * 1000,
     // gcTime: 2 * 60 * 1000,

@@ -30,7 +30,7 @@ export const useUpdateTask = (): UseUpdateTaskResponse => {
       description: updateTaskData.description,
       link: updateTaskData.link,
       links: JSON.stringify(updateTaskData.links),
-      isFlagged: updateTaskData.isFlagged,
+      isImportant: updateTaskData.isImportant,
       noteId: updateTaskData.note?.id ?? null,
       dueDate: updateTaskData.dueDate?.toISOString() ?? null,
       completedDate: updateTaskData.completedDate?.toISOString() ?? null,

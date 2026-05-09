@@ -27,7 +27,7 @@ export const mapTask = (
     title: task.title,
     description: task.description,
     link: task.link || null,
-    isFlagged: task.isFlagged,
+    isImportant: task.isImportant,
     note: options.note ?? null,
     links,
     dueDate: task.dueDate ? dayjs.utc(task.dueDate).local() : null,

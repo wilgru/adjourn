@@ -5,7 +5,7 @@ import type { Colour } from "src/colours/Colour.type";
 type TaskEditorState = {
   isTaskFocused: boolean;
   colour: Colour | undefined;
-  isFlagged: boolean;
+  isImportant: boolean;
   dueDate: Dayjs | null;
   isCompleted: boolean;
   isCancelled: boolean;
@@ -19,7 +19,7 @@ type TaskEditorState = {
 export const defaultTaskEditorState: TaskEditorState = {
   isTaskFocused: false,
   colour: undefined,
-  isFlagged: false,
+  isImportant: false,
   dueDate: null,
   isCompleted: false,
   isCancelled: false,

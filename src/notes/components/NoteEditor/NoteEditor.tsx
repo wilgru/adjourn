@@ -114,7 +114,7 @@ const NoteEditor = ({
       createTaskData: {
         note: editedNote,
         title: "",
-        isFlagged: false,
+        isImportant: false,
         link: null,
         links: [],
         description: "",
