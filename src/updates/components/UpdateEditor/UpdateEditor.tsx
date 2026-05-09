@@ -132,11 +132,11 @@ export const UpdateEditor = ({
   if (isEditing) {
     return (
       <div className="relative">
-        <div className="rounded-2xl p-4 my-2 flex flex-col gap-3 bg-white border border-slate-100">
+        <div className="rounded-2xl p-4 my-2 flex flex-col gap-3 bg-white border border-slate-100 shadow-md">
           <div className="flex items-center justify-between flex-wrap gap-2 border-b-2 pb-3 border-slate-100">
             <div className="flex items-center gap-3 flex-wrap">
               {dateStr && (
-                <span className="text-xs text-slate-400 shrink-0">
+                <span className="text-xs text-slate-700 shrink-0">
                   {dateStr}
                 </span>
               )}
@@ -230,7 +230,7 @@ export const UpdateEditor = ({
   return (
     <div
       className={cn(
-        "rounded-2xl p-4 my-2 flex flex-col gap-3 transition-colors border shadow",
+        "rounded-2xl p-4 my-2 flex flex-col gap-3 transition-colors border shadow hover:shadow-md",
         tintClasses.card,
         tintClasses.border,
       )}
