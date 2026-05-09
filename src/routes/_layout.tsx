@@ -14,7 +14,7 @@ function RouteComponent() {
     <div className="fixed flex h-screen w-screen">
       {isSideBarVisible && <Sidebar />}
       {/* all the other elements */}
-      <div id="detail" className="w-full">
+      <div id="detail" className="flex-1 min-w-0">
         <Outlet />
       </div>
     </div>

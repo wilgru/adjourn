@@ -75,7 +75,7 @@ export const NotesLayout = ({
 
   return (
     <div className="flex-1 min-h-0 w-full min-w-0 flex overflow-hidden">
-      <div className="h-full w-80 px-4 flex flex-col gap-6 overflow-y-scroll border-r-2 border-slate-100">
+      <div className="h-full w-60 px-4 flex flex-col gap-6 overflow-y-scroll border-dashed border-r-2 border-slate-100">
         {(description || (links && links.length > 0)) && (
           <div className="bg-slate-50 p-4 rounded-xl flex flex-col gap-2">
             {description && (
@@ -109,7 +109,7 @@ export const NotesLayout = ({
         </div>
       </div>
 
-      <div className="h-full w-full relative flex flex-col min-w-0">
+      <div className="h-full flex-1 relative flex flex-col min-w-0">
         <div className="flex-1 min-h-0 overflow-y-scroll flex justify-center">
           {selectedNote ? (
             <NoteEditor note={selectedNote} colour={colour} />
