@@ -68,6 +68,7 @@ import {
   HourglassLow,
   CalendarDots,
   Notebook,
+  Sparkle,
 } from "@phosphor-icons/react";
 
 export const icons = [
@@ -121,6 +122,7 @@ export const icons = [
   { name: "signpost", icon: Signpost },
   { name: "camera", icon: Camera },
   { name: "brain", icon: Brain },
+  { name: "sparkle", icon: Sparkle },
   { name: "chatCircle", icon: ChatCircle },
   { name: "scroll", icon: Scroll },
   { name: "bookmarkSimple", icon: BookmarkSimple },
