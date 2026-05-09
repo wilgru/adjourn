@@ -40,7 +40,7 @@ export const Sidebar = () => {
     <aside className="bg-slate-50 min-w-60 max-w-60 flex flex-col h-full">
       <div
         className={cn(
-          "flex flex-row items-center gap-2 electron-drag-region min-h-16 flex-shrink-0 px-3",
+          "flex flex-row items-center gap-2 electron-drag-region flex-shrink-0 h-[58px] px-3",
           isWindows ? "justify-between" : "justify-end",
         )}
       >
@@ -58,101 +58,106 @@ export const Sidebar = () => {
         />
       </div>
 
-      <div className={cn("flex flex-col gap-3 overflow-y-auto overflow-x-hidden px-3 pb-3 flex-1", isWindows && "scrollbar-hide")}>
-          <PocketbookSelector
-            currentPocketbook={currentPocketbook}
-            pocketbooks={pocketbooks}
+      <div
+        className={cn(
+          "flex flex-col gap-3 overflow-y-auto overflow-x-hidden px-3 pb-3 flex-1",
+          isWindows && "scrollbar-hide",
+        )}
+      >
+        <PocketbookSelector
+          currentPocketbook={currentPocketbook}
+          pocketbooks={pocketbooks}
+        />
+
+        <section className="flex flex-col gap-1">
+          <NavItem
+            ghost
+            iconName="pencil"
+            title="Notes"
+            to={`/${pocketbookId}/notes/`}
+            colour={currentPocketbook.colour}
+            preview={counts?.noteCount}
           />
 
-          <section className="flex flex-col gap-1">
-            <NavItem
-              ghost
-              iconName="pencil"
-              title="Notes"
-              to={`/${pocketbookId}/notes/`}
-              colour={currentPocketbook.colour}
-              preview={counts?.noteCount}
-            />
-
-            <NavItem
-              ghost
-              iconName="checkCircle"
-              title="Tasks"
-              to={`/${pocketbookId}/tasks/`}
-              colour={currentPocketbook.colour}
-              preview={counts?.taskCount}
-            />
-
-            <NavItem
-              ghost
-              iconName="chatCenteredText"
-              title="Updates"
-              to={`/${pocketbookId}/updates`}
-              colour={currentPocketbook.colour}
-              preview={counts?.updateCount}
-            />
-          </section>
-
-          <SidebarBookmarkSection />
-
-          <SidebarTagSection
-            title={"Tags"}
+          <NavItem
+            ghost
+            iconName="checkCircle"
+            title="Tasks"
+            to={`/${pocketbookId}/tasks/`}
             colour={currentPocketbook.colour}
-            isEmpty={ungroupedTags.length === 0}
-          >
-            {ungroupedTags.map((tag) => (
-              <NavItem
-                colour={tag.colour}
-                title={tag.name}
-                preview={tag.noteCount}
-                to={`/${pocketbookId}/tags/${tag.id}`}
-                key={tag.id}
-                iconName={tag.icon}
-              />
-            ))}
-          </SidebarTagSection>
+            preview={counts?.taskCount}
+          />
 
-          {tagGroups.map((tagGroup) => (
-            <SidebarTagSection
-              title={tagGroup.title}
-              tagGroup={tagGroup}
-              colour={currentPocketbook.colour}
-              isEmpty={tagGroup.tags.length === 0}
-              key={tagGroup.id}
-            >
-              <div className="flex flex-col gap-1 mt-1">
-                {tagGroup.tags.map((tag) => (
-                  <NavItem
-                    iconName={tag.icon}
-                    colour={tag.colour}
-                    title={tag.name}
-                    preview={tag.noteCount}
-                    to={`/${pocketbookId}/tags/${tag.id}`}
-                    key={tag.id}
-                  />
-                ))}
-              </div>
-            </SidebarTagSection>
+          <NavItem
+            ghost
+            iconName="chatCenteredText"
+            title="Updates"
+            to={`/${pocketbookId}/updates`}
+            colour={currentPocketbook.colour}
+            preview={counts?.updateCount}
+          />
+        </section>
+
+        <SidebarBookmarkSection />
+
+        <SidebarTagSection
+          title={"Tags"}
+          colour={currentPocketbook.colour}
+          isEmpty={ungroupedTags.length === 0}
+        >
+          {ungroupedTags.map((tag) => (
+            <NavItem
+              colour={tag.colour}
+              title={tag.name}
+              preview={tag.noteCount}
+              to={`/${pocketbookId}/tags/${tag.id}`}
+              key={tag.id}
+              iconName={tag.icon}
+            />
           ))}
+        </SidebarTagSection>
 
-          {/* <hr className="w-full border-slate-200" /> */}
+        {tagGroups.map((tagGroup) => (
+          <SidebarTagSection
+            title={tagGroup.title}
+            tagGroup={tagGroup}
+            colour={currentPocketbook.colour}
+            isEmpty={tagGroup.tags.length === 0}
+            key={tagGroup.id}
+          >
+            <div className="flex flex-col gap-1 mt-1">
+              {tagGroup.tags.map((tag) => (
+                <NavItem
+                  iconName={tag.icon}
+                  colour={tag.colour}
+                  title={tag.name}
+                  preview={tag.noteCount}
+                  to={`/${pocketbookId}/tags/${tag.id}`}
+                  key={tag.id}
+                />
+              ))}
+            </div>
+          </SidebarTagSection>
+        ))}
 
-          <Dialog.Root>
-            <Dialog.Trigger asChild>
-              <button
-                type="button"
-                className={cn(
-                  "mt-1 w-fit flex items-center gap-1 text-slate-400 transition-colors",
-                  `hover:${currentPocketbook.colour.textPill}`,
-                )}
-              >
-                <span className="font-title text-md">Add Section</span>
-                <Icon iconName="plus" size="sm" className="pb-1" />
-              </button>
-            </Dialog.Trigger>
+        {/* <hr className="w-full border-slate-200" /> */}
 
-            <CreateTagGroupModal />
-          </Dialog.Root>
+        <Dialog.Root>
+          <Dialog.Trigger asChild>
+            <button
+              type="button"
+              className={cn(
+                "mt-1 w-fit flex items-center gap-1 text-slate-400 transition-colors",
+                `hover:${currentPocketbook.colour.textPill}`,
+              )}
+            >
+              <span className="font-title text-md">Add Section</span>
+              <Icon iconName="plus" size="sm" className="pb-1" />
+            </button>
+          </Dialog.Trigger>
+
+          <CreateTagGroupModal />
+        </Dialog.Root>
       </div>
     </aside>
   );

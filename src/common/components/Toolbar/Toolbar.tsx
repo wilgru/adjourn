@@ -28,13 +28,12 @@ export const Toolbar = ({
   const [isSideBarVisible, setValue] = useAtom(isSideBarVisibleAtom);
   const shouldReserveWindowButtonSpace = isMac && !isSideBarVisible;
 
-  //TODO: remove h-16 when scrolling issue is fixed
   return (
-    <div className="bg-white w-full min-h-16 flex items-center justify-between p-3 electron-drag-region">
+    <div className="bg-white w-full flex items-center justify-between p-3 electron-drag-region">
       <div className="flex items-center gap-2">
         {shouldReserveWindowButtonSpace && <div className="h-8 w-[4.5rem]" />}
 
-        <div className="flex gap-2 electron-no-drag">
+        <div className="flex items-center gap-2 electron-no-drag">
           {!isSideBarVisible && (
             <Button
               variant="ghost"
@@ -45,20 +44,17 @@ export const Toolbar = ({
             />
           )}
 
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-2">
-              {iconName && (
-                <Icon
-                  className={cn("pb-1", colour.text)}
-                  iconName={iconName}
-                  size="md"
-                />
-              )}
-              <h1 className="font-title text-xl">{title}</h1>
-            </div>
+          {iconName && (
+            <Icon
+              className={cn("pb-1", colour.text)}
+              iconName={iconName}
+              size="md"
+            />
+          )}
 
-            {children}
-          </div>
+          <h1 className="font-title text-xl pt-0.5">{title}</h1>
+
+          {children}
         </div>
       </div>
 
