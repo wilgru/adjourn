@@ -113,7 +113,7 @@ const NoteEditor = ({
     await createTask({
       createTaskData: {
         note: editedNote,
-        title: "New task",
+        title: "",
         isFlagged: false,
         link: null,
         links: [],
