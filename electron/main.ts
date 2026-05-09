@@ -1,5 +1,5 @@
 import path from "node:path";
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, shell } from "electron";
 import log from "electron-log";
 import "src/notes/ipc/createNote";
 import "src/notes/ipc/getNote";
@@ -43,6 +43,15 @@ log.initialize();
 
 let mainWindow: BrowserWindow | null = null;
 
+const isHttpUrl = (value: string) => {
+  try {
+    const parsedUrl = new URL(value);
+    return parsedUrl.protocol === "http:" || parsedUrl.protocol === "https:";
+  } catch {
+    return false;
+  }
+};
+
 const createWindow = () => {
   const isMac = process.platform === "darwin";
   const isWindows = process.platform === "win32";
@@ -84,6 +93,34 @@ const createWindow = () => {
   if (!app.isPackaged) {
     mainWindow.webContents.openDevTools();
   }
+
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    if (isHttpUrl(url)) {
+      void shell.openExternal(url);
+    }
+
+    return { action: "deny" };
+  });
+
+  mainWindow.webContents.on("will-navigate", (event, url) => {
+    if (!isHttpUrl(url)) {
+      return;
+    }
+
+    const currentUrl = mainWindow?.webContents.getURL();
+
+    if (currentUrl && isHttpUrl(currentUrl)) {
+      const nextOrigin = new URL(url).origin;
+      const currentOrigin = new URL(currentUrl).origin;
+
+      if (nextOrigin === currentOrigin) {
+        return;
+      }
+    }
+
+    event.preventDefault();
+    void shell.openExternal(url);
+  });
 };
 
 // This method will be called when Electron has finished

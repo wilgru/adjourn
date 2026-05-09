@@ -5,7 +5,7 @@ import { quillEditorStateAtom } from "src/common/atoms/quillEditorStateAtom";
 import { taskEditorStateAtom } from "src/common/atoms/taskEditorStateAtom";
 import { EmptyState } from "src/common/components/EmptyState/EmptyState";
 import { FloatingToolbar } from "src/common/components/FloatingToolbar/FloatingToolbar";
-import { NoteLinkPill } from "src/common/components/NoteLinkPill/NoteLinkPill";
+import { LinkPill } from "src/common/components/LinkPill/LinkPill";
 import { QuillFormattingToolbar } from "src/common/components/QuillFormattingToolbar/QuillFormattingToolbar";
 import NoteEditor from "src/notes/components/NoteEditor/NoteEditor";
 import { groupNotes } from "src/notes/utils/groupNotes";
@@ -84,7 +84,7 @@ export const NotesLayout = ({
 
             {links &&
               links.map((link, index) => (
-                <NoteLinkPill key={index} link={link} colour={colour} />
+                <LinkPill key={index} link={link} colour={colour} />
               ))}
           </div>
         )}

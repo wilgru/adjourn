@@ -4,8 +4,11 @@ import debounce from "debounce";
 import { useSetAtom } from "jotai";
 import { useEffect, useRef, useState } from "react";
 import { colours } from "src/colours/colours.constant";
-import { defaultTaskEditorState, taskEditorStateAtom } from "src/common/atoms/taskEditorStateAtom";
-import { NoteLinkPill } from "src/common/components/NoteLinkPill/NoteLinkPill";
+import {
+  defaultTaskEditorState,
+  taskEditorStateAtom,
+} from "src/common/atoms/taskEditorStateAtom";
+import { LinkPill } from "src/common/components/LinkPill/LinkPill";
 import { useAutoResize } from "src/common/hooks/useAutoResize";
 import { cn } from "src/common/utils/cn";
 import { Icon } from "src/icons/components/Icon/Icon";
@@ -114,7 +117,8 @@ export const TaskEditor = ({
 
   // Stable refs so callbacks stored in the atom always call the latest implementation.
   const onFlagCallbackRef = useRef<() => void>();
-  onFlagCallbackRef.current = () => onUpdateTask({ isFlagged: !editedTask.isFlagged });
+  onFlagCallbackRef.current = () =>
+    onUpdateTask({ isFlagged: !editedTask.isFlagged });
 
   const onDueDateCallbackRef = useRef<(date: Dayjs | null) => void>();
   onDueDateCallbackRef.current = (date) => onUpdateTask({ dueDate: date });
@@ -129,14 +133,20 @@ export const TaskEditor = ({
   };
 
   // Stable callbacks created once – these are safe to store in the atom.
-  const stableFlagCallback = useRef(() => onFlagCallbackRef.current?.()).current;
-  const stableDueDateCallback = useRef(
-    (date: Dayjs | null) => onDueDateCallbackRef.current?.(date),
+  const stableFlagCallback = useRef(() =>
+    onFlagCallbackRef.current?.(),
   ).current;
-  const stableDeleteCallback = useRef(() => onDeleteCallbackRef.current?.()).current;
-  const stableLinkCallback = useRef(() => onLinkCallbackRef.current?.()).current;
-  const stableDatePickerOpenChangeCallback = useRef(
-    (open: boolean) => setIsDatePickerOpen(open),
+  const stableDueDateCallback = useRef((date: Dayjs | null) =>
+    onDueDateCallbackRef.current?.(date),
+  ).current;
+  const stableDeleteCallback = useRef(() =>
+    onDeleteCallbackRef.current?.(),
+  ).current;
+  const stableLinkCallback = useRef(() =>
+    onLinkCallbackRef.current?.(),
+  ).current;
+  const stableDatePickerOpenChangeCallback = useRef((open: boolean) =>
+    setIsDatePickerOpen(open),
   ).current;
 
   // Sync atom when focus state or colour changes.
@@ -157,9 +167,7 @@ export const TaskEditor = ({
       });
     } else {
       setTaskEditorState((current) =>
-        current.isTaskFocused
-          ? { ...defaultTaskEditorState }
-          : current,
+        current.isTaskFocused ? { ...defaultTaskEditorState } : current,
       );
     }
   }, [isFocused, colour, setTaskEditorState]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -174,7 +182,14 @@ export const TaskEditor = ({
       isCompleted: !!editedTask.completedDate,
       isCancelled: !!editedTask.cancelledDate,
     }));
-  }, [editedTask.isFlagged, editedTask.dueDate, editedTask.completedDate, editedTask.cancelledDate, isFocused, setTaskEditorState]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [
+    editedTask.isFlagged,
+    editedTask.dueDate,
+    editedTask.completedDate,
+    editedTask.cancelledDate,
+    isFocused,
+    setTaskEditorState,
+  ]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Clear atom on unmount if this task was the focused one.
   useEffect(() => {
@@ -276,7 +291,7 @@ export const TaskEditor = ({
             />
 
             {editedTask.links.map((link) => (
-              <NoteLinkPill key={link.id} link={link} colour={colour} />
+              <LinkPill key={link.id} link={link} colour={colour} />
             ))}
           </div>
 
@@ -311,7 +326,9 @@ export const TaskEditor = ({
             <span
               className={cn(
                 "text-xs px-2 py-1 rounded-full",
-                isDueDateOverdue ? "bg-red-100 text-red-500" : "bg-gray-100 text-gray-500",
+                isDueDateOverdue
+                  ? "bg-red-100 text-red-500"
+                  : "bg-gray-100 text-gray-500",
               )}
             >
               {editedTask.dueDate.format("MMM D, YYYY")}

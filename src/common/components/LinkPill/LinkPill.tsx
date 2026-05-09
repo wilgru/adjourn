@@ -5,21 +5,18 @@ import { Icon } from "src/icons/components/Icon/Icon";
 import type { Colour } from "src/colours/Colour.type";
 import type { Link } from "src/common/types/Link.type";
 
-type NoteLinkPillProps = {
+type LinkPillProps = {
   link: Link;
   colour?: Colour;
 };
 
-export const NoteLinkPill = ({
-  link,
-  colour = colours.orange,
-}: NoteLinkPillProps) => {
+export const LinkPill = ({ link, colour = colours.orange }: LinkPillProps) => {
   return (
     <a
       href={link.link}
       target="_blank"
       className={cn(
-        "flex flex-row items-center gap-1 text-sm rounded-full hover:underline min-w-0",
+        "h-fit flex flex-row items-center gap-1 text-sm rounded-full hover:underline min-w-0",
         colour.text,
       )}
     >

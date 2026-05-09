@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import { colours } from "src/colours/colours.constant";
 import { quillEditorStateAtom } from "src/common/atoms/quillEditorStateAtom";
 import { Button } from "src/common/components/Button/Button";
-import { NoteLinkPill } from "src/common/components/NoteLinkPill/NoteLinkPill";
+import { LinkPill } from "src/common/components/LinkPill/LinkPill";
 import { QuillEditor } from "src/common/components/QuillEditor/QuillEditor";
 import { Toggle } from "src/common/components/Toggle/Toggle";
 import { useAutoResize } from "src/common/hooks/useAutoResize";
@@ -166,7 +166,7 @@ const NoteEditor = ({
         {editedNote.links.length > 0 && (
           <div className="flex flex-row flex-wrap gap-2 items-center">
             {editedNote.links.map((link) => (
-              <NoteLinkPill key={link.id} link={link} colour={colour} />
+              <LinkPill key={link.id} link={link} colour={colour} />
             ))}
           </div>
         )}
