@@ -276,47 +276,41 @@ export const TaskEditor = ({
 
       <div className="w-full flex items-start justify-between">
         <div className="flex flex-col grow">
-          <div className="flex justify-between items-center gap-2">
-            <div className="flex items-start gap-1 flex-1">
-              {editedTask.isImportant && (
-                <Icon
-                  iconName="exclamationMark"
-                  size="sm"
-                  className={cn(
-                    "mt-[3px] -mx-1 shrink-0",
-                    isCompleted || isCancelled
-                      ? "text-slate-500"
-                      : "text-red-500",
-                  )}
-                />
-              )}
-
-              <textarea
-                ref={titleRef}
-                rows={1}
-                name="title"
-                value={editedTask.title ?? ""}
-                placeholder="No Title"
-                onChange={(e) =>
-                  onUpdateTask({
-                    title: e.target.value,
-                  })
-                }
+          <div className="flex items-center flex-1">
+            {editedTask.isImportant && (
+              <Icon
+                iconName="exclamationMark"
+                size="sm"
                 className={cn(
-                  "flex-1 tracking-tight text-md bg-transparent placeholder-slate-400 select-none resize-none outline-none",
+                  "-ml-2 shrink-0",
                   isCompleted || isCancelled
                     ? "text-slate-500"
-                    : editedTask.isImportant
-                      ? "text-red-500"
-                      : "text-slate-700",
-                  isCancelled && "line-through",
+                    : "text-red-500",
                 )}
               />
-            </div>
+            )}
 
-            {editedTask.links.map((link) => (
-              <LinkPill key={link.id} link={link} colour={colour} />
-            ))}
+            <textarea
+              ref={titleRef}
+              rows={1}
+              name="title"
+              value={editedTask.title ?? ""}
+              placeholder="No Title"
+              onChange={(e) =>
+                onUpdateTask({
+                  title: e.target.value,
+                })
+              }
+              className={cn(
+                "flex-1 tracking-tight text-md bg-transparent placeholder-slate-400 select-none resize-none outline-none",
+                isCompleted || isCancelled
+                  ? "text-slate-500"
+                  : editedTask.isImportant
+                    ? "text-red-500"
+                    : "text-slate-700",
+                isCancelled && "line-through",
+              )}
+            />
           </div>
 
           {showDescription && (
@@ -336,7 +330,11 @@ export const TaskEditor = ({
           )}
         </div>
 
-        <div className="flex flex-row flex-wrap items-center gap-1 pl-2">
+        <div className="flex flex-row flex-wrap items-center gap-2">
+          {editedTask.links.map((link) => (
+            <LinkPill key={link.id} link={link} colour={colour} />
+          ))}
+
           {!!editedTask.dueDate && (
             <span
               className={cn(
