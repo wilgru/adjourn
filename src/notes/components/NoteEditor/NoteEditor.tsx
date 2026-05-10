@@ -53,6 +53,7 @@ const NoteEditor = ({
   const [editedNote, setEditedNote] = useState<Note>(note); // TODO: maybe use key prop when using NoteEditor to force reset instead of having to manage this state and useEffects to reset when the note prop changes.
   const [showNewUpdate, setShowNewUpdate] = useState(false);
   const [linksModalKey, setLinksModalKey] = useState(0);
+  const [newTaskFocusId, setNewTaskFocusId] = useState<string | null>(null);
 
   const newUpdateRef = useRef<HTMLDivElement>(null);
   const titleRef = useAutoResize(editedNote.title);
@@ -81,6 +82,7 @@ const NoteEditor = ({
     debouncedSave.flush();
     setEditedNote(note);
     setShowNewUpdate(false);
+    setNewTaskFocusId(null);
     setQuillEditorState((s) => ({ ...s, isQuillFocused: false }));
   }, [note.id]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -112,7 +114,7 @@ const NoteEditor = ({
   }, [showNewUpdate]);
 
   const onCreateTask = async () => {
-    await createTask({
+    const createdTask = await createTask({
       createTaskData: {
         note: editedNote,
         title: "",
@@ -125,6 +127,9 @@ const NoteEditor = ({
         cancelledDate: null,
       },
     });
+    if (createdTask?.id) {
+      setNewTaskFocusId(createdTask.id);
+    }
   };
 
   const onUpdateNote = (updateNoteData: Partial<Note>) => {
@@ -262,7 +267,13 @@ const NoteEditor = ({
       {note.tasks && note.tasks.length > 0 && (
         <div className="w-full flex flex-col gap-2 justify-between border-b-2 border-slate-100 pb-4">
           {note.tasks.map((task) => (
-            <TaskEditor key={task.id} task={task} colour={colour} />
+            <TaskEditor
+              key={task.id}
+              task={task}
+              colour={colour}
+              autoFocusTitle={task.id === newTaskFocusId}
+              onAutoFocusComplete={() => setNewTaskFocusId(null)}
+            />
           ))}
         </div>
       )}
