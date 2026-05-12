@@ -83,7 +83,7 @@ export default function TableOfContents({
       <div className="sticky flex flex-col gap-1 top-1 z-10 bg-white pt-1">
         <h2
           className={cn(
-            "font-title text-lg px-2 pt-1 overflow-x-hidden whitespace-nowrap overflow-ellipsis cursor-pointer rounded-full overflow-clip transition-color",
+            "font-title text-lg px-3 pt-1 overflow-x-hidden whitespace-nowrap overflow-ellipsis cursor-pointer rounded-full overflow-clip transition-color",
             colour.backgroundGlow,
             colour.textPillInverted,
           )}
@@ -91,14 +91,12 @@ export default function TableOfContents({
           {title}
         </h2>
 
-        <div className="px-1 flex flex-col gap-2">
-          <div className="border-b" />
+        <div className="ml-2 border-b" />
 
-          {children && <>{children}</>}
-        </div>
+        {children && <div className="px-1 pt-2">{children}</div>}
       </div>
 
-      <ul className="pt-3">
+      <ul className="pt-2">
         {items.map((item, index) => {
           const showGroupTitle = item.group && item.group !== previousGroup;
           if (item.group) previousGroup = item.group;
