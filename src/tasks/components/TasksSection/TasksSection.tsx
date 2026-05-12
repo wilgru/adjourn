@@ -20,6 +20,7 @@ export const TasksSection = ({
   noNoteEditorTrigger,
 }: TasksSectionProps) => {
   const [isTitleHovered, setIsTitleHovered] = useState(false);
+  const [newTaskFocusId, setNewTaskFocusId] = useState<string | null>(null);
   const { createTask } = useCreateTask();
   const { pocketbookId } = useCurrentPocketbookId();
   const handledToolbarTriggerRef = useRef(0);
@@ -27,7 +28,7 @@ export const TasksSection = ({
   const note = taskGroup.relevantTaskData.note;
 
   const onCreateTask = useCallback(async () => {
-    await createTask({
+    const createdTask = await createTask({
       createTaskData: {
         note: note ?? null,
         title: "",
@@ -40,6 +41,9 @@ export const TasksSection = ({
         cancelledDate: null,
       },
     });
+    if (createdTask?.id) {
+      setNewTaskFocusId(createdTask.id);
+    }
   }, [createTask, note]);
 
   // Create a new no-note task whenever the toolbar plus button fires.
@@ -105,6 +109,8 @@ export const TasksSection = ({
               key={task.id}
               task={task}
               colour={colour}
+              autoFocusTitle={task.id === newTaskFocusId}
+              onAutoFocusComplete={() => setNewTaskFocusId(null)}
             />
           ))}
         </div>
@@ -155,6 +161,8 @@ export const TasksSection = ({
             key={task.id}
             task={task}
             colour={colour}
+            autoFocusTitle={task.id === newTaskFocusId}
+            onAutoFocusComplete={() => setNewTaskFocusId(null)}
           />
         ))}
       </div>

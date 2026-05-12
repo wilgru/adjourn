@@ -26,6 +26,8 @@ type TaskEditorProps = {
   onSave?: () => void;
   onCreate?: (task: Task) => void;
   onFocusLost?: () => void;
+  autoFocusTitle?: boolean;
+  onAutoFocusComplete?: () => void;
   colour?: Colour;
 };
 
@@ -51,6 +53,8 @@ export const TaskEditor = ({
   onSave,
   onCreate,
   onFocusLost,
+  autoFocusTitle = false,
+  onAutoFocusComplete,
   colour = colours.orange,
 }: TaskEditorProps) => {
   const { createTask } = useCreateTask();
@@ -70,6 +74,7 @@ export const TaskEditor = ({
 
   // Timer for distinguishing single vs double click on the status circle
   const clickTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hasAutoFocusedRef = useRef(false);
 
   // Ref that always points to the latest save implementation so the debounced
   // function never closes over stale state.
@@ -102,6 +107,17 @@ export const TaskEditor = ({
       debouncedSave.flush();
     };
   }, [debouncedSave]);
+
+  // Auto-focus title once for newly created tasks.
+  useEffect(() => {
+    if (!autoFocusTitle || hasAutoFocusedRef.current) {
+      return;
+    }
+
+    titleRef.current?.focus();
+    hasAutoFocusedRef.current = true;
+    onAutoFocusComplete?.();
+  }, [autoFocusTitle, onAutoFocusComplete, titleRef]);
 
   // Clear any pending click-timer when the component unmounts.
   useEffect(() => {
