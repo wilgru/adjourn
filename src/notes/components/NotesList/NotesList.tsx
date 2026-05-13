@@ -19,7 +19,7 @@ export const NotesList = ({
     <section>
       <div className="flex flex-col gap-1 items-start">
         {noteGroup.title && (
-          <p className="text-slate-400 text-xs">{noteGroup.title}</p>
+          <h3 className="text-slate-400 text-xs">{noteGroup.title}</h3>
         )}
 
         {noteGroup.notes.map((note) => {

@@ -122,14 +122,12 @@ export const Calendar = ({
           isSmall ? "mb-1" : "mb-2",
         )}
       >
-        <span
-          className={cn(
-            "font-title text-slate-500",
-            isSmall ? "ml-2 text-xs" : "ml-1 text-sm",
-          )}
+        <h3
+          className={cn("text-slate-400 ml-1", isSmall ? "text-xs" : "text-sm")}
         >
           {MONTH_NAMES[displayMonth]} {displayYear}
-        </span>
+        </h3>
+
         <div className={cn("flex items-center", isSmall ? "gap-0.5" : "gap-1")}>
           <Button
             onClick={handlePrevMonth}

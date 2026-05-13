@@ -9,7 +9,7 @@ type UpdatesSectionProps = {
 
 export const UpdatesSection = ({ group, colour }: UpdatesSectionProps) => {
   return (
-    <section id={group.title} className="w-full flex flex-col pr-12">
+    <section id={group.title} className="w-full flex flex-col">
       <h2 className="font-title text-3xl mb-4">{group.title}</h2>
 
       <div className="flex flex-col relative">

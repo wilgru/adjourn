@@ -78,7 +78,7 @@ export default function TableOfContents({
   return (
     <nav
       aria-label={`${title} table of contents`}
-      className="w-56 m-4 pb-2 max-h-[calc(100vh-2rem)] overflow-y-auto opacity-60 hover:opacity-100 transition-opacity"
+      className="w-48 m-4 pb-2 max-h-[calc(100vh-2rem)] overflow-y-auto opacity-60 hover:opacity-100 transition-opacity"
     >
       <div className="sticky flex flex-col gap-1 top-1 z-10 bg-white pt-1">
         <h2
@@ -105,7 +105,7 @@ export default function TableOfContents({
             <div key={`${item.navigationId}-${index}`}>
               {showGroupTitle && (
                 <li className="pointer-events-none">
-                  <h3 className="text-xs px-3 pt-4 text-gray-400 tracking-wide">
+                  <h3 className="text-xs px-3 pt-4 text-slate-400">
                     {item.group}
                   </h3>
                 </li>
